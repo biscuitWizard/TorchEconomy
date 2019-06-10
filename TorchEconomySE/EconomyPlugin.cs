@@ -43,6 +43,11 @@ namespace TorchEconomySE
             _container = new Container();
         }
 
+        public static T GetManager<T>() where T : BaseManager
+        {
+            return Instance._managers.FirstOrDefault(m => m is T) as T;
+        }
+        
         public override void Init(ITorchBase torch)
         {
             base.Init(torch);

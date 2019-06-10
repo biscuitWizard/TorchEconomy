@@ -62,10 +62,8 @@ namespace TorchEconomySE.Managers
             foreach (var blueprintDefinition in _definitionManager.GetBlueprintDefinitions())
             {
                 // Ignore disabled blueprints.
-                if (!blueprintDefinition.Enabled)
+                if (!blueprintDefinition.Enabled || !(blueprintDefinition is MyBlueprintDefinition))
                     continue;
-                if (blueprintDefinition.Results.Length > 1)
-                    continue; // Fuck this recipe.
                 
                 var result = blueprintDefinition.Results.First();
 

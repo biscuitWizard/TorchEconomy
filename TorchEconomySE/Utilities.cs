@@ -15,6 +15,15 @@ namespace TorchEconomySE
 {
     public static class Utilities
     {
+        public static double DistanceFrom(this VRageMath.Vector3 start, VRageMath.Vector3 end)
+        {
+            var x = Math.Pow(end.X - start.X, 2);
+            var y = Math.Pow(end.Y - start.Y, 2);
+            var z = Math.Pow(end.Z - start.Z, 2);
+
+            return Math.Abs(Math.Sqrt(x + y + z));
+        }
+        
         public static bool HasBlockType(this IMyCubeGrid grid, string typeName)
         {
             foreach (var block in ((MyCubeGrid)grid).GetFatBlocks())

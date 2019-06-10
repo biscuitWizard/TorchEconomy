@@ -112,6 +112,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\GameBinaries\VRage.Library.dll</HintPath>
     </Reference>
+    <Reference Include="VRage.Math, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
+      <HintPath>..\GameBinaries\VRage.Math.dll</HintPath>
+    </Reference>
     <Reference Include="VRage.Render, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\GameBinaries\VRage.Render.dll</HintPath>
@@ -123,17 +126,18 @@
     <Compile Include="Commands\AdminModule.cs" />
     <Compile Include="Commands\TradeZoneModule.cs" />
     <Compile Include="Data\IConnectionFactory.cs" />
-    <Compile Include="Data\Models\MarketOrderDataObject.cs" />
+    <Compile Include="Data\DataObjects\MarketOrderDataObject.cs" />
     <Compile Include="Data\MysqlConnectionFactory.cs" />
     <Compile Include="Data\SQL.cs" />
     <Compile Include="Data\Types\BuyOrderType.cs" />
     <Compile Include="EconomyConfig.cs" />
     <Compile Include="EconomyPlugin.cs" />
-    <Compile Include="Data\Models\AccountDataObject.cs" />
-    <Compile Include="Data\Models\FungibleShipDataObject.cs" />
-    <Compile Include="Data\Models\TradeZoneDataObject.cs" />
-    <Compile Include="Data\Models\TransactionDataObject.cs" />
+    <Compile Include="Data\DataObjects\AccountDataObject.cs" />
+    <Compile Include="Data\DataObjects\FungibleShipDataObject.cs" />
+    <Compile Include="Data\DataObjects\TradeZoneDataObject.cs" />
+    <Compile Include="Data\DataObjects\TransactionDataObject.cs" />
     <Compile Include="IoC.cs" />
+    <Compile Include="LazyProperty.cs" />
     <Compile Include="Managers\AccountsManager.cs" />
     <Compile Include="Managers\BaseManager.cs" />
     <Compile Include="Managers\MarketSimManager.cs" />
@@ -154,6 +158,5 @@
     <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
