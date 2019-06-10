@@ -7,10 +7,10 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <UserControl.DataContext>
-        <local:EconomyConfiguration/>
+        <local:EconomyConfig/>
     </UserControl.DataContext>
     <StackPanel>
-        <Label Content="Message of the Day"/>
+        <Label Content="Connection String"/>
         <TextBox Text="{Binding ConnectionString}" AcceptsReturn="true" MinLines="5" TextWrapping="Wrap" VerticalScrollBarVisibility="Visible"/>
     </StackPanel>
 </UserControl>
