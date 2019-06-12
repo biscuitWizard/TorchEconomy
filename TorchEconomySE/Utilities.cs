@@ -15,6 +15,7 @@ namespace TorchEconomySE
 {
     public static class Utilities
     {
+        
         public static double DistanceFrom(this VRageMath.Vector3 start, VRageMath.Vector3 end)
         {
             var x = Math.Pow(end.X - start.X, 2);

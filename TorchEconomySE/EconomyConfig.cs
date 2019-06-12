@@ -10,6 +10,7 @@ namespace TorchEconomySE
             _startingFunds = 2000000;
             _currencyName = "KeenBucks";
             _currencyName = "KB";
+            _energySecondsValue = 10;
         }
 
         //[Display(Name = "Database Connection String", GroupName = "Database Settings", Order = 0, Description = "Set backend server connection to store economy data for players.")]
@@ -30,5 +31,12 @@ namespace TorchEconomySE
 
         public string _currencyAbbreviation;
         public string CurrencyAbbreviation { get => _currencyAbbreviation; set => SetValue(ref _currencyAbbreviation, value); }
+
+        public decimal _energySecondsValue;
+        public decimal EnergySecondsValue
+        {
+            get => _energySecondsValue;
+            set => SetValue(ref _energySecondsValue, value);
+        }
     }
 }

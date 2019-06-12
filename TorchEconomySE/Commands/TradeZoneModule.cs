@@ -1,8 +1,14 @@
-﻿using System.Linq;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using NLog;
+using Sandbox.Game.Entities;
+using Sandbox.ModAPI;
 using Torch.Commands;
+using TorchEconomySE.Data.Models;
 using TorchEconomySE.Managers;
+using VRage.Game;
 
 namespace TorchEconomySE.Commands
 {
@@ -33,27 +39,81 @@ namespace TorchEconomySE.Commands
             Context.Respond(stringBuilder.ToString());
         }
 
+        [Command("list", "Lists available goods to buy.")]
+        public void List()
+        {
+            var marketManager = EconomyPlugin.GetManager<MarketSimManager>();
+            var stringBuilder = new StringBuilder("Available Items:");
+
+            var index = 0;
+            foreach (var item in marketManager.GetUniversalItems())
+            {
+                stringBuilder.AppendLine($"{index}. {item.FriendlyName}: ${item.FriendlyValue}");
+                index++;
+            }
+
+            Context.Respond(stringBuilder.ToString());
+        }
+
         [Command("buy", "<itemNameOrIndex> <quantity>: Purchases a quantity of items from nearby tradezones at the lowest prices available.")]
         public void Buy(string itemNameOrIndex, decimal quantity)
         {
-            var stringBuilder = new StringBuilder("Available Items: ");
+//            var stringBuilder = new StringBuilder("Available Items: ");
             var marketManager = EconomyPlugin.GetManager<MarketSimManager>();
-            
-            if (definition.Id.TypeId != typeof(MyObjectBuilder_Ore) && definition.Id.TypeId != typeof(MyObjectBuilder_Ingot))
+
+            var marketItem = default(MarketValueItem);
+            if (int.TryParse(itemNameOrIndex, out var index))
             {
-                if (ItemQuantity != Math.Truncate(ItemQuantity))
-                {
-                    MessageClientTextMessage.SendMessage(SenderSteamId, "SELL", "You must provide a whole number for the quantity of that item.");
-                    return;
-                }
-                //ItemQuantity = Math.Round(ItemQuantity, 0);  // Or do we just round the number?
+                // Find the item by tradezone index.
             }
+            else
+            {
+                marketItem = marketManager.GetUniversalMarketValueItem(itemNameOrIndex);
+            }
+
+            if (!IsValidQuantity(marketItem, quantity))
+                return;
+            if (quantity <= 0)
+            {
+                Context.Respond("Invalid quantity, or you dont have any to trade!");
+                return;
+            }
+
+            var buyingPlayer = Context.Player;
+            var buyingCharacter = buyingPlayer.Character;
+            // TODO: do players in Cryochambers count as a valid trading partner? They should be alive, but the connected player may be offline.
+            // I think we'll have to do lower level checks to see if a physical player is Online.
+            if (buyingCharacter == null)
+            {
+                // Player has no body. Could mean they are dead.
+                // Either way, there is no inventory.
+                Context.Respond( "You are dead. You cannot trade while dead.");
+//                EconomyScript.Instance.ServerLogger.WriteVerbose("Action /Sell Create aborted by Steam Id '{0}' -- player is dead.", SenderSteamId);
+                return;
+            }
+            
+            var playerInventory = buyingCharacter.GetInventory();
+            Support.InventoryAdd(playerInventory, (VRage.MyFixedPoint)quantity, marketItem.Definition.Id);
         }
 
         [Command("sell", "<itemName> <quantity>: Attempts to sell a quantity of items to nearby trade zones at best possible price from character inventory and ship inventory.")]
         public void Sell(string itemName, decimal quantity)
         {
 
+        }
+
+        private bool IsValidQuantity(MarketValueItem marketItem, decimal quantity)
+        {
+            if (marketItem.Definition.Id.TypeId != typeof(MyObjectBuilder_Ore) && marketItem.Definition.Id.TypeId != typeof(MyObjectBuilder_Ingot))
+            {
+                if (quantity != Math.Truncate(quantity))
+                {
+                    Context.Respond("You must provide a whole number for the quantity of that item.");
+                    return false;
+                }
+            }
+
+            return true;
         }
     }
 }

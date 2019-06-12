@@ -59,6 +59,9 @@
     <Reference Include="Sandbox.Game">
       <HintPath>..\GameBinaries\Sandbox.Game.dll</HintPath>
     </Reference>
+    <Reference Include="SpaceEngineers.ObjectBuilders, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
+      <HintPath>..\GameBinaries\SpaceEngineers.ObjectBuilders.dll</HintPath>
+    </Reference>
     <Reference Include="StructureMap, Version=4.7.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\StructureMap.4.7.1\lib\net45\StructureMap.dll</HintPath>
     </Reference>
@@ -108,6 +111,9 @@
     <Reference Include="VRage.Game">
       <HintPath>..\GameBinaries\VRage.Game.dll</HintPath>
     </Reference>
+    <Reference Include="VRage.Input, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
+      <HintPath>..\GameBinaries\VRage.Input.dll</HintPath>
+    </Reference>
     <Reference Include="VRage.Library, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\GameBinaries\VRage.Library.dll</HintPath>
@@ -127,6 +133,7 @@
     <Compile Include="Commands\TradeZoneModule.cs" />
     <Compile Include="Data\IConnectionFactory.cs" />
     <Compile Include="Data\DataObjects\MarketOrderDataObject.cs" />
+    <Compile Include="Data\Models\MarketValueItem.cs" />
     <Compile Include="Data\MysqlConnectionFactory.cs" />
     <Compile Include="Data\SQL.cs" />
     <Compile Include="Data\Types\BuyOrderType.cs" />
@@ -136,16 +143,19 @@
     <Compile Include="Data\DataObjects\FungibleShipDataObject.cs" />
     <Compile Include="Data\DataObjects\TradeZoneDataObject.cs" />
     <Compile Include="Data\DataObjects\TransactionDataObject.cs" />
+    <Compile Include="HudAPIv2.cs" />
     <Compile Include="IoC.cs" />
     <Compile Include="LazyProperty.cs" />
     <Compile Include="Managers\AccountsManager.cs" />
     <Compile Include="Managers\BaseManager.cs" />
     <Compile Include="Managers\MarketSimManager.cs" />
+    <Compile Include="Managers\TextHudAPIManager.cs" />
     <Compile Include="Managers\TradeZoneManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="EconomyControl.xaml.cs">
       <DependentUpon>EconomyControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Support.cs" />
     <Compile Include="Utilities.cs" />
   </ItemGroup>
   <ItemGroup>
