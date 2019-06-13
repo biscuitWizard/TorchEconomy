@@ -23,6 +23,7 @@ Frontier Economy's code, expanding and modifying it to make it a server-side onl
 * NPC markets can be attached to stations and will automatically populate with inventory.
 * Configurable through Torch's WPF UI, allowing the adjustment of base ore prices.
 * Prices rise as players buy from NPCs, prices lower as players sell to NPCs, with prices normalizing over time.
+* Player tradezones can be configured to use a specific bank account, preventing overdrafting and griefing by mass sales.
 
 ## TorchEconomy.ShipTrading (Incomplete)
 
