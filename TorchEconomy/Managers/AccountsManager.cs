@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Dapper;
+using NLog;
 using NLog.Fluent;
 using Sandbox.ModAPI;
 using Torch.API;
@@ -15,7 +16,9 @@ namespace TorchEconomy.Managers
 {
     public class AccountsManager : BaseManager
     {
-        public const ulong SystemAccountId = ulong.MaxValue;
+        private static readonly Logger Log = LogManager.GetLogger("Economy.Managers.Account");
+        
+        public const long SystemAccountId = long.MaxValue;
         
         private readonly IMultiplayerManagerServer _multiplayerManager;
         private MessageRouterManager _messageRouter;
@@ -72,7 +75,7 @@ namespace TorchEconomy.Managers
         }
 #endregion
 
-        public Promise<IEnumerable<TransactionDataObject>> GetTransactions(ulong accountId)
+        public Promise<IEnumerable<TransactionDataObject>> GetTransactions(long accountId)
         {
             return new Promise<IEnumerable<TransactionDataObject>>((resolve, reject) =>
             {
@@ -91,7 +94,7 @@ namespace TorchEconomy.Managers
             {
                 using (var connection = ConnectionFactory.Open())
                 {
-                    var primaryAccount = connection.QueryFirst<AccountDataObject>(
+                    var primaryAccount = connection.QueryFirstOrDefault<AccountDataObject>(
                         SQL.SELECT_PRIMARY_ACCOUNT,
                         new {playerId = playerId});
 
@@ -106,7 +109,7 @@ namespace TorchEconomy.Managers
                             isNPC = isNpc, isPrimary = firstAccount
                         });
                     
-                    primaryAccount = connection.QueryFirst<AccountDataObject>(
+                    primaryAccount = connection.QueryFirstOrDefault<AccountDataObject>(
                         SQL.SELECT_PRIMARY_ACCOUNT,
                         new {playerId = playerId});
                     
@@ -135,7 +138,7 @@ namespace TorchEconomy.Managers
             {
                 using (var connection = ConnectionFactory.Open())
                 {
-                    resolve(connection.QueryFirst<AccountDataObject>(
+                    resolve(connection.QueryFirstOrDefault<AccountDataObject>(
                         SQL.SELECT_PRIMARY_ACCOUNT,
                         new {playerId = playerId}));
                 }
@@ -147,13 +150,13 @@ namespace TorchEconomy.Managers
         /// </summary>
         /// <param name="accountId"></param>
         /// <returns></returns>
-        public Promise<AccountDataObject> GetAccount(ulong accountId)
+        public Promise<AccountDataObject> GetAccount(long accountId)
         {
             return new Promise<AccountDataObject>((resolve, reject) =>
             {
                 using (var connection = ConnectionFactory.Open())
                 {
-                    resolve(connection.QueryFirst<AccountDataObject>(
+                    resolve(connection.QueryFirstOrDefault<AccountDataObject>(
                         SQL.SELECT_ACCOUNT,
                         new {id = accountId}));
                 }
@@ -183,7 +186,7 @@ namespace TorchEconomy.Managers
         /// </summary>
         /// <param name="accountId"></param>
         /// <returns></returns>
-        public Promise<decimal> GetAccountBalance(ulong accountId)
+        public Promise<decimal> GetAccountBalance(long accountId)
         {
             return GetAccount(accountId).Then(result => result.Balance) as Promise<decimal>;
         }
@@ -206,8 +209,8 @@ namespace TorchEconomy.Managers
         /// <param name="amount"></param>
         /// <param name="optionalReason"></param>
         /// <param name="fromAccountId">If this is specified, the money will also be deducted from this account id.</param>
-        public void AdjustAccountBalance(ulong accountId, decimal amount, 
-            ulong? fromAccountId = null, string optionalReason = null)
+        public void AdjustAccountBalance(long accountId, decimal amount, 
+            long? fromAccountId = null, string optionalReason = null)
         {
             var transactionDate = DateTime.UtcNow.ToUnixTimestamp();
             using (var connection = ConnectionFactory.Open())
@@ -239,7 +242,7 @@ namespace TorchEconomy.Managers
         /// Sets a player's accountID as primary, and sets a player's all other accounts as non-primary.
         /// </summary>
         /// <param name="accountId"></param>
-        public void SetAccountAsPrimary(ulong accountId)
+        public void SetAccountAsPrimary(long accountId)
         {
             using (var connection = ConnectionFactory.Open())
             {
@@ -264,6 +267,10 @@ namespace TorchEconomy.Managers
 
                 // Create a new account with the starting money defined in config.
                 CreateAccount(player.SteamId, Config.StartingFunds, false);
+            })
+            .Catch(error =>
+            {
+                if (error != null) Log.Error(error);
             });
         }
     }

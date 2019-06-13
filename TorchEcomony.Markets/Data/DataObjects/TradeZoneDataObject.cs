@@ -2,7 +2,7 @@
 {
     public class TradeZoneDataObject
     {
-        public ulong Id { get; set; }
+        public long Id { get; set; }
         public string Name { get; set; }
         public int Range { get; set; }
         

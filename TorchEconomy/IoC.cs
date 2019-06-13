@@ -39,16 +39,14 @@ namespace TorchEconomy
                     var assemblies = AppDomain
                         .CurrentDomain
                         .GetAssemblies()
-                        .Where(a => a.FullName.StartsWith("TorchEconomy."));
+                        .Where(a => a.GetName().Name.StartsWith("TorchEconomy.") 
+                                    || a.GetName().Name == "TorchEconomy")
+                        .ToList();
                     foreach (var assembly in assemblies)
                         s.Assembly(assembly);
 
-                    // Registration conventions.
-                    s.AddAllTypesOf<BaseManager>();
-                    s.WithDefaultConventions();
-                    
                     // All managers should be singletons.
-                    s.With(new SingletonConvention<BaseManager>());
+                    s.Convention<SingletonConvention<BaseManager>>();
                 });
 
                 _.For<IMultiplayerManagerServer>()

@@ -6,7 +6,7 @@ namespace TorchEconomy.Data.DataObjects
     public class AccountDataObject
     {
         [ProtoMember(101)]
-        public ulong Id { get; set; }
+        public long Id { get; set; }
         [ProtoMember(102)]
         public ulong PlayerId { get; set; }
         [ProtoMember(103)]

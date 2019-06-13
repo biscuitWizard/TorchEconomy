@@ -10,7 +10,7 @@ namespace TorchEconomy.Messages.Accounts
 		/// <summary>
 		/// Target account ID to modify.
 		/// </summary>
-		public ulong AccountId { get; set; }
+		public long AccountId { get; set; }
 		/// <summary>
 		/// The amount to adjust by.
 		/// </summary>
@@ -24,7 +24,7 @@ namespace TorchEconomy.Messages.Accounts
 		/// Optional field. If specified, will also deduct from the specified accountID and
 		/// add their ID to the transaction log.
 		/// </summary>
-		public ulong? FromAccountId { get; set; }
+		public long? FromAccountId { get; set; }
 	}
 
 	[ProtoContract]

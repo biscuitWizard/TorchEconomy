@@ -5,9 +5,9 @@ using VRage.Game.ModAPI;
 
 namespace TorchEconomy.Commands
 {
+	[Category("admin accounts")]
 	public class AdminModule : EconomyCommandModule
 	{
-		
 		[Command("give", "<playerNameOrId> <amount>: Gives player that amount of currency.")]
 		[Permission(MyPromoteLevel.Admin)]
 		public void GiveCurrency(string playerNameOrId, decimal amount)

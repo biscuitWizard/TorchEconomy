@@ -65,6 +65,8 @@ namespace TorchEconomy
         {
             base.Init(torch);
 
+            Log.Info("Loading Torch Economy...");
+            
             // Load up the configuration
             string path = Path.Combine(StoragePath, "Economy.cfg");
             Log.Info($"Attempting to load config from {path}");
@@ -79,6 +81,8 @@ namespace TorchEconomy
             
             // Set static instance.
             Instance = this;
+            
+            Log.Info("Torch Economy Initialized!");
         }
 
         public override void Update()
@@ -96,8 +100,11 @@ namespace TorchEconomy
             switch (state)
             {
                 case TorchSessionState.Loaded:
+                    _managers.Clear();
+                    
                     // Get all the managers.
-                    _managers.AddRange(GetContainer().GetAllInstances<BaseManager>());
+                    var managers = GetContainer().GetAllInstances<BaseManager>();
+                    _managers.AddRange(managers);
                     
                     // Start the managers.
                     foreach (var manager in _managers)

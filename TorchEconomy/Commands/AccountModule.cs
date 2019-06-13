@@ -24,7 +24,7 @@ namespace TorchEconomy.Commands
             var manager = GetManager<AccountsManager>();
             var playerId = Context.Player.SteamUserId;
 
-            if (!ulong.TryParse(accountIdString, out var accountId)
+            if (!long.TryParse(accountIdString, out var accountId)
                 || accountId <= 0)
             {
                 Context.Respond("Invalid account ID entered. Must be a number above 0.");
@@ -88,7 +88,8 @@ namespace TorchEconomy.Commands
                 {
                     if (account.IsPrimary)
                         responseBuilder.AppendLine($"+ Acct#{account.Id} [PRIMARY]: ${account.Balance}");
-                    responseBuilder.AppendLine($"+ Acct#{account.Id}: ${account.Balance}");
+                    else
+                        responseBuilder.AppendLine($"+ Acct#{account.Id}: ${account.Balance}");
                 }
 
                 responseBuilder.AppendLine($"Accounts Total: {accounts.Sum(a => a.Balance)}");
