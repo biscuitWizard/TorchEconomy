@@ -75,6 +75,7 @@
         <Compile Include="Commands\AdminModule.cs" />
         <Compile Include="Commands\TradeZoneModule.cs" />
         <Compile Include="Data\DataObjects\MarketOrderDataObject.cs" />
+        <Compile Include="Data\DataObjects\ShipSaleDataObject.cs" />
         <Compile Include="Data\DataObjects\TradeZoneDataObject.cs" />
         <Compile Include="Data\Models\MarketValueItem.cs" />
         <Compile Include="Data\Types\BuyOrderType.cs" />

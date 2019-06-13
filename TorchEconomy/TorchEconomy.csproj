@@ -145,7 +145,6 @@
     <Compile Include="EconomyConfig.cs" />
     <Compile Include="EconomyPlugin.cs" />
     <Compile Include="Data\DataObjects\AccountDataObject.cs" />
-    <Compile Include="Data\DataObjects\ShipSaleDataObject.cs" />
     <Compile Include="Data\DataObjects\TransactionDataObject.cs" />
     <Compile Include="EconomyPluginBase.cs" />
     <Compile Include="HudAPIv2.cs" />
