@@ -15,6 +15,11 @@ Frontier Economy's code, expanding and modifying it to make it a server-side onl
 * ADO.NET backend integration. All data is stored on SQL providers allowing external integration through web portals.
 * Full transaction logs for every monetary exchange that takes place.
 
+### Using the API
+Send requests to DS using the normal APIGateway (the Protobuf classes are under TorchEconomy/Messages). Messages from other mods should include the TransactionKey if ForceTransactionCheck is enabled in Torch Economy. Responses from Torch will be returned specifically to the client that requested them.
+
+It is currently possibly to interact directly with accounts using the API if properly authorized by the server's TransactionKey.
+
 ## TorchEconomy.Markets (In Progress)
 
 ### Features
