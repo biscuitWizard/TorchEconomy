@@ -16,13 +16,32 @@ using Torch.API.Plugins;
 using Torch.API.Session;
 using Torch.Session;
 using Torch.Views;
+using TorchEconomy.Data;
 using TorchEconomy.Managers;
 using VRage.Game;
 
 namespace TorchEconomy
 {
-    public class EconomyPlugin : EconomyPluginBase, IWpfPlugin
+    public class EconomyPlugin : TorchPluginBase, IWpfPlugin
     {
+        private static IContainer _container;
+
+        protected IContainer GetContainer()
+        {
+            if (_container == null)
+            {
+                _container = new Container();
+                _container.Initialize();
+            }
+
+            return _container;
+        }
+
+        public IConnectionFactory GetConnectionFactory()
+        {
+            return GetContainer().GetInstance<IConnectionFactory>();
+        }
+        
         private static readonly Logger Log = LogManager.GetLogger("Economy");
         
         public static EconomyPlugin Instance;
