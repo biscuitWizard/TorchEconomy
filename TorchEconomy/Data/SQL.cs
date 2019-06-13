@@ -4,23 +4,23 @@
     { 
         #region Accounts
         public const string SELECT_ACCOUNTS 
-            = "SELECT * FROM `Account` WHERE PlayerIdentity = @playerId;";
+            = "SELECT * FROM `Account` WHERE PlayerId = @playerId;";
 
         public const string SELECT_PRIMARY_ACCOUNT
-            = "SELECT * FROM `Account` WHERE PlayerIdentity = @playerId AND IsPrimary=1;";
+            = "SELECT * FROM `Account` WHERE PlayerId = @playerId AND IsPrimary=1;";
 
         public const string SELECT_ACCOUNT
             = "SELECT * FROM `Account` WHERE Id = @id";
         
         public const string INSERT_ACCOUNT 
-            = "INSERT INTO `Account` (`PlayerIdentity`,`Balance`,`IsNPC`,`IsPrimary`) VALUES(@playerId,@balance,@isNPC,@isPrimary);";
+            = "INSERT INTO `Account` (`PlayerId`,`Balance`,`IsNPC`,`IsPrimary`) VALUES(@playerId,@balance,@isNPC,@isPrimary);";
         
         public const string MUTATE_ACCOUNT_BALANCE 
             = "UPDATE `Account` SET `Balance` = `Balance` + @amount WHERE `Id` = @id;";
             
         public const string MUTATE_ACCOUNT_PRIMARY
             = @"
-            UPDATE `Account` SET `IsPrimary` = 0 WHERE `PlayerIdentity` = (SELECT `PlayerIdentity` FROM `Account` WHERE `Id`=@id) AND `Id` > 0; 
+            UPDATE `Account` SET `IsPrimary` = 0 WHERE `PlayerId` = (SELECT `PlayerId` FROM `Account` WHERE `Id`=@id) AND `Id` > 0; 
             UPDATE `Account` SET `IsPrimary` = @isPrimary WHERE `Id`=@id;";
         
         #endregion
