@@ -7,7 +7,10 @@ namespace TorchEconomy.Data
     {
         public IDbConnection Open()
         {
-            return new MySqlConnection("Server=localhost;Database=space_engineers;Uid=root;Pwd=password;");
+            var connection = new MySqlConnection("Server=localhost;Database=space_engineers;Uid=root;Pwd=password;");
+            connection.Open();
+            
+            return connection;
         }
     }
 }
