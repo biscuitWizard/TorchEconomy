@@ -162,7 +162,7 @@ namespace TorchEconomy.Managers
         /// <param name="accountId"></param>
         /// <param name="amount"></param>
         /// <param name="optionalReason"></param>
-        /// <param name="fromAccountId">If this is specified, a transaction log will be generated.</param>
+        /// <param name="fromAccountId">If this is specified, the money will also be deducted from this account id.</param>
         public void AdjustAccountBalance(ulong accountId, decimal amount, 
             ulong? fromAccountId = null, string optionalReason = null)
         {
@@ -182,6 +182,13 @@ namespace TorchEconomy.Managers
                         transactionAmount = amount, transactedOn = transactionDate,
                         reason = optionalReason
                     });
+
+                if (fromAccountId.HasValue)
+                {
+                    connection.ExecuteAsync(
+                        SQL.MUTATE_ACCOUNT_BALANCE,
+                        new {id = fromAccountId, amount = amount * -1});
+                }
             }
         }
 

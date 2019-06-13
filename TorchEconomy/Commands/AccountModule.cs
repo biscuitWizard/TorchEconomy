@@ -113,6 +113,7 @@ namespace TorchEconomy.Commands
         public void TransferBalance(string targetPlayerNameOrId, decimal amount)
         {
             var fromPlayerId = Context.Player.SteamUserId;
+            var manager = GetManager<AccountsManager>();
             
             ulong.TryParse(targetPlayerNameOrId, out var toPlayerId);
             toPlayerId = Utilities.GetPlayerByNameOrId(targetPlayerNameOrId)?.SteamUserId ?? toPlayerId;
@@ -129,17 +130,37 @@ namespace TorchEconomy.Commands
                 return;
             }
 
+            manager.GetPrimaryAccount(fromPlayerId)
+                .Then(fromAccount =>
+                {
+                    if (fromAccount.Balance - amount < 0)
+                    {
+                        Context.Respond(
+                            $"Lacking {amount - fromAccount.Balance}{EconomyPlugin.Instance.Config.CurrencyAbbreviation} to complete that transfer.");
+                        return;
+                    }
+
+                    manager.GetPrimaryAccount(toPlayerId)
+                        .Then(toAccount =>
+                        {
+                            if (toAccount == null)
+                            {
+                                Context.Respond($"Unable to find {targetPlayerNameOrId}.");
+                                return;
+                            }
+                            
+                            manager.AdjustAccountBalance(toAccount.Id, amount, fromAccount.Id, 
+                                $"{Context.Player.DisplayName} is transferring {amount}.");
+                        });
+                });
+
             var connectionFactory = new MysqlConnectionFactory();
             using (var connection = connectionFactory.Open())
             {
                 var playerAccount = connection.QueryFirst<AccountDataObject>(
                     SQL.SELECT_ACCOUNTS,
                     new { playerId = fromPlayerId });
-                if(playerAccount.Balance - amount < 0)
-                {
-                    Context.Respond($"Lacking {amount - playerAccount.Balance}{EconomyPlugin.Instance.Config.CurrencyAbbreviation} to complete that transfer.");
-                    return;
-                }
+                
 
                 connection.Execute(
                     SQL.MUTATE_ACCOUNT_BALANCE,
