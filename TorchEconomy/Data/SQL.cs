@@ -13,7 +13,7 @@
             = "SELECT * FROM `Account` WHERE Id = @id";
         
         public const string INSERT_ACCOUNT 
-            = "INSERT INTO `Account` (`PlayerId`,`Balance`,`IsNPC`,`IsPrimary`) VALUES(@playerId,@balance,@isNPC,@isPrimary);";
+            = "INSERT INTO `Account` (`PlayerId`,`Balance`,`IsNPC`,`IsPrimary`,`Nickname`) VALUES(@playerId,@balance,@isNPC,@isPrimary,@nickname);";
         
         public const string MUTATE_ACCOUNT_BALANCE 
             = "UPDATE `Account` SET `Balance` = `Balance` + @amount WHERE `Id` = @id;";

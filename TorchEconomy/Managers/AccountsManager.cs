@@ -58,7 +58,7 @@ namespace TorchEconomy.Managers
 
         private void OnCreateAccount(CreateAccountMessage message)
         {
-            CreateAccount(message.ForPlayerId, message.InitialBalance, message.IsNPC)
+            CreateAccount(message.ForPlayerId, message.InitialBalance, message.Nickname, message.IsNPC)
                 .Then(newAccount =>
                 {
                     _messageRouter.SendResponse(new CreateAccountResponseMessage
@@ -88,7 +88,22 @@ namespace TorchEconomy.Managers
             });
         }
 
-        public Promise<AccountDataObject> CreateAccount(ulong playerId, decimal initialBalance, bool isNpc = false)
+        public IPromise CloseAccount(long accountId)
+        {
+            return new Promise((resolve, reject) =>
+            {
+                using (var connection = ConnectionFactory.Open())
+                {
+                    connection.Execute("UPDATE `Account` SET `IsDeleted`=1 WHERE Id=@id",
+                        new {id = accountId});
+
+                    resolve();
+                }
+            });
+        }
+        
+        public Promise<AccountDataObject> CreateAccount(ulong playerId, decimal initialBalance, 
+            string nickname = "default", bool isNpc = false)
         {
             return new Promise<AccountDataObject>((resolve, reject) =>
             {
@@ -106,7 +121,8 @@ namespace TorchEconomy.Managers
                         new
                         {
                             playerId = playerId, balance = initialBalance,
-                            isNPC = isNpc, isPrimary = firstAccount
+                            isNPC = isNpc, isPrimary = firstAccount,
+                            nickname = nickname
                         });
                     
                     primaryAccount = connection.QueryFirstOrDefault<AccountDataObject>(
@@ -164,6 +180,40 @@ namespace TorchEconomy.Managers
         }
 
         /// <summary>
+        /// Gets a player's account by its nickname or ID.
+        /// </summary>
+        /// <param name="playerId"></param>
+        /// <param name="accountNameOrId"></param>
+        /// <returns></returns>
+        public Promise<AccountDataObject> GetAccount(ulong playerId, string accountNameOrId)
+        {
+            return new Promise<AccountDataObject>((result, reject) =>
+            {
+                GetAccounts(playerId)
+                    .Then(accounts =>
+                    {
+                        AccountDataObject account = null;
+                        if (long.TryParse(accountNameOrId, out var accountId))
+                        {
+                            account = accounts.FirstOrDefault(a => a.Id == accountId);
+                        }
+                        else
+                        {
+                            account = accounts.FirstOrDefault(a => a.Nickname.StartsWith(accountNameOrId));
+                        }
+
+                        if (account == null)
+                        {
+                            reject(new Exception($"Unable to find account with a name or id of {accountNameOrId}."));
+                            return;
+                        }
+
+                        result(account);
+                    });
+            });
+        }
+        
+        /// <summary>
         /// Gets all accounts associated with a player.
         /// </summary>
         /// <param name="playerId"></param>
@@ -176,7 +226,8 @@ namespace TorchEconomy.Managers
                 {
                     resolve(connection.Query<AccountDataObject>(
                         SQL.SELECT_ACCOUNTS,
-                        new {playerId = playerId}));
+                        new {playerId = playerId})
+                        .ToArray());
                 }
             });
         }
@@ -266,7 +317,7 @@ namespace TorchEconomy.Managers
                 Log.Info($"Allocating {Config.StartingFunds} to Player#{player.SteamId}");
 
                 // Create a new account with the starting money defined in config.
-                CreateAccount(player.SteamId, Config.StartingFunds, false);
+                CreateAccount(player.SteamId, Config.StartingFunds, "default", false);
             })
             .Catch(error =>
             {

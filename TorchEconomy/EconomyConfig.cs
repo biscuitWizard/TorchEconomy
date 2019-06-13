@@ -51,5 +51,13 @@ namespace TorchEconomy
             get => _forceTransactionCheck;
             set => SetValue(ref _forceTransactionCheck, value);
         }
+
+        public int _maxPlayerAccounts;
+
+        public int MaxPlayerAccounts
+        {
+            get => _maxPlayerAccounts;
+            set => SetValue(ref _maxPlayerAccounts, value);
+        }
     }
 }

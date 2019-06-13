@@ -14,7 +14,13 @@ namespace TorchEconomy.Messages.Accounts
 		[ProtoMember(202)]
 		public decimal InitialBalance { get; set; }
 		
+		/// <summary>
+		/// The nickname to give the account.
+		/// </summary>
 		[ProtoMember(203)]
+		public string Nickname { get; set; }
+		
+		[ProtoMember(204)]
 		public bool IsNPC { get; set; }
 	}
 

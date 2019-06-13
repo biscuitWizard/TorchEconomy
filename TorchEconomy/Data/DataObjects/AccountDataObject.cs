@@ -15,5 +15,9 @@ namespace TorchEconomy.Data.DataObjects
         public bool IsNPC { get; set; }
         [ProtoMember(105)]
         public bool IsPrimary { get; set; }
+        [ProtoMember(106)]
+        public string Nickname { get; set; }
+        [ProtoMember(107)]
+        public bool IsDeleted { get; set; }
     }
 }
