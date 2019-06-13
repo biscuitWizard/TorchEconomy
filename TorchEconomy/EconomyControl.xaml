@@ -11,6 +11,14 @@
     </UserControl.DataContext>
     <StackPanel>
         <Label Content="Connection String"/>
-        <TextBox Text="{Binding ConnectionString}" AcceptsReturn="true" MinLines="5" TextWrapping="Wrap" VerticalScrollBarVisibility="Visible"/>
+        <TextBox Text="{Binding ConnectionString}" AcceptsReturn="true" TextWrapping="Wrap" VerticalScrollBarVisibility="Visible"/>
+        <Label Content="Starting Funds"/>
+        <TextBox Text="{Binding StartingFunds}" AcceptsReturn="true" TextWrapping="Wrap" VerticalScrollBarVisibility="Visible"/>
+        <Label Content="Currency Name"/>
+        <TextBox Text="{Binding CurrencyName}" AcceptsReturn="true" TextWrapping="Wrap" VerticalScrollBarVisibility="Visible"/>
+        <Label Content="Currency Abbreviation"/>
+        <TextBox Text="{Binding CurrencyAbbreviation}" AcceptsReturn="true" TextWrapping="Wrap" VerticalScrollBarVisibility="Visible"/>
+        <Label Content="Transaction Key"/>
+        <TextBox Text="{Binding TransactionKey}" AcceptsReturn="true" TextWrapping="Wrap" VerticalScrollBarVisibility="Visible"/>
     </StackPanel>
 </UserControl>

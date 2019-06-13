@@ -73,6 +73,7 @@
         <Compile Include="Commands\TradeZoneModule.cs" />
         <Compile Include="EconomyMarketConfig.cs" />
         <Compile Include="EconomyMarketsPlugin.cs" />
+        <Compile Include="Managers\BaseMarketManager.cs" />
         <Compile Include="Managers\MarketSimManager.cs" />
         <Compile Include="Managers\TradeZoneManager.cs" />
         <Compile Include="Properties\AssemblyInfo.cs" />

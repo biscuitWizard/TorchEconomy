@@ -11,7 +11,7 @@ using VRage.ObjectBuilders;
 
 namespace TorchEconomy.Markets.Managers
 {
-    public class MarketSimManager : BaseManager
+    public class MarketSimManager : BaseMarketManager
     {
         private static readonly Logger Log = LogManager.GetLogger("Economy.Markets.Managers.Market_Simulation");
         
@@ -96,7 +96,7 @@ namespace TorchEconomy.Markets.Managers
                 if (_itemValues.ContainsKey(result.Id))
                     continue; // We've already calculated this. Pass.
 
-                var cost = Config.EnergySecondsValue * (decimal)blueprintDefinition.BaseProductionTimeInSeconds;
+                var cost = MarketConfig.EnergySecondsValue * (decimal)blueprintDefinition.BaseProductionTimeInSeconds;
                 var skipBlueprint = false;
                 foreach (var prereq in blueprintDefinition.Prerequisites)
                 {
@@ -154,7 +154,7 @@ namespace TorchEconomy.Markets.Managers
             if (blueprintDefinition == null)
                 throw new KeyNotFoundException($"Unable to find a blueprint for item id '{id}'.");
             
-            var cost = Config.EnergySecondsValue * (decimal)blueprintDefinition.BaseProductionTimeInSeconds;
+            var cost = MarketConfig.EnergySecondsValue * (decimal)blueprintDefinition.BaseProductionTimeInSeconds;
             foreach (var prereq in blueprintDefinition.Prerequisites)
             {
                 if (prereq.Id == id)

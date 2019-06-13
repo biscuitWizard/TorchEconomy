@@ -11,7 +11,7 @@ namespace TorchEconomy.Markets
 	{
 		private static readonly Logger Log = LogManager.GetLogger("Economy.Markets");
         
-		public static EconomyPlugin Instance;
+		public static EconomyMarketsPlugin Instance;
 		private Persistent<EconomyMarketConfig> _config;
 		private TorchSessionManager _sessionManager;
 		private UserControl _control;

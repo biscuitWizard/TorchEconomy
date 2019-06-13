@@ -10,7 +10,6 @@ namespace TorchEconomy
             _startingFunds = 2000000;
             _currencyName = "KeenBucks";
             _currencyName = "KB";
-            _energySecondsValue = 10;
         }
 
         //[Display(Name = "Database Connection String", GroupName = "Database Settings", Order = 0, Description = "Set backend server connection to store economy data for players.")]
@@ -23,20 +22,20 @@ namespace TorchEconomy
         private bool _mysql;
         public bool MySQL { get => _mysql; set => SetValue(ref _mysql, value); }
 
-        public decimal _startingFunds;
+        private decimal _startingFunds;
         public decimal StartingFunds { get => _startingFunds; set => SetValue(ref _startingFunds, value); }
 
-        public string _currencyName;
+        private string _currencyName;
         public string CurrencyName { get => _currencyName; set => SetValue(ref _currencyName, value); }
 
-        public string _currencyAbbreviation;
+        private string _currencyAbbreviation;
         public string CurrencyAbbreviation { get => _currencyAbbreviation; set => SetValue(ref _currencyAbbreviation, value); }
 
-        public decimal _energySecondsValue;
-        public decimal EnergySecondsValue
+        private string _transactionKey;
+        public string TransactionKey
         {
-            get => _energySecondsValue;
-            set => SetValue(ref _energySecondsValue, value);
+            get => _transactionKey;
+            set => SetValue(ref _transactionKey, value);
         }
     }
 }

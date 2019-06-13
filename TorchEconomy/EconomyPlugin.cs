@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Controls;
 using Sandbox.Engine.Voxels;
+using Sandbox.ModAPI;
 using StructureMap;
 using Torch;
 using Torch.API;
@@ -75,41 +76,12 @@ namespace TorchEconomy
                 case TorchSessionState.Loaded:
                     // Get all the managers.
                     _managers.AddRange(GetContainer().GetAllInstances<BaseManager>());
+                    
                     // Start the managers.
                     foreach (var manager in _managers)
                     {
                         manager.Start();
                     }
-                    
-//                    var planetGenerator = planetGenerators.First();
-//                    foreach (var oreMapping in planetGenerator.OreMappings)
-//                    {
-//                        var material = MyDefinitionManager.Static.GetVoxelMaterialDefinition(oreMapping.Type);
-//                        if (material == null)
-//                            continue;
-//                        material.
-//                    }
-//                    //planetGenerator.SurfaceMaterialTable.First().
-//                    foreach(var oreType in planetGenerator.OreMappings.Select(o => o.Type).Distinct())
-//                    {
-//                        float oreEntries = planetGenerator.OreMappings.Count(o => o.Type == oreType);
-//                        float totalOreEntries = planetGenerator.OreMappings.Count();
-//                        float baseInflation = 10f;
-//                        float minDepth = planetGenerator.OreMappings.Min(o => o.Start);
-//                        float maxDepth = planetGenerator.OreMappings.Max(o => o.Start + o.Depth);
-//                        float averageDepthForOre = planetGenerator.OreMappings.Where(o => o.Type == oreType).Average(o => o.Depth + o.Start);
-//
-//                        var basecost = (oreEntries / totalOreEntries) * baseInflation;
-//                        var modifier = (.2f * (minDepth / (maxDepth - averageDepthForOre))) + 1;
-//
-//                        Log.Info($"Ore {oreType} value is {basecost * modifier}");
-//                    }
-
-                    //foreach (var blueprint in MyDefinitionManager.Static.GetBlueprintDefinitions())
-                    //{
-                    //    CalculateBlueprintPrice(blueprint);
-                    //}
-                    //Log.Info($"[DONE] Market Data Generated for {_prices.Count} items.");
                     break;
                 case TorchSessionState.Unloading:
                     // Stop and unload all the managers.
@@ -117,7 +89,6 @@ namespace TorchEconomy
                     {
                         manager.Stop();
                     }
-
                     _managers.Clear();
                     break;
             }
