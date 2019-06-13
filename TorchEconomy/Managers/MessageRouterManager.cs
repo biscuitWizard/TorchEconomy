@@ -1,10 +1,12 @@
 using System;
 using System.Collections.Generic;
 using NLog;
+using Sandbox.Definitions;
 using Sandbox.ModAPI;
 using TorchEconomy.Data;
 using TorchEconomy.Messages;
 using TorchEconomy.Messages.Accounts;
+using VRage.Network;
 
 namespace TorchEconomy.Managers
 {
@@ -13,6 +15,7 @@ namespace TorchEconomy.Managers
 		private static readonly Logger Log = LogManager.GetLogger("Economy.Managers.Messages");
 		private readonly Dictionary<Type, List<Action<BaseMessage>>> _subscriptions 
 			= new Dictionary<Type, List<Action<BaseMessage>>>();
+		private readonly Dictionary<EndpointId, ulong> _steamEndpointMapping = new Dictionary<EndpointId, ulong>();
 		
 		public MessageRouterManager(IConnectionFactory connectionFactory) : base(connectionFactory)
 		{
@@ -59,11 +62,11 @@ namespace TorchEconomy.Managers
 
 		public void SendResponse<TResponse>(TResponse message) where TResponse : BaseResponseMessage
 		{
-			if (message.OriginalMessage.ResponseChannelOverride.HasValue)
-			{
-				var bytes = message.ToBytes();
-				MyAPIGateway.Multiplayer.SendMessageToOthers(message.OriginalMessage.ResponseChannelOverride.Value, bytes);
-			}
+			var recipient = message.OriginalMessage.SenderId;
+			var channel = message.OriginalMessage.ResponseChannelOverride ?? EconomyConfig.ModChannelId;
+			var bytes = message.ToBytes();
+
+			MyAPIGateway.Multiplayer.SendMessageTo(channel, bytes, recipient, true);
 		}
 		
 		/// <summary>
@@ -78,6 +81,9 @@ namespace TorchEconomy.Managers
 			{
 				var baseMessage = MyAPIGateway.Utilities.SerializeFromBinary<BaseMessage>(data);
 
+				var senderEndpoint = MyEventContext.Current.Sender;
+				baseMessage.SenderId = senderEndpoint.Value;
+				
 				if (Config.ForceTransactionCheck)
 				{
 					if (baseMessage.TransactionKey != Config.TransactionKey)

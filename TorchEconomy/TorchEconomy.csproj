@@ -132,6 +132,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\GameBinaries\VRage.Render.dll</HintPath>
     </Reference>
+    <Reference Include="VRage.Steam, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
+      <HintPath>..\GameBinaries\VRage.Steam.dll</HintPath>
+    </Reference>
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>

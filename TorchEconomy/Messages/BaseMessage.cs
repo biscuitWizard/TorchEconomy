@@ -11,6 +11,11 @@ namespace TorchEconomy.Messages
 	[ProtoInclude(4, typeof(GetConfigMessage))]
 	public abstract class BaseMessage
 	{
+		/// <summary>
+		/// This is assigned by the MessageRouter through the event context.
+		/// </summary>
+		public ulong SenderId { get; set; }
+		
 		[ProtoMember(101)]
 		public abstract MessageTypeEnum MessageType { get; }
 		
@@ -23,10 +28,6 @@ namespace TorchEconomy.Messages
 		/// <summary>
 		/// Can be used to tell Torch Economy to respond to this message
 		/// on a different channel than normal.
-		///
-		/// If this isn't specified, Torch Econ will NOT send a response!!
-		///
-		/// This is because I cannot tell where a message is from, so it has to be broadcast.
 		/// </summary>
 		[ProtoMember(103)]
 		public ushort? ResponseChannelOverride { get; set; }
