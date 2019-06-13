@@ -29,6 +29,19 @@ namespace TorchEconomy.Managers
             _multiplayerManager.PlayerJoined += PlayerJoined;
         }
 
+        public Promise<IEnumerable<TransactionDataObject>> GetTransactions(ulong accountId)
+        {
+            return new Promise<IEnumerable<TransactionDataObject>>((resolve, reject) =>
+            {
+                using (var connection = ConnectionFactory.Open())
+                {
+                    resolve(connection.Query<TransactionDataObject>(
+                        SQL.SELECT_TRANSACTIONS,
+                        new { accountId = accountId }));
+                }
+            });
+        }
+
         public Promise<AccountDataObject> CreateAccount(ulong playerId, decimal initialBalance, bool isNpc = false)
         {
             return new Promise<AccountDataObject>((resolve, reject) =>

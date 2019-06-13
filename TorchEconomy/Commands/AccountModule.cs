@@ -17,6 +17,58 @@ namespace TorchEconomy.Commands
     public class AccountModule : EconomyCommandModule
     {
         private static readonly Logger Log = LogManager.GetLogger("Economy.Commands.Account");
+
+        [Command("log", "<account id>: Lists the last 50 transactions to happen on the specified account.")]
+        public void TransactionLog(string accountIdString)
+        {
+            var manager = GetManager<AccountsManager>();
+            var playerId = Context.Player.SteamUserId;
+
+            if (!ulong.TryParse(accountIdString, out var accountId)
+                || accountId <= 0)
+            {
+                Context.Respond("Invalid account ID entered. Must be a number above 0.");
+                return;
+            }
+
+            manager.GetAccount(accountId).Then(account =>
+            {
+                if (account.PlayerIdentity != playerId)
+                {
+                    Context.Respond("[ACCESS DENIED] This account does not belong to you.");
+                    return;
+                }
+
+                manager.GetTransactions(accountId).Then(logs =>
+                {
+                    var responseBuilder = new StringBuilder($"Transaction Log for Acct#{accountId}:");
+                    responseBuilder.AppendLine();
+
+                    foreach (var log in logs.Take(50))
+                    {
+                        var operation = log.ToAccountId == accountId ? "[RECV]" : "[SEND]";
+                        var to = log.ToAccountId == AccountsManager.SystemAccountId 
+                            ? "SYSTEM" : log.ToAccountId.ToString();
+                        var from = log.FromAccountId == AccountsManager.SystemAccountId
+                            ? "SYSTEM"
+                            : log.FromAccountId.ToString();
+                        
+                        responseBuilder.AppendLine(
+                            $"{operation} {to}==>{from} [${log.TransactionAmount}]: {log.Reason}");
+                    }
+                    
+                    EconomyPlugin.Instance
+                        .Torch
+                        .CurrentSession?
+                        .Managers?
+                        .GetManager<IChatManagerServer>()?
+                        .SendMessageAsOther("Server",
+                            responseBuilder.ToString(),
+                            MyFontEnum.Blue,
+                            playerId);
+                });
+            });
+        }
         
         [Command("balance", "Lists current bank account balance.")]
         public void Balance()
