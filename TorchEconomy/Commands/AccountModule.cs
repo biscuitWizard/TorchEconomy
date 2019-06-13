@@ -151,28 +151,13 @@ namespace TorchEconomy.Commands
                             
                             manager.AdjustAccountBalance(toAccount.Id, amount, fromAccount.Id, 
                                 $"{Context.Player.DisplayName} is transferring {amount}.");
+                           
+                            ModCommunication.SendMessageTo(new DialogMessage("Transfer Received", null, 
+                                $"You have been sent {amount}{EconomyPlugin.Instance.Config.CurrencyAbbreviation} by {Context.Player.DisplayName}."), toPlayerId);
+                            ModCommunication.SendMessageTo(new DialogMessage("Transfer Sent", null, 
+                                $"You have sent {amount}{EconomyPlugin.Instance.Config.CurrencyAbbreviation} to {targetPlayerNameOrId}."), fromPlayerId);
                         });
                 });
-
-            var connectionFactory = new MysqlConnectionFactory();
-            using (var connection = connectionFactory.Open())
-            {
-                var playerAccount = connection.QueryFirst<AccountDataObject>(
-                    SQL.SELECT_ACCOUNTS,
-                    new { playerId = fromPlayerId });
-                
-
-                connection.Execute(
-                    SQL.MUTATE_ACCOUNT_BALANCE,
-                    new { playerId = toPlayerId, amount });
-
-                var inverseAmount = amount * -1;
-                connection.Execute(
-                    SQL.MUTATE_ACCOUNT_BALANCE,
-                    new { playerId = fromPlayerId, inverseAmount });
-
-                ModCommunication.SendMessageTo(new DialogMessage("Transfer Received", null, $"You have been sent {amount}{EconomyPlugin.Instance.Config.CurrencyAbbreviation} by {Context.Player.DisplayName}."), toPlayerId);
-            }
         }
     }
 }
