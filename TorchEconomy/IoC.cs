@@ -1,0 +1,61 @@
+using System;
+using System.Linq;
+using System.Reflection;
+using StructureMap;
+using StructureMap.Graph;
+using StructureMap.Graph.Scanning;
+using Torch.API.Managers;
+using TorchEconomy.Data;
+using TorchEconomy.Managers;
+
+namespace TorchEconomy
+{
+    internal class SingletonConvention<TPluginFamily> : IRegistrationConvention
+    {
+        public void ScanTypes(TypeSet types, Registry registry)
+        {
+            foreach (var type in types.FindTypes(TypeClassification.Concretes | TypeClassification.Closed)
+                .Where(type => typeof(TPluginFamily).IsAssignableFrom(type)))
+            {
+                registry.ForSingletonOf(type);
+                registry.For(typeof(TPluginFamily)).Use(c => c.GetInstance(type));
+                //registry.For(type).Use(c => c.GetInstance(type));
+            }
+        }
+    }
+    
+    internal static class IoC
+    {
+        public static void Initialize(this IContainer container)
+        {
+            container.Configure(_ =>
+            {
+                _.For<IConnectionFactory>()
+                    .Use<MysqlConnectionFactory>();
+                
+                _.Scan(s =>
+                {
+                    // Assembly to scan.
+                    var assemblies = AppDomain
+                        .CurrentDomain
+                        .GetAssemblies()
+                        .Where(a => a.FullName.StartsWith("TorchEconomy."));
+                    foreach (var assembly in assemblies)
+                        s.Assembly(assembly);
+
+                    // Registration conventions.
+                    s.AddAllTypesOf<BaseManager>();
+                    s.WithDefaultConventions();
+                });
+
+                _.For<IMultiplayerManagerServer>()
+                    .Use((context) => EconomyPlugin
+                        .Instance
+                        .Torch
+                        .CurrentSession
+                        .Managers
+                        .GetManager<IMultiplayerManagerServer>());
+            });
+        }
+    }
+}

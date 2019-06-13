@@ -1,0 +1,16 @@
+﻿<UserControl x:Class="TorchEconomy.EconomyControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:torchEconomy="clr-namespace:TorchEconomy"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.DataContext>
+        <torchEconomy:EconomyConfig/>
+    </UserControl.DataContext>
+    <StackPanel>
+        <Label Content="Connection String"/>
+        <TextBox Text="{Binding ConnectionString}" AcceptsReturn="true" MinLines="5" TextWrapping="Wrap" VerticalScrollBarVisibility="Visible"/>
+    </StackPanel>
+</UserControl>

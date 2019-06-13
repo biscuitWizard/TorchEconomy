@@ -1,0 +1,98 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+    <PropertyGroup>
+        <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+        <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+        <ProjectGuid>{68DFFAFD-2131-402F-B89E-1C5C92D4CED9}</ProjectGuid>
+        <OutputType>Library</OutputType>
+        <AppDesignerFolder>Properties</AppDesignerFolder>
+        <RootNamespace>TorchEconomy.Markets</RootNamespace>
+        <AssemblyName>TorchEconomy.Markets</AssemblyName>
+        <TargetFrameworkVersion>v4.7.1</TargetFrameworkVersion>
+        <FileAlignment>512</FileAlignment>
+    </PropertyGroup>
+    <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+        <PlatformTarget>AnyCPU</PlatformTarget>
+        <DebugSymbols>true</DebugSymbols>
+        <DebugType>full</DebugType>
+        <Optimize>false</Optimize>
+        <OutputPath>bin\Debug\</OutputPath>
+        <DefineConstants>DEBUG;TRACE</DefineConstants>
+        <ErrorReport>prompt</ErrorReport>
+        <WarningLevel>4</WarningLevel>
+    </PropertyGroup>
+    <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+        <PlatformTarget>AnyCPU</PlatformTarget>
+        <DebugType>pdbonly</DebugType>
+        <Optimize>true</Optimize>
+        <OutputPath>bin\Release\</OutputPath>
+        <DefineConstants>TRACE</DefineConstants>
+        <ErrorReport>prompt</ErrorReport>
+        <WarningLevel>4</WarningLevel>
+    </PropertyGroup>
+    <ItemGroup>
+        <Reference Include="Dapper, Version=1.60.0.0, Culture=neutral, PublicKeyToken=null">
+          <HintPath>..\packages\Dapper.1.60.6\lib\net451\Dapper.dll</HintPath>
+          <Private>True</Private>
+        </Reference>
+        <Reference Include="Microsoft.CSharp" />
+        <Reference Include="NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c">
+          <HintPath>..\GameBinaries\NLog.dll</HintPath>
+        </Reference>
+        <Reference Include="PresentationFramework" />
+        <Reference Include="Sandbox.Game, Version=0.1.1.0, Culture=neutral, PublicKeyToken=null">
+          <HintPath>..\GameBinaries\Sandbox.Game.dll</HintPath>
+        </Reference>
+        <Reference Include="System" />
+        <Reference Include="System.Core" />
+        <Reference Include="System.Data" />
+        <Reference Include="System.Xml" />
+        <Reference Include="System.Xml.Linq" />
+        <Reference Include="Torch, Version=1.3.1.47, Culture=neutral, PublicKeyToken=null">
+          <HintPath>..\TorchBinaries\Torch.dll</HintPath>
+        </Reference>
+        <Reference Include="Torch.API, Version=1.3.1.47, Culture=neutral, PublicKeyToken=null">
+          <HintPath>..\TorchBinaries\Torch.API.dll</HintPath>
+        </Reference>
+        <Reference Include="VRage, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
+          <HintPath>..\GameBinaries\VRage.dll</HintPath>
+        </Reference>
+        <Reference Include="VRage.Game, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
+          <HintPath>..\GameBinaries\VRage.Game.dll</HintPath>
+        </Reference>
+        <Reference Include="VRage.Library, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
+          <HintPath>..\GameBinaries\VRage.Library.dll</HintPath>
+        </Reference>
+        <Reference Include="VRage.Math, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
+          <HintPath>..\GameBinaries\VRage.Math.dll</HintPath>
+        </Reference>
+    </ItemGroup>
+    <ItemGroup>
+        <Compile Include="Commands\AdminModule.cs" />
+        <Compile Include="Commands\TradeZoneModule.cs" />
+        <Compile Include="EconomyMarketConfig.cs" />
+        <Compile Include="EconomyMarketsPlugin.cs" />
+        <Compile Include="Managers\MarketSimManager.cs" />
+        <Compile Include="Managers\TradeZoneManager.cs" />
+        <Compile Include="Properties\AssemblyInfo.cs" />
+    </ItemGroup>
+    <ItemGroup>
+      <ProjectReference Include="..\TorchEconomy\TorchEconomy.csproj">
+        <Project>{8eefdd28-d4a1-4256-aa68-44b288989f61}</Project>
+        <Name>TorchEconomy</Name>
+      </ProjectReference>
+    </ItemGroup>
+    <ItemGroup>
+      <None Include="packages.config" />
+    </ItemGroup>
+    <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+    <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+         Other similar extension points exist, see Microsoft.Common.targets.
+    <Target Name="BeforeBuild">
+    </Target>
+    <Target Name="AfterBuild">
+    </Target>
+    -->
+
+</Project>
