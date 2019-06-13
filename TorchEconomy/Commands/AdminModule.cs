@@ -1,5 +1,7 @@
 using Torch.Commands;
 using Torch.Commands.Permissions;
+using Torch.Mod;
+using Torch.Mod.Messages;
 using TorchEconomy.Managers;
 using VRage.Game.ModAPI;
 
@@ -13,7 +15,8 @@ namespace TorchEconomy.Commands
 		public void GiveCurrency(string playerNameOrId, decimal amount)
 		{
 			ulong.TryParse(playerNameOrId, out var toPlayerId);
-			toPlayerId = Utilities.GetPlayerByNameOrId(playerNameOrId)?.SteamUserId ?? toPlayerId;
+			var player = Utilities.GetPlayerByNameOrId(playerNameOrId);
+			toPlayerId = player?.SteamUserId ?? toPlayerId;
 
 			if (toPlayerId == 0)
 			{
@@ -28,7 +31,9 @@ namespace TorchEconomy.Commands
 				{
 					manager.AdjustAccountBalance(result.Id, amount);
 
-					Context.Respond($"Gave player money.");
+					Context.Respond($"Gave {player?.DisplayName} ${amount} {Config.CurrencyName}.");
+					ModCommunication.SendMessageTo(new DialogMessage("Transfer Received", null, 
+						$"You have been sent {amount}{EconomyPlugin.Instance.Config.CurrencyAbbreviation} by SYSTEM."), toPlayerId);
 				});
 		}
 	}

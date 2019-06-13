@@ -54,7 +54,7 @@ namespace TorchEconomy.Commands
                             : log.FromAccountId.ToString();
                         
                         responseBuilder.AppendLine(
-                            $"{operation} {to}==>{from} [${log.TransactionAmount}]: {log.Reason}");
+                            $"{operation} {from}==>{to} [${log.TransactionAmount}]: {log.Reason}");
                     }
                     
                     EconomyPlugin.Instance
