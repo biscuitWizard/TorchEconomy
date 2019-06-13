@@ -15,6 +15,16 @@ Frontier Economy's code, expanding and modifying it to make it a server-side onl
 * ADO.NET backend integration. All data is stored on SQL providers allowing external integration through web portals.
 * Full transaction logs for every monetary exchange that takes place.
 
+### Commands
+* !econ balance: Displays the balance for all accounts attached to your player.
+* !econ logs <account#OrName>: Displays a transaction log for your account limited to the last 50 transactions.
+* !econ accounts primary <account#OrName>: Sets the provided account # as your primary account to send/receive money from.
+* !econ accounts close <account#OrName>: Closes the account # provided it has 0 money.
+* !econ accounts open <accountName>: Opens a new account with the provided nickname. Players are limited to 10 of these.
+* !econ transfer <playerNameOrId> <amount>: Transfers money from your primary account to the targeted player's primary account.
+
+* !admin accounts give <playerNameOrId> <amount>: Admin command to give a player money. Sends it to their primary account. Amount may be negative.
+
 ### Using the API
 Send requests to DS using the normal APIGateway (the Protobuf classes are under TorchEconomy/Messages). Messages from other mods should include the TransactionKey if ForceTransactionCheck is enabled in Torch Economy. Responses from Torch will be returned specifically to the client that requested them.
 
