@@ -28,25 +28,29 @@ namespace TorchEconomy.Commands
             var responseBuilder = new StringBuilder("Your Accounts:");
             responseBuilder.AppendLine();
 
-            var accounts = manager.GetAccounts(playerId).ToArray();
-            foreach (var account in accounts)
+            manager.GetAccounts(playerId).Then(result =>
             {
-                if (account.IsPrimary)
-                    responseBuilder.AppendLine($"+ Acct#{account.Id} [PRIMARY]: ${account.Balance}");
-                responseBuilder.AppendLine($"+ Acct#{account.Id}: ${account.Balance}");
-            }
+                var accounts = result.ToArray();
+                
+                foreach (var account in accounts)
+                {
+                    if (account.IsPrimary)
+                        responseBuilder.AppendLine($"+ Acct#{account.Id} [PRIMARY]: ${account.Balance}");
+                    responseBuilder.AppendLine($"+ Acct#{account.Id}: ${account.Balance}");
+                }
 
-            responseBuilder.AppendLine($"Accounts Total: {accounts.Sum(a => a.Balance)}");
+                responseBuilder.AppendLine($"Accounts Total: {accounts.Sum(a => a.Balance)}");
             
-            EconomyPlugin.Instance
-                .Torch
-                .CurrentSession?
-                .Managers?
-                .GetManager<IChatManagerServer>()?
-                .SendMessageAsOther("Server",
-                    responseBuilder.ToString(),
-                    MyFontEnum.Green,
-                    playerId);
+                EconomyPlugin.Instance
+                    .Torch
+                    .CurrentSession?
+                    .Managers?
+                    .GetManager<IChatManagerServer>()?
+                    .SendMessageAsOther("Server",
+                        responseBuilder.ToString(),
+                        MyFontEnum.Green,
+                        playerId);
+            });
         }
 
         [Command("give", "Alias for /transfer <target> <amount>")]

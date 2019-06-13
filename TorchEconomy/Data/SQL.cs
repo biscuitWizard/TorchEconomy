@@ -20,7 +20,7 @@
             
         public const string MUTATE_ACCOUNT_PRIMARY
             = @"
-            UPDATE `Account` SET `IsPrimary` = 0 WHERE `PlayerIdentity` = @playerId AND `Id` > 0; 
+            UPDATE `Account` SET `IsPrimary` = 0 WHERE `PlayerIdentity` = (SELECT `PlayerIdentity` FROM `Account` WHERE `Id`=@id) AND `Id` > 0; 
             UPDATE `Account` SET `IsPrimary` = @isPrimary WHERE `Id`=@id;";
         
         #endregion

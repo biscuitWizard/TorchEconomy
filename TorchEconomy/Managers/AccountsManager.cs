@@ -25,70 +25,156 @@ namespace TorchEconomy.Managers
             _multiplayerManager.PlayerJoined += PlayerJoined;
         }
 
-        public AccountDataObject GetPrimaryAccount(ulong playerId)
+        public Promise<AccountDataObject> CreateAccount(ulong playerId, decimal initialBalance, bool isNpc = false)
+        {
+            return new Promise<AccountDataObject>((resolve, reject) =>
+            {
+                using (var connection = ConnectionFactory.Open())
+                {
+                    var primaryAccount = connection.QueryFirst<AccountDataObject>(
+                        SQL.SELECT_PRIMARY_ACCOUNT,
+                        new {playerId = playerId});
+
+                    // Is this their first account?
+                    var firstAccount = primaryAccount == null;
+
+                    connection.Execute(
+                        SQL.INSERT_ACCOUNT,
+                        new
+                        {
+                            playerId = playerId, balance = initialBalance,
+                            isNPC = isNpc, isPrimary = firstAccount
+                        });
+                    
+                    primaryAccount = connection.QueryFirst<AccountDataObject>(
+                        SQL.SELECT_PRIMARY_ACCOUNT,
+                        new {playerId = playerId});
+                    resolve(primaryAccount);
+                }
+            });
+        }
+
+        /// <summary>
+        /// Gets a player's primary account.
+        /// </summary>
+        /// <param name="playerId"></param>
+        /// <returns></returns>
+        public Promise<AccountDataObject> GetPrimaryAccount(ulong playerId)
+        {
+            return new Promise<AccountDataObject>((resolve, reject) =>
+            {
+                using (var connection = ConnectionFactory.Open())
+                {
+                    resolve(connection.QueryFirst<AccountDataObject>(
+                        SQL.SELECT_PRIMARY_ACCOUNT,
+                        new {playerId = playerId}));
+                }
+            });
+        }
+
+        /// <summary>
+        /// Gets a specific account by that account's id.
+        /// </summary>
+        /// <param name="accountId"></param>
+        /// <returns></returns>
+        public Promise<AccountDataObject> GetAccount(ulong accountId)
+        {
+            return new Promise<AccountDataObject>((resolve, reject) =>
+            {
+                using (var connection = ConnectionFactory.Open())
+                {
+                    resolve(connection.QueryFirst<AccountDataObject>(
+                        SQL.SELECT_ACCOUNT,
+                        new {id = accountId}));
+                }
+            });
+        }
+
+        /// <summary>
+        /// Gets all accounts associated with a player.
+        /// </summary>
+        /// <param name="playerId"></param>
+        /// <returns></returns>
+        public Promise<IEnumerable<AccountDataObject>> GetAccounts(ulong playerId)
+        {
+            return new Promise<IEnumerable<AccountDataObject>>((resolve, reject) =>
+            {
+                using (var connection = ConnectionFactory.Open())
+                {
+                    resolve(connection.Query<AccountDataObject>(
+                        SQL.SELECT_ACCOUNTS,
+                        new {playerId = playerId}));
+                }
+            });
+        }
+
+        /// <summary>
+        /// Gets a player's balance from a specific account.
+        /// </summary>
+        /// <param name="accountId"></param>
+        /// <returns></returns>
+        public Promise<decimal> GetAccountBalance(ulong accountId)
+        {
+            return GetAccount(accountId).Then(result => result.Balance) as Promise<decimal>;
+        }
+
+        /// <summary>
+        /// Gets a player's balance from their primary account.
+        /// </summary>
+        /// <param name="playerId"></param>
+        /// <returns></returns>
+        public Promise<decimal> GetPrimaryAccountBalance(ulong playerId)
+        {
+            return GetPrimaryAccount(playerId).Then(result => result.Balance) as Promise<decimal>;
+        }
+
+        /// <summary>
+        /// Adjusts a player's account balance and creates the associated
+        /// transaction log to accompany it.
+        /// </summary>
+        /// <param name="accountId"></param>
+        /// <param name="amount"></param>
+        /// <param name="optionalReason"></param>
+        public void AdjustAccountBalance(ulong accountId, decimal amount, string optionalReason = null)
         {
             using (var connection = ConnectionFactory.Open())
             {
-                return connection.QueryFirst<AccountDataObject>(
-                    SQL.SELECT_PRIMARY_ACCOUNT, 
-                    new {playerId = playerId});
+                connection.ExecuteAsync(
+                    SQL.MUTATE_ACCOUNT_BALANCE,
+                    new {id = accountId, amount = amount});
             }
         }
 
-        public AccountDataObject GetAccount(ulong accountId)
+        /// <summary>
+        /// Sets a player's accountID as primary, and sets a player's all other accounts as non-primary.
+        /// </summary>
+        /// <param name="accountId"></param>
+        public void SetAccountAsPrimary(ulong accountId)
         {
             using (var connection = ConnectionFactory.Open())
             {
-                return connection.QueryFirst<AccountDataObject>(
-                    SQL.SELECT_ACCOUNT,
-                    new {id = accountId});
+                connection.ExecuteAsync(
+                    SQL.MUTATE_ACCOUNT_PRIMARY,
+                    new {id = accountId });
             }
-        }
-
-        public IEnumerable<AccountDataObject> GetAccounts(ulong playerId)
-        {
-            using (var connection = ConnectionFactory.Open())
-            {
-                return connection.Query<AccountDataObject>(
-                    SQL.SELECT_ACCOUNTS,
-                    new {playerId = playerId});
-            }
-        }
-
-        public decimal GetAccountBalance(ulong accountId)
-        {
-            return GetAccount(accountId).Balance;
-        }
-
-        public decimal GetPrimaryAccountBalance(ulong playerId)
-        {
-            return GetPrimaryAccount(playerId).Balance;
-        }
-
-        public void AdjustAccountBalance(ulong accountId, decimal amount)
-        {
-            
         }
         
         private void PlayerJoined(IPlayer player)
         {
-            using(var connection = ConnectionFactory.Open())
+            GetPrimaryAccount(player.SteamId).Then(result =>
             {
-                var playerAccount = connection.QueryFirstOrDefault<AccountDataObject>(
-                    SQL.SELECT_ACCOUNTS, 
-                    new { playerId = player.SteamId });
-
-                if(playerAccount == null)
+                if (result != null)
                 {
-                    Log.Info("Creating Bank Account for Player# " + player.SteamId);
-                    Log.Info(string.Format("Allocating {0} to Player# {1}", Config.StartingFunds, player.SteamId));
-
-                    // Create a new account with the starting money defined in config.
-                    connection.Execute(
-                        SQL.INSERT_ACCOUNT,
-                        new { playerId = player.SteamId, balance = Config.StartingFunds, isNPC = false, IsPrimary = true });
+                    // They already have an account. Ignore them.
+                    return;
                 }
-            }
+
+                Log.Info("Creating Bank Account for Player# " + player.SteamId);
+                Log.Info($"Allocating {Config.StartingFunds} to Player#{player.SteamId}");
+
+                // Create a new account with the starting money defined in config.
+                CreateAccount(player.SteamId, Config.StartingFunds, false);
+            });
         }
     }
 }

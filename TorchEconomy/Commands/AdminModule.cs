@@ -22,10 +22,14 @@ namespace TorchEconomy.Commands
 			}
 
 			var manager = GetManager<AccountsManager>();
-			var primaryAccount = manager.GetPrimaryAccount(toPlayerId);
-			manager.AdjustAccountBalance(primaryAccount.Id, amount);
+			manager
+				.GetPrimaryAccount(toPlayerId)
+				.Then(result =>
+				{
+					manager.AdjustAccountBalance(result.Id, amount);
 
-			Context.Respond($"Gave player money.");
+					Context.Respond($"Gave player money.");
+				});
 		}
 	}
 }
