@@ -13,6 +13,7 @@ Frontier Economy's code, expanding and modifying it to make it a server-side onl
 * Extended gameplay provided through addon plugins.
 * Fully configurable through Torch's WPF UI (with currency names, and more being tracked this way.)
 * ADO.NET backend integration. All data is stored on SQL providers allowing external integration through web portals.
+* Full transaction logs for every monetary exchange that takes place.
 
 ## TorchEconomy.Markets (In Progress)
 
