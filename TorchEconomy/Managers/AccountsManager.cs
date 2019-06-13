@@ -1,15 +1,19 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Dapper;
 using NLog.Fluent;
 using Torch.API;
 using Torch.API.Managers;
 using TorchEconomy.Data;
 using TorchEconomy.Data.DataObjects;
+using VRage;
 
 namespace TorchEconomy.Managers
 {
     public class AccountsManager : BaseManager
     {
+        public const ulong SystemAccountId = ulong.MaxValue;
+        
         private readonly IMultiplayerManagerServer _multiplayerManager;
 
         public AccountsManager(IConnectionFactory connectionFactory, IMultiplayerManagerServer multiplayerManager) 
@@ -49,6 +53,16 @@ namespace TorchEconomy.Managers
                     primaryAccount = connection.QueryFirst<AccountDataObject>(
                         SQL.SELECT_PRIMARY_ACCOUNT,
                         new {playerId = playerId});
+                    
+                    // Create a transaction log.
+                    connection.ExecuteAsync(
+                        SQL.INSERT_TRANSACTION,
+                        new
+                        {
+                            toAccountId = primaryAccount.Id, fromAccountId = SystemAccountId,
+                            transactionAmount = initialBalance, transactedOn = DateTime.UtcNow.ToUnixTimestamp(),
+                            reason = "Initial account creation credit"
+                        });
                     resolve(primaryAccount);
                 }
             });
@@ -135,13 +149,26 @@ namespace TorchEconomy.Managers
         /// <param name="accountId"></param>
         /// <param name="amount"></param>
         /// <param name="optionalReason"></param>
-        public void AdjustAccountBalance(ulong accountId, decimal amount, string optionalReason = null)
+        /// <param name="fromAccountId">If this is specified, a transaction log will be generated.</param>
+        public void AdjustAccountBalance(ulong accountId, decimal amount, 
+            ulong? fromAccountId = null, string optionalReason = null)
         {
+            var transactionDate = DateTime.UtcNow.ToUnixTimestamp();
             using (var connection = ConnectionFactory.Open())
             {
                 connection.ExecuteAsync(
                     SQL.MUTATE_ACCOUNT_BALANCE,
                     new {id = accountId, amount = amount});
+
+                var sourceAccountId = fromAccountId ?? SystemAccountId;
+                connection.ExecuteAsync(
+                    SQL.INSERT_TRANSACTION,
+                    new
+                    {
+                        toAccountId = accountId, fromAccountId = sourceAccountId,
+                        transactionAmount = amount, transactedOn = transactionDate,
+                        reason = optionalReason
+                    });
             }
         }
 
@@ -169,7 +196,7 @@ namespace TorchEconomy.Managers
                     return;
                 }
 
-                Log.Info("Creating Bank Account for Player# " + player.SteamId);
+                Log.Info("Creating Bank Account for Player#" + player.SteamId);
                 Log.Info($"Allocating {Config.StartingFunds} to Player#{player.SteamId}");
 
                 // Create a new account with the starting money defined in config.

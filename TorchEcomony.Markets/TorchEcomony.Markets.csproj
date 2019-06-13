@@ -71,6 +71,8 @@
     <ItemGroup>
         <Compile Include="Commands\AdminModule.cs" />
         <Compile Include="Commands\TradeZoneModule.cs" />
+        <Compile Include="Data\DataObjects\MarketOrderDataObject.cs" />
+        <Compile Include="Data\DataObjects\TradeZoneDataObject.cs" />
         <Compile Include="EconomyMarketConfig.cs" />
         <Compile Include="EconomyMarketsPlugin.cs" />
         <Compile Include="Managers\BaseMarketManager.cs" />

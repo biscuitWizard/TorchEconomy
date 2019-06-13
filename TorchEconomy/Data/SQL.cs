@@ -25,6 +25,16 @@
         
         #endregion
         
+        #region Transactions
+
+        public const string SELECT_TRANSACTIONS
+            = "SELECT * FROM `Transaction` WHERE `FromAccountId`=@accountId OR `ToAccountId`=@accountId;";
+        
+        public const string INSERT_TRANSACTION
+            = @"INSERT INTO `Transaction` (`FromAccountId`,`ToAccountId`,`TransactionAmount`,`TransactedOn`,`Reason`) 
+             VALUES(@fromAccountId,@toAccountId,@transactionAmount,@transactedOn,@reason);";
+        #endregion
+        
         #region Trade Zones
         public const string INSERT_TRADEZONE
             = @"

@@ -6,6 +6,7 @@ using TorchEconomy;
 using TorchEconomy.Data;
 using TorchEconomy.Data.DataObjects;
 using TorchEconomy.Managers;
+using TorchEconomy.Markets.Data.DataObjects;
 
 namespace TorchEconomy.Markets.Managers
 {

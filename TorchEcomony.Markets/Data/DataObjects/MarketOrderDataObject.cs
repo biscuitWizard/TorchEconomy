@@ -1,6 +1,6 @@
 ﻿using TorchEconomy.Data.Types;
 
-namespace TorchEconomy.Data.DataObjects
+namespace TorchEconomy.Markets.Data.DataObjects
 {
     public class MarketOrderDataObject
     {

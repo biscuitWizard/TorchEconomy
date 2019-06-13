@@ -131,7 +131,6 @@
     <Compile Include="Commands\AccountModule.cs" />
     <Compile Include="Commands\AdminModule.cs" />
     <Compile Include="Data\IConnectionFactory.cs" />
-    <Compile Include="Data\DataObjects\MarketOrderDataObject.cs" />
     <Compile Include="Data\Models\MarketValueItem.cs" />
     <Compile Include="Data\MysqlConnectionFactory.cs" />
     <Compile Include="Data\SQL.cs" />
@@ -141,7 +140,6 @@
     <Compile Include="EconomyPlugin.cs" />
     <Compile Include="Data\DataObjects\AccountDataObject.cs" />
     <Compile Include="Data\DataObjects\ShipSaleDataObject.cs" />
-    <Compile Include="Data\DataObjects\TradeZoneDataObject.cs" />
     <Compile Include="Data\DataObjects\TransactionDataObject.cs" />
     <Compile Include="EconomyPluginBase.cs" />
     <Compile Include="HudAPIv2.cs" />
