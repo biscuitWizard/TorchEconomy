@@ -22,7 +22,7 @@ namespace TorchEconomy
 
 		public IConnectionFactory GetConnectionFactory()
 		{
-			return _container.GetInstance<IConnectionFactory>();
+			return GetContainer().GetInstance<IConnectionFactory>();
 		}
 	}
 }
