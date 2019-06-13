@@ -112,7 +112,7 @@ namespace TorchEconomy.Markets.Managers
                     {
                         cost += GetOrCalculateUniversalItemValue(prereq.Id) * (decimal) prereq.Amount;
                     }
-                    catch (KeyNotFoundException e)
+                    catch (KeyNotFoundException)
                     {
                         Log.Warn($"Ignoring blueprint for '{result.Id}', unable to find recipe for prerequisite '{prereq.Id}'..");
                         skipBlueprint = true;

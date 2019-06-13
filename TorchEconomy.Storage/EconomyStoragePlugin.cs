@@ -15,7 +15,6 @@ namespace TorchEconomy.Storage
         
 		public static EconomyStoragePlugin Instance;
 		private Persistent<EconomyStorageConfig> _config;
-		private TorchSessionManager _sessionManager;
 		private UserControl _control;
 		
 		

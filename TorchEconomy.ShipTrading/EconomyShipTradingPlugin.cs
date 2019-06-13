@@ -15,7 +15,6 @@ namespace TorchEconomy.ShipTrading
         
 		public static EconomyShipTradingPlugin Instance;
 		private Persistent<EconomyShipTradingConfig> _config;
-		private TorchSessionManager _sessionManager;
 		private UserControl _control;
 		
 		

@@ -15,7 +15,6 @@ namespace TorchEconomy.WebAPI
         
 		public static EconomyWebAPIPlugin Instance;
 		private Persistent<EconomyWebAPIConfig> _config;
-		private TorchSessionManager _sessionManager;
 		private UserControl _control;
 		
 		

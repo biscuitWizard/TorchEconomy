@@ -114,7 +114,7 @@ namespace TorchEconomy.Managers
 			}
 			catch (Exception e)
 			{
-				Log.Error($"Unable to deserialize message with length: {data.Length}", e);
+				Log.Error(e, $"Unable to deserialize message with length: {data.Length}");
 			}
 		}
 	}

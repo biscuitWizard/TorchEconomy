@@ -15,7 +15,6 @@ namespace TorchEconomy.Markets
         
 		public static EconomyMarketsPlugin Instance;
 		private Persistent<EconomyMarketConfig> _config;
-		private TorchSessionManager _sessionManager;
 		private UserControl _control;
 		
 		
