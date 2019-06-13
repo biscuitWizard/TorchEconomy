@@ -32,14 +32,41 @@
         <WarningLevel>4</WarningLevel>
     </PropertyGroup>
     <ItemGroup>
+        <Reference Include="NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c">
+          <HintPath>..\GameBinaries\NLog.dll</HintPath>
+        </Reference>
+        <Reference Include="PresentationFramework" />
         <Reference Include="System" />
         <Reference Include="System.Core" />
         <Reference Include="System.Data" />
         <Reference Include="System.Xml" />
+        <Reference Include="Torch, Version=1.3.1.47, Culture=neutral, PublicKeyToken=null">
+          <HintPath>..\TorchBinaries\Torch.dll</HintPath>
+        </Reference>
+        <Reference Include="Torch.API, Version=1.3.1.47, Culture=neutral, PublicKeyToken=null">
+          <HintPath>..\TorchBinaries\Torch.API.dll</HintPath>
+        </Reference>
+        <Reference Include="VRage, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
+          <HintPath>..\GameBinaries\VRage.dll</HintPath>
+        </Reference>
+        <Reference Include="VRage.Game, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
+          <HintPath>..\GameBinaries\VRage.Game.dll</HintPath>
+        </Reference>
+        <Reference Include="VRage.Library, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
+          <HintPath>..\GameBinaries\VRage.Library.dll</HintPath>
+        </Reference>
     </ItemGroup>
     <ItemGroup>
         <Compile Include="Data\DataObjects\ShipSaleDataObject.cs" />
+        <Compile Include="EconomyShipTradingConfig.cs" />
+        <Compile Include="EconomyShipTradingPlugin.cs" />
         <Compile Include="Properties\AssemblyInfo.cs" />
+    </ItemGroup>
+    <ItemGroup>
+      <ProjectReference Include="..\TorchEconomy\TorchEconomy.csproj">
+        <Project>{8eefdd28-d4a1-4256-aa68-44b288989f61}</Project>
+        <Name>TorchEconomy</Name>
+      </ProjectReference>
     </ItemGroup>
     <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
     <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

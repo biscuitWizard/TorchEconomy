@@ -7,19 +7,19 @@ using Torch.API.Plugins;
 using Torch.Session;
 using Torch.Views;
 
-namespace TorchEconomy.Markets
+namespace TorchEconomy.WebAPI
 {
-	public class EconomyMarketsPlugin : EconomyPluginBase, IWpfPlugin
+	public class EconomyWebAPIPlugin : EconomyPluginBase, IWpfPlugin
 	{
-		private static readonly Logger Log = LogManager.GetLogger("Economy.Markets");
+		private static readonly Logger Log = LogManager.GetLogger("Economy.WebAPI");
         
-		public static EconomyMarketsPlugin Instance;
-		private Persistent<EconomyMarketConfig> _config;
+		public static EconomyWebAPIPlugin Instance;
+		private Persistent<EconomyWebAPIConfig> _config;
 		private TorchSessionManager _sessionManager;
 		private UserControl _control;
 		
 		
-		public EconomyMarketConfig Config => _config?.Data;
+		public EconomyWebAPIConfig Config => _config?.Data;
 		
 		/// <inheritdoc />
 		public UserControl GetControl() => _control ?? (_control = new PropertyGrid() { DataContext = Config/*, IsEnabled = false*/});
@@ -29,9 +29,9 @@ namespace TorchEconomy.Markets
 			base.Init(torch);
 			
 			// Load up the configuration
-			string path = Path.Combine(StoragePath, "Economy.Markets.cfg");
+			string path = Path.Combine(StoragePath, "Economy.WebAPI.cfg");
 			Log.Info($"Attempting to load config from {path}");
-			_config = Persistent<EconomyMarketConfig>.Load(path);
+			_config = Persistent<EconomyWebAPIConfig>.Load(path);
 		}
 	}
 }

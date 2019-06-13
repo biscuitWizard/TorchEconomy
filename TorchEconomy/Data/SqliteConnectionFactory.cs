@@ -6,8 +6,10 @@ namespace TorchEconomy.Data
 {
 	public class SqliteConnectionFactory : IConnectionFactory
 	{
-		private const string DbPath = "torch_economy.sqlite";
-		
+		private const string DatabaseName = "torch_economy.sqlite";
+
+		public static string DbPath => Path.Combine(EconomyPlugin.Instance.StoragePath, DatabaseName);
+
 		public IDbConnection Open()
 		{
 			if (!File.Exists(DbPath))

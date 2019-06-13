@@ -7,19 +7,19 @@ using Torch.API.Plugins;
 using Torch.Session;
 using Torch.Views;
 
-namespace TorchEconomy.Markets
+namespace TorchEconomy.Storage
 {
-	public class EconomyMarketsPlugin : EconomyPluginBase, IWpfPlugin
+	public class EconomyStoragePlugin : EconomyPluginBase, IWpfPlugin
 	{
-		private static readonly Logger Log = LogManager.GetLogger("Economy.Markets");
+		private static readonly Logger Log = LogManager.GetLogger("Economy.Storage");
         
-		public static EconomyMarketsPlugin Instance;
-		private Persistent<EconomyMarketConfig> _config;
+		public static EconomyStoragePlugin Instance;
+		private Persistent<EconomyStorageConfig> _config;
 		private TorchSessionManager _sessionManager;
 		private UserControl _control;
 		
 		
-		public EconomyMarketConfig Config => _config?.Data;
+		public EconomyStorageConfig Config => _config?.Data;
 		
 		/// <inheritdoc />
 		public UserControl GetControl() => _control ?? (_control = new PropertyGrid() { DataContext = Config/*, IsEnabled = false*/});
@@ -29,9 +29,9 @@ namespace TorchEconomy.Markets
 			base.Init(torch);
 			
 			// Load up the configuration
-			string path = Path.Combine(StoragePath, "Economy.Markets.cfg");
+			string path = Path.Combine(StoragePath, "Economy.Storage.cfg");
 			Log.Info($"Attempting to load config from {path}");
-			_config = Persistent<EconomyMarketConfig>.Load(path);
+			_config = Persistent<EconomyStorageConfig>.Load(path);
 		}
 	}
 }

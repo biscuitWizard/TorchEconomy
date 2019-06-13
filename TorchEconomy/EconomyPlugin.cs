@@ -3,6 +3,7 @@ using NLog;
 using Sandbox.Definitions;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Windows.Controls;
 using Sandbox.Engine.Voxels;
@@ -46,7 +47,9 @@ namespace TorchEconomy
             base.Init(torch);
 
             // Load up the configuration
-            _config = new Persistent<EconomyConfig>("", new EconomyConfig());
+            string path = Path.Combine(StoragePath, "Economy.cfg");
+            Log.Info($"Attempting to load config from {path}");
+            _config = Persistent<EconomyConfig>.Load(path);
 
             // Associate Torch containers for lifetime management.
             _sessionManager = Torch.Managers.GetManager(typeof(TorchSessionManager)) as TorchSessionManager;
