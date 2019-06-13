@@ -33,7 +33,7 @@ namespace TorchEconomy.Commands
 
             manager.GetAccount(accountId).Then(account =>
             {
-                if (account.PlayerIdentity != playerId)
+                if (account.PlayerId != playerId)
                 {
                     Context.Respond("[ACCESS DENIED] This account does not belong to you.");
                     return;

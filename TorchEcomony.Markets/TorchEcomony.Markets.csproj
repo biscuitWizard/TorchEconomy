@@ -41,6 +41,9 @@
           <HintPath>..\GameBinaries\NLog.dll</HintPath>
         </Reference>
         <Reference Include="PresentationFramework" />
+        <Reference Include="protobuf-net, Version=2.4.0.0, Culture=neutral, PublicKeyToken=257b51d87d2e4d67">
+          <HintPath>..\GameBinaries\protobuf-net.dll</HintPath>
+        </Reference>
         <Reference Include="Sandbox.Game, Version=0.1.1.0, Culture=neutral, PublicKeyToken=null">
           <HintPath>..\GameBinaries\Sandbox.Game.dll</HintPath>
         </Reference>
