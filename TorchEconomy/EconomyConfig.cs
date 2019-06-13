@@ -7,6 +7,8 @@ namespace TorchEconomy
     [ProtoContract]
     public class EconomyConfig : ViewModel
     {
+        public const ushort ModChannelId = 39384;
+        
         public EconomyConfig()
         {
             _startingFunds = 2000000;
@@ -41,6 +43,13 @@ namespace TorchEconomy
         {
             get => _transactionKey;
             set => SetValue(ref _transactionKey, value);
+        }
+
+        private bool _forceTransactionCheck;
+        public bool ForceTransactionCheck
+        {
+            get => _forceTransactionCheck;
+            set => SetValue(ref _forceTransactionCheck, value);
         }
     }
 }

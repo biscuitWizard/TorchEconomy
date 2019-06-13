@@ -23,9 +23,13 @@ namespace TorchEconomy.Messages
 		/// <summary>
 		/// Can be used to tell Torch Economy to respond to this message
 		/// on a different channel than normal.
+		///
+		/// If this isn't specified, Torch Econ will NOT send a response!!
+		///
+		/// This is because I cannot tell where a message is from, so it has to be broadcast.
 		/// </summary>
 		[ProtoMember(103)]
-		public long ResponseChannelOverride { get; set; }
+		public ushort? ResponseChannelOverride { get; set; }
 
 		public byte[] ToBytes()
 		{

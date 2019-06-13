@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Dapper;
 using NLog.Fluent;
+using Sandbox.ModAPI;
 using Torch.API;
 using Torch.API.Managers;
 using TorchEconomy.Data;
 using TorchEconomy.Data.DataObjects;
+using TorchEconomy.Messages.Accounts;
 using VRage;
 
 namespace TorchEconomy.Managers
@@ -15,8 +18,10 @@ namespace TorchEconomy.Managers
         public const ulong SystemAccountId = ulong.MaxValue;
         
         private readonly IMultiplayerManagerServer _multiplayerManager;
+        private MessageRouterManager _messageRouter;
 
-        public AccountsManager(IConnectionFactory connectionFactory, IMultiplayerManagerServer multiplayerManager) 
+        public AccountsManager(IConnectionFactory connectionFactory, 
+            IMultiplayerManagerServer multiplayerManager) 
             : base(connectionFactory)
         {
             _multiplayerManager = multiplayerManager;
@@ -27,7 +32,45 @@ namespace TorchEconomy.Managers
             base.Start();
 
             _multiplayerManager.PlayerJoined += PlayerJoined;
+            
+            _messageRouter = EconomyPlugin.GetManager<MessageRouterManager>();
+            
+            _messageRouter.Subscribe<AdjustBalanceMessage>(OnAdjustBalance);
+            _messageRouter.Subscribe<CreateAccountMessage>(OnCreateAccount);
+            _messageRouter.Subscribe<GetAccountsMessage>(OnGetAccounts);
         }
+
+#region Messages
+        private void OnGetAccounts(GetAccountsMessage message)
+        {
+            GetAccounts(message.PlayerId)
+                .Then(accounts =>
+                {
+                    _messageRouter.SendResponse(new GetAccountsResponseMessage
+                    {
+                        Accounts = accounts.ToArray()
+                    });
+                });
+        }
+
+        private void OnCreateAccount(CreateAccountMessage message)
+        {
+            CreateAccount(message.ForPlayerId, message.InitialBalance, message.IsNPC)
+                .Then(newAccount =>
+                {
+                    _messageRouter.SendResponse(new CreateAccountResponseMessage
+                    {
+                        Account = newAccount
+                    });
+                });
+        }
+
+        private void OnAdjustBalance(AdjustBalanceMessage message)
+        {
+            AdjustAccountBalance(message.AccountId, message.Amount, message.FromAccountId, message.Reason);
+            _messageRouter.SendResponse(new AdjustBalanceResponseMessage());
+        }
+#endregion
 
         public Promise<IEnumerable<TransactionDataObject>> GetTransactions(ulong accountId)
         {

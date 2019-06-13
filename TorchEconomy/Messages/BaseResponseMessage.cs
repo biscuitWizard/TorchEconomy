@@ -11,11 +11,21 @@ namespace TorchEconomy.Messages
 	[ProtoInclude(4, typeof(GetConfigResponseMessage))]
 	public abstract class BaseResponseMessage
 	{
+		/// <summary>
+		/// This is not serialized. Just here for convenience.
+		/// </summary>
+		public BaseMessage OriginalMessage { get; set; }
+		
 		[ProtoMember(101)]
 		public abstract MessageTypeEnum MessageType { get; }
 		
 		[ProtoMember(102)]
 		public bool Success { get; set; }
+
+		public BaseResponseMessage()
+		{
+			Success = true;
+		}
 		
 		public byte[] ToBytes()
 		{
