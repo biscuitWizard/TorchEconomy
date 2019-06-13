@@ -1,7 +1,7 @@
 using System;
 using VRage.Game;
 
-namespace TorchEconomy.Data.Models
+namespace TorchEconomy.Markets.Data.Models
 {
     public struct MarketValueItem
     {

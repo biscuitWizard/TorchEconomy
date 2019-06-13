@@ -135,11 +135,9 @@
     <Compile Include="Commands\AccountModule.cs" />
     <Compile Include="Commands\AdminModule.cs" />
     <Compile Include="Data\IConnectionFactory.cs" />
-    <Compile Include="Data\Models\MarketValueItem.cs" />
     <Compile Include="Data\MysqlConnectionFactory.cs" />
     <Compile Include="Data\SQL.cs" />
     <Compile Include="Data\SqliteConnectionFactory.cs" />
-    <Compile Include="Data\Types\BuyOrderType.cs" />
     <Compile Include="EconomyCommandModule.cs" />
     <Compile Include="EconomyConfig.cs" />
     <Compile Include="EconomyPlugin.cs" />

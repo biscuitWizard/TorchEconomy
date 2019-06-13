@@ -1,4 +1,4 @@
-﻿using TorchEconomy.Data.Types;
+﻿using TorchEconomy.Markets.Data.Types;
 
 namespace TorchEconomy.Markets.Data.DataObjects
 {

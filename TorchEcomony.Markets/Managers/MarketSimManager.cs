@@ -4,8 +4,8 @@ using System.Linq;
 using NLog;
 using Sandbox.Definitions;
 using TorchEconomy.Data;
-using TorchEconomy.Data.Models;
 using TorchEconomy.Managers;
+using TorchEconomy.Markets.Data.Models;
 using VRage.Game;
 using VRage.ObjectBuilders;
 

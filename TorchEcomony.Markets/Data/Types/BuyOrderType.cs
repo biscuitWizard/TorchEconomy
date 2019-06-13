@@ -1,4 +1,4 @@
-﻿namespace TorchEconomy.Data.Types
+﻿namespace TorchEconomy.Markets.Data.Types
 {
     public enum BuyOrderType
     {

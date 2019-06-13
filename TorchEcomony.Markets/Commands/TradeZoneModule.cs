@@ -3,7 +3,7 @@ using System.Linq;
 using System.Text;
 using NLog;
 using Torch.Commands;
-using TorchEconomy.Data.Models;
+using TorchEconomy.Markets.Data.Models;
 using TorchEconomy.Markets.Managers;
 using VRage.Game;
 

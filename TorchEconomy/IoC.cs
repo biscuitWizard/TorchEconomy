@@ -46,6 +46,9 @@ namespace TorchEconomy
                     // Registration conventions.
                     s.AddAllTypesOf<BaseManager>();
                     s.WithDefaultConventions();
+                    
+                    // All managers should be singletons.
+                    s.With(new SingletonConvention<BaseManager>());
                 });
 
                 _.For<IMultiplayerManagerServer>()
