@@ -14,12 +14,12 @@
 -- Dumping structure for table space_engineers.Account
 CREATE TABLE IF NOT EXISTS `Account` (
   `Id` bigint(8) NOT NULL AUTO_INCREMENT,
-  `PlayerId` bigint(8) NOT NULL,
+  `PlayerId` decimal(20,0) NOT NULL,
   `Balance` float NOT NULL,
   `IsNPC` tinyint(1) NOT NULL DEFAULT '0',
   `IsPrimary` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`Id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- Data exporting was unselected.
 -- Dumping structure for table space_engineers.TradeZone
@@ -43,7 +43,7 @@ CREATE TABLE IF NOT EXISTS `Transaction` (
   `TransactedOn` int(8) NOT NULL,
   `Reason` varchar(256) DEFAULT NULL,
   PRIMARY KEY (`Id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- Data exporting was unselected.
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
