@@ -42,6 +42,7 @@ CREATE TABLE IF NOT EXISTS `Market` (
   `Range` float NOT NULL,
   `ParentGridId` decimal(20,0) NOT NULL,
   `AccountId` bigint(8) DEFAULT NULL,
+  `CreatorPlayerId` decimal(20,0) DEFAULT NULL,
   `IsDeleted` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`Id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;

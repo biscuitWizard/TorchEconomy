@@ -12,7 +12,7 @@ using VRage.Game.ModAPI.Ingame;
 namespace TorchEconomy.Markets.Commands
 {
     [Category("econ market")]
-    public class MarketModule : CommandModule
+    public class MarketModule : EconomyCommandModule
     {
         private static readonly Logger Log = LogManager.GetLogger("Economy.Commands.TradeZone");
 //
@@ -57,7 +57,8 @@ namespace TorchEconomy.Markets.Commands
             }
 
             var manager = EconomyPlugin.GetManager<MarketManager>();
-            manager.CreateMarket(entity.EntityId, marketName, 3000);
+            manager.CreateMarket(entity.EntityId, Context.Player.SteamUserId, marketName, 
+                EconomyMarketsPlugin.Instance.Config.DefaultMarketRange);
             Context.Respond($"{marketName} has been successfully established.");
         }
 

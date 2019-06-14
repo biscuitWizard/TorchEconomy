@@ -15,5 +15,12 @@ namespace TorchEconomy.Markets
 			get => _energySecondsValue;
 			set => SetValue(ref _energySecondsValue, value);
 		}
+
+		private float _defaultMarketRange;
+		public float DefaultMarketRange
+		{
+			get => _defaultMarketRange;
+			set => SetValue(ref _defaultMarketRange, value);
+		}
 	}
 }

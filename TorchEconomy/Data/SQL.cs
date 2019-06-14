@@ -38,10 +38,13 @@
         #region Trade Zones
         public const string INSERT_MARKET
             = @"
-            INSERT INTO `TradeZone` (`Name`,`PositionX`,`PositionY`,`PositionZ`,`Range`,`OwnerId`) 
-            VALUES(@name,@positionX,@positionY,@positionZ,@range,@ownerPlayerId);";
+            INSERT INTO `Market` (`Name`,`ParentGridId`,`Range`,`CreatorPlayerId`) 
+            VALUES(@name,@parentGridId,@range,@creatorPlayerId);";
         public const string SELECT_TRADEZONES
-            = @"SELECT * FROM `TradeZone`;";
+            = @"SELECT * FROM `Market`;";
+
+        public const string SELECT_MARKET_BY_GRID
+            = @"SELECT * FROM `Market` WHERE `ParentGridId`=@parentGridId;";
         #endregion
         
         #region Market Orders

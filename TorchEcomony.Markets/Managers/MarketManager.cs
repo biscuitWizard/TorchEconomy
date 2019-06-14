@@ -13,34 +13,12 @@ namespace TorchEconomy.Markets.Managers
     public class MarketManager : BaseManager
     {
         // ReSharper disable once InconsistentNaming
-        private readonly LazyProperty<List<TradeZoneDataObject>> TradeZones;
-        
-        public TradeZoneManager(IConnectionFactory connectionFactory) : base(connectionFactory)
+        public MarketManager(IConnectionFactory connectionFactory) : base(connectionFactory)
         {
-            TradeZones = new LazyProperty<List<TradeZoneDataObject>>(RefreshTradeZones, 
-                TimeSpan.FromMinutes(30));
         }
 
-        protected virtual List<TradeZoneDataObject> RefreshTradeZones()
-        {
-            using (var connection = ConnectionFactory.Open())
-            {
-                return connection
-                    .Query<TradeZoneDataObject>(SQL.SELECT_TRADEZONES)
-                    .ToList();
-            }
-        }
-
-        public IEnumerable<TradeZoneDataObject> GetTradeZonesInRange(VRageMath.Vector3D position)
-        {
-            foreach (var tradeZone in TradeZones.Get())
-            {
-                if (tradeZone.Position.DistanceFrom(position) <= tradeZone.Range)
-                    yield return tradeZone;
-            }
-        }
-
-        public Promise<MarketDataObject> CreateMarket(long parentGridId, string marketName, float range)
+        public Promise<MarketDataObject> CreateMarket(long parentGridId, ulong creatorPlayerId,
+            string marketName, float range)
         {
             return new Promise<MarketDataObject>((resolve, reject) =>
             {
@@ -48,8 +26,13 @@ namespace TorchEconomy.Markets.Managers
                 {
                     connection.Execute(
                         SQL.INSERT_MARKET,
-                        new {parentGridId = parentGridId, 
-                            marketName = marketName, @range = range});
+                        new {parentGridId = parentGridId, creatorPlayerId = creatorPlayerId,
+                            name = marketName, @range = range});
+
+                    var market = connection.QueryFirst<MarketDataObject>(
+                        SQL.SELECT_MARKET_BY_GRID,
+                        new {parentGridId = parentGridId});
+                    resolve(market);
                 }
             });
         }

@@ -9,7 +9,7 @@ using Torch.Views;
 
 namespace TorchEconomy.Markets
 {
-	public class EconomyMarketsPlugin : EconomyPluginBase, IWpfPlugin
+	public class EconomyMarketsPlugin : TorchPluginBase, IWpfPlugin
 	{
 		private static readonly Logger Log = LogManager.GetLogger("Economy.Markets");
         
@@ -31,6 +31,8 @@ namespace TorchEconomy.Markets
 			string path = Path.Combine(StoragePath, "Economy.Markets.cfg");
 			Log.Info($"Attempting to load config from {path}");
 			_config = Persistent<EconomyMarketConfig>.Load(path);
+
+			Instance = this;
 		}
 		
 		public void Save()
