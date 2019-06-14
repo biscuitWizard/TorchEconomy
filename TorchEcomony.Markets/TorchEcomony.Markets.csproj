@@ -44,6 +44,9 @@
     <Reference Include="protobuf-net, Version=2.4.0.0, Culture=neutral, PublicKeyToken=257b51d87d2e4d67">
       <HintPath>..\GameBinaries\protobuf-net.dll</HintPath>
     </Reference>
+    <Reference Include="Sandbox.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
+      <HintPath>..\GameBinaries\Sandbox.Common.dll</HintPath>
+    </Reference>
     <Reference Include="Sandbox.Game, Version=0.1.1.0, Culture=neutral, PublicKeyToken=null">
       <HintPath>..\GameBinaries\Sandbox.Game.dll</HintPath>
     </Reference>
@@ -73,16 +76,16 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Commands\AdminModule.cs" />
-    <Compile Include="Commands\TradeZoneModule.cs" />
+    <Compile Include="Commands\MarketModule.cs" />
     <Compile Include="Data\DataObjects\MarketOrderDataObject.cs" />
-    <Compile Include="Data\DataObjects\TradeZoneDataObject.cs" />
+    <Compile Include="Data\DataObjects\MarketDataObject.cs" />
     <Compile Include="Data\Models\MarketValueItem.cs" />
     <Compile Include="Data\Types\BuyOrderType.cs" />
     <Compile Include="EconomyMarketConfig.cs" />
     <Compile Include="EconomyMarketsPlugin.cs" />
     <Compile Include="Managers\BaseMarketManager.cs" />
     <Compile Include="Managers\MarketSimManager.cs" />
-    <Compile Include="Managers\TradeZoneManager.cs" />
+    <Compile Include="Managers\MarketManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -32,5 +32,10 @@ namespace TorchEconomy.Markets
 			Log.Info($"Attempting to load config from {path}");
 			_config = Persistent<EconomyMarketConfig>.Load(path);
 		}
+		
+		public void Save()
+		{
+			_config.Save();
+		}
 	}
 }

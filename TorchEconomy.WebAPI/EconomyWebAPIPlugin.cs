@@ -32,5 +32,10 @@ namespace TorchEconomy.WebAPI
 			Log.Info($"Attempting to load config from {path}");
 			_config = Persistent<EconomyWebAPIConfig>.Load(path);
 		}
+		
+		public void Save()
+		{
+			_config.Save();
+		}
 	}
 }

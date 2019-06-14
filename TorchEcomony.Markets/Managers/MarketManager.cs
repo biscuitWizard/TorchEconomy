@@ -10,7 +10,7 @@ using TorchEconomy.Markets.Data.DataObjects;
 
 namespace TorchEconomy.Markets.Managers
 {
-    public class TradeZoneManager : BaseManager
+    public class MarketManager : BaseManager
     {
         // ReSharper disable once InconsistentNaming
         private readonly LazyProperty<List<TradeZoneDataObject>> TradeZones;
@@ -38,6 +38,20 @@ namespace TorchEconomy.Markets.Managers
                 if (tradeZone.Position.DistanceFrom(position) <= tradeZone.Range)
                     yield return tradeZone;
             }
+        }
+
+        public Promise<MarketDataObject> CreateMarket(long parentGridId, string marketName, float range)
+        {
+            return new Promise<MarketDataObject>((resolve, reject) =>
+            {
+                using (var connection = ConnectionFactory.Open())
+                {
+                    connection.Execute(
+                        SQL.INSERT_MARKET,
+                        new {parentGridId = parentGridId, 
+                            marketName = marketName, @range = range});
+                }
+            });
         }
     }
 }

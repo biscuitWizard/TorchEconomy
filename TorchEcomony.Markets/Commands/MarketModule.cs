@@ -2,38 +2,63 @@
 using System.Linq;
 using System.Text;
 using NLog;
+using Sandbox.ModAPI;
 using Torch.Commands;
 using TorchEconomy.Markets.Data.Models;
 using TorchEconomy.Markets.Managers;
 using VRage.Game;
+using VRage.Game.ModAPI.Ingame;
 
 namespace TorchEconomy.Markets.Commands
 {
-    [Category("econ")]
-    public class TradeZoneModule : CommandModule
+    [Category("econ market")]
+    public class MarketModule : CommandModule
     {
         private static readonly Logger Log = LogManager.GetLogger("Economy.Commands.TradeZone");
+//
+//        [Command("zones", "Lists all trade zones player is currently in.")]
+//        public void GetZones()
+//        {
+//            var tradeZoneManager = EconomyPlugin.GetManager<TradeZoneManager>();
+//
+//            var playerPosition = Context.Player.Character.GetPosition();
+//            var tradeZones = tradeZoneManager.GetTradeZonesInRange(playerPosition).ToArray();
+//            if (tradeZones.Length == 0)
+//            {
+//                Context.Respond("There are no trade zones in range of you.");
+//                return;
+//            }
+//            
+//            var stringBuilder = new StringBuilder("Nearby Trade Zones:");
+//            foreach (var tradeZone in tradeZones)
+//            {
+//                stringBuilder.AppendLine($"[{tradeZone.Name}] {tradeZone.Position.DistanceFrom(playerPosition)}m");
+//            }
+//
+//            Context.Respond(stringBuilder.ToString());
+//        }
 
-        [Command("zones", "Lists all trade zones player is currently in.")]
-        public void GetZones()
+        [Command("create", "<stationGridName> <newMarketName>: Creates a market using the specified station grid and names it based on the new market name.")]
+        public void CreateMarket(string stationGridName, string marketName)
         {
-            var tradeZoneManager = EconomyPlugin.GetManager<TradeZoneManager>();
-
-            var playerPosition = Context.Player.Character.GetPosition();
-            var tradeZones = tradeZoneManager.GetTradeZonesInRange(playerPosition).ToArray();
-            if (tradeZones.Length == 0)
+            var character = Context.Player.Character;
+            if (character == null)
             {
-                Context.Respond("There are no trade zones in range of you.");
+                Context.Respond("You are dead. You cant trade ships while dead.");
                 return;
             }
             
-            var stringBuilder = new StringBuilder("Nearby Trade Zones:");
-            foreach (var tradeZone in tradeZones)
+            var entity = MyAPIGateway.Entities.GetEntityByName(stationGridName) as IMyCubeGrid;
+            if (entity == null
+                || !entity.IsStatic)
             {
-                stringBuilder.AppendLine($"[{tradeZone.Name}] {tradeZone.Position.DistanceFrom(playerPosition)}m");
+                Context.Respond("Unable to find a station by the name of '{stationGridName}'.");
+                return;
             }
 
-            Context.Respond(stringBuilder.ToString());
+            var manager = EconomyPlugin.GetManager<MarketManager>();
+            manager.CreateMarket(entity.EntityId, marketName, 3000);
+            Context.Respond($"{marketName} has been successfully established.");
         }
 
         [Command("list", "Lists available goods to buy.")]

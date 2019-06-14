@@ -36,7 +36,7 @@
         #endregion
         
         #region Trade Zones
-        public const string INSERT_TRADEZONE
+        public const string INSERT_MARKET
             = @"
             INSERT INTO `TradeZone` (`Name`,`PositionX`,`PositionY`,`PositionZ`,`Range`,`OwnerId`) 
             VALUES(@name,@positionX,@positionY,@positionZ,@range,@ownerPlayerId);";

@@ -32,5 +32,10 @@ namespace TorchEconomy.Storage
 			Log.Info($"Attempting to load config from {path}");
 			_config = Persistent<EconomyStorageConfig>.Load(path);
 		}
+		
+		public void Save()
+		{
+			_config.Save();
+		}
 	}
 }

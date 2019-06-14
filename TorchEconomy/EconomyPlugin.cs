@@ -122,5 +122,10 @@ namespace TorchEconomy
                     break;
             }
         }
+        
+        public void Save()
+        {
+            _config.Save();
+        }
     }
 }

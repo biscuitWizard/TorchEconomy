@@ -18,20 +18,9 @@ CREATE TABLE IF NOT EXISTS `Account` (
   `Balance` float NOT NULL,
   `IsNPC` tinyint(1) NOT NULL DEFAULT '0',
   `IsPrimary` tinyint(1) NOT NULL DEFAULT '0',
+  `IsDeleted` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`Id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
--- Data exporting was unselected.
--- Dumping structure for table space_engineers.TradeZone
-CREATE TABLE IF NOT EXISTS `TradeZone` (
-  `Id` bigint(8) NOT NULL AUTO_INCREMENT,
-  `Name` varchar(64) NOT NULL,
-  `Range` float NOT NULL,
-  `PositionX` float NOT NULL,
-  `PositionY` float NOT NULL,
-  `PositionZ` float NOT NULL,
-  PRIMARY KEY (`Id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- Data exporting was unselected.
 -- Dumping structure for table space_engineers.Transaction
@@ -43,7 +32,34 @@ CREATE TABLE IF NOT EXISTS `Transaction` (
   `TransactedOn` int(8) NOT NULL,
   `Reason` varchar(256) DEFAULT NULL,
   PRIMARY KEY (`Id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- Data exporting was unselected.
+-- Dumping structure for table space_engineers.Market
+CREATE TABLE IF NOT EXISTS `Market` (
+  `Id` bigint(8) NOT NULL AUTO_INCREMENT,
+  `Name` varchar(64) NOT NULL,
+  `Range` float NOT NULL,
+  `ParentGridId` decimal(20,0) NOT NULL,
+  `AccountId` bigint(8) DEFAULT NULL,
+  `IsDeleted` tinyint(1) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`Id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+
+-- Data exporting was unselected.
+-- Dumping structure for table space_engineers.MarketOrder
+CREATE TABLE IF NOT EXISTS `MarketOrder` (
+  `Id` bigint(8) NOT NULL AUTO_INCREMENT,
+  `MarketId` bigint(8) NOT NULL,
+  `BuyOrderType` int(8) NOT NULL,
+  `DefinitionId` varchar(128) NOT NULL,
+  `Quantity` int(8) NOT NULL,
+  `Price` float NOT NULL,
+  `CreatedOn` int(8) NOT NULL,
+  PRIMARY KEY (`Id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
 
 -- Data exporting was unselected.
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;

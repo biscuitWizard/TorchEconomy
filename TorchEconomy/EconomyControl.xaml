@@ -10,15 +10,29 @@
         <torchEconomy:EconomyConfig/>
     </UserControl.DataContext>
     <StackPanel>
-        <Label Content="Connection String"/>
-        <TextBox Text="{Binding ConnectionString}" AcceptsReturn="true" TextWrapping="Wrap" VerticalScrollBarVisibility="Visible"/>
+        <GroupBox Header="Connection Details">
+            <StackPanel>
+                <Label Content="Provider"/>
+                <StackPanel Orientation="Horizontal">
+                    <CheckBox Content="SQLite" Checked="{Binding SqlLite}"></CheckBox>
+                    <CheckBox Content="MySQL" Checked="{Binding MySQL}"></CheckBox>
+                </StackPanel>
+                <Label Content="Connection String"/>
+                <TextBox Text="{Binding ConnectionString}" IsEnabled="{Binding ConnectionStringDisabled}"/>
+            </StackPanel>
+        </GroupBox>
         <Label Content="Starting Funds"/>
-        <TextBox Text="{Binding StartingFunds}" AcceptsReturn="true" TextWrapping="Wrap" VerticalScrollBarVisibility="Visible"/>
+        <TextBox Text="{Binding StartingFunds}" PreviewTextInput="PreviewNumericInput"/>
+        <Label Content="Max Player Bank Accounts"/>
+        <TextBox Text="{Binding MaxPlayerAccounts}" PreviewTextInput="PreviewNumericInput"/>
         <Label Content="Currency Name"/>
-        <TextBox Text="{Binding CurrencyName}" AcceptsReturn="true" TextWrapping="Wrap" VerticalScrollBarVisibility="Visible"/>
+        <TextBox Text="{Binding CurrencyName}"/>
         <Label Content="Currency Abbreviation"/>
-        <TextBox Text="{Binding CurrencyAbbreviation}" AcceptsReturn="true" TextWrapping="Wrap" VerticalScrollBarVisibility="Visible"/>
+        <TextBox Text="{Binding CurrencyAbbreviation}"/>
         <Label Content="Transaction Key"/>
-        <TextBox Text="{Binding TransactionKey}" AcceptsReturn="true" TextWrapping="Wrap" VerticalScrollBarVisibility="Visible"/>
+        <TextBox Text="{Binding TransactionKey}"/>
+        
+        <Separator/>
+        <Button Content="Save Config" Click="SaveConfig_OnClick"/>
     </StackPanel>
 </UserControl>

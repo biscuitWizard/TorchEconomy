@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -31,6 +32,17 @@ namespace TorchEconomy
         {
             Plugin = plugin;
             DataContext = plugin.Config;
+        }
+
+        private static readonly Regex _numericRegex = new Regex("[^0-9.-]+");
+        private void PreviewNumericInput(object sender, TextCompositionEventArgs e)
+        {
+            e.Handled = !_numericRegex.IsMatch(e.Text);
+        }
+
+        private void SaveConfig_OnClick(object sender, RoutedEventArgs e)
+        {
+            Plugin.Save();
         }
     }
 }
