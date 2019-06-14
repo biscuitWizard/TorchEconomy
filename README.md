@@ -56,6 +56,12 @@ It is currently possibly to interact directly with accounts using the API if pro
 * Can charge regular fees to keep a ship stowed.
 * Fully configurable through Torch's WPF UI
 
+## TorchEconomy.WebAPI (Incomplete)
+
+### Features
+* A full REST API that gives read/write access to functionalities of the plugin.
+* Packaged vue.js web application that gives steam users the ability to interact with markets and manage accounts via a web interface.
+
 # Installation
 
 * Get the latest Torch release here: https://torchapi.net/download
