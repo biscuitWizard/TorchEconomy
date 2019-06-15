@@ -17,6 +17,10 @@ namespace TorchEconomy.Data.Schema
             // SQLite primary keys always have to be integer.
             if (property.GetCustomAttribute<PrimaryKeyAttribute>() != null)
                 return "INTEGER";
+
+            // Enums should be integers.
+            if (property.GetCustomAttribute<EnumAsByteAttribute>() != null)
+                return "INTEGER";
             
             if (propertyType == typeof(string))
                 return "TEXT";

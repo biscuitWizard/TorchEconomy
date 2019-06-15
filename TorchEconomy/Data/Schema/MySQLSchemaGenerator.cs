@@ -14,6 +14,10 @@ namespace TorchEconomy.Data.Schema
         {
             var propertyType = property.PropertyType;
             
+            // Enums as ints.
+            if (property.GetCustomAttribute<EnumAsByteAttribute>() != null)
+                return "int(8)";
+            
             if (propertyType == typeof(long)
                 || propertyType == typeof(long?))
                 return "bigint(8)";
