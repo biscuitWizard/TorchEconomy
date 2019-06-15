@@ -14,11 +14,14 @@ namespace TorchEconomy.Data.Schema
         {
             var propertyType = property.PropertyType;
             
-            if (propertyType == typeof(long))
+            if (propertyType == typeof(long)
+                || propertyType == typeof(long?))
                 return "bigint(8)";
-            if (propertyType == typeof(ulong))
+            if (propertyType == typeof(ulong)
+                || propertyType == typeof(ulong?))
                 return "decimal(20,0)";
-            if (propertyType == typeof(decimal))
+            if (propertyType == typeof(decimal)
+                || propertyType == typeof(decimal?))
                 return "decimal(20,2)";
             if (propertyType == typeof(string))
             {
@@ -27,11 +30,14 @@ namespace TorchEconomy.Data.Schema
                     return "text";
                 return $"varchar({lengthAttribute.Length})";
             }
-            if (propertyType == typeof(bool))
+            if (propertyType == typeof(bool)
+                || propertyType == typeof(bool?))
                 return "tinyint(1)";
-            if (propertyType == typeof(int))
+            if (propertyType == typeof(int)
+                || propertyType == typeof(int?))
                 return "int(8)";
-            if (propertyType == typeof(float))
+            if (propertyType == typeof(float)
+                || propertyType == typeof(float?))
                 return "float";
 
             return "blob";

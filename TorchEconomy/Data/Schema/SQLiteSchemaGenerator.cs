@@ -24,12 +24,21 @@ namespace TorchEconomy.Data.Schema
                 || propertyType == typeof(int)
                 || propertyType == typeof(short)
                 || propertyType == typeof(byte)
-                || propertyType == typeof(bool))
+                || propertyType == typeof(bool)
+                || propertyType == typeof(bool?)
+                || propertyType == typeof(int?)
+                || propertyType == typeof(short?)
+                || propertyType == typeof(byte?)
+                || propertyType == typeof(bool?))
                 return "INTEGER";
             if (propertyType == typeof(float)
                 || propertyType == typeof(long)
                 || propertyType == typeof(ulong)
-                || propertyType == typeof(decimal))
+                || propertyType == typeof(decimal)
+                || propertyType == typeof(float?)
+                || propertyType == typeof(long?)
+                || propertyType == typeof(ulong?)
+                || propertyType == typeof(decimal?))
                 return "NUMERIC";
             return "BLOB";
         }

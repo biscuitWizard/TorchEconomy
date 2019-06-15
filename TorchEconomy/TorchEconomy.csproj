@@ -146,6 +146,7 @@
     <Compile Include="Data\IConnectionFactory.cs" />
     <Compile Include="Data\MysqlConnectionFactory.cs" />
     <Compile Include="Data\Schema\DefaultValueAttribute.cs" />
+    <Compile Include="Data\Schema\EnumAsByteAttribute.cs" />
     <Compile Include="Data\Schema\MySQLSchemaGenerator.cs" />
     <Compile Include="Data\Schema\PrimaryKeyAttribute.cs" />
     <Compile Include="Data\Schema\RequiredAttribute.cs" />

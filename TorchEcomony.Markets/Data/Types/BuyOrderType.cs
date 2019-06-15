@@ -1,6 +1,6 @@
 ﻿namespace TorchEconomy.Markets.Data.Types
 {
-    public enum BuyOrderType
+    public enum BuyOrderType : byte
     {
         Buy,
         Sell
