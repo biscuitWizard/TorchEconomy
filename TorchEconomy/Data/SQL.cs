@@ -1,7 +1,7 @@
 ﻿namespace TorchEconomy.Data
 {
     public static class SQL
-    { 
+    {
         #region Accounts
         public const string SELECT_ACCOUNTS 
             = "SELECT * FROM `Account` WHERE PlayerId = @playerId AND `IsDeleted`=0;";
@@ -46,6 +46,16 @@
 
         public const string SELECT_MARKET_BY_GRID
             = @"SELECT * FROM `Market` WHERE `ParentGridId`=@parentGridId AND `IsDeleted`=0;";
+
+        public const string SELECT_MARKET_BY_NAME_AND_OWNER
+            = @"SELECT * FROM `Market` WHERE CreatorId=@creatorId  
+                         AND (`Name` LIKE @marketNameOrId OR `Id`=@marketNameOrId)";
+
+        public const string MUTATE_MARKET_OPEN
+            = @"UPDATE `Market` SET IsOpen=@isOpen WHERE `Id`=@id;";
+
+        public const string MUTATE_MARKET_ACCOUNT
+            = @"UPDATE `Market` SET AccountId=@accountId WHERE `Id`=@id;"; 
         #endregion
         
         #region Market Orders

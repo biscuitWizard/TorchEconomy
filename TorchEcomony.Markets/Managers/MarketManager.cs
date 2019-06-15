@@ -47,5 +47,54 @@ namespace TorchEconomy.Markets.Managers
                 }
             });
         }
+
+        public Promise<MarketDataObject> GetMarketByNameOrId(string marketNameOrId, ulong playerId)
+        {
+            return new Promise<MarketDataObject>((resolve, reject) =>
+            {
+                using (var connection = ConnectionFactory.Open())
+                {
+                    var searchString = marketNameOrId;
+                    if (!long.TryParse(searchString, out var index))
+                        searchString += "%";
+
+                    var market = connection.QueryFirstOrDefault<MarketDataObject>(
+                        SQL.SELECT_MARKET_BY_NAME_AND_OWNER,
+                        new {creatorId = playerId, marketNameOrId = searchString});
+
+                    if (market.CreatorId != playerId)
+                        reject(null);
+                    resolve(market);
+                }
+            });
+        }
+
+        public IPromise SetMarketOpenStatus(long marketId, bool isOpen)
+        {
+            return new Promise((resolve, reject) =>
+            {
+                using (var connection = ConnectionFactory.Open())
+                {
+                    connection.Execute(
+                        SQL.MUTATE_MARKET_OPEN,
+                        new {id = marketId, isOpen = isOpen});
+                    resolve();
+                }
+            });
+        }
+
+        public IPromise SetMarketAccount(long marketId, long accountId)
+        {
+            return new Promise((resolve, reject) =>
+            {
+                using (var connection = ConnectionFactory.Open())
+                {
+                    connection.Execute(
+                        SQL.MUTATE_MARKET_ACCOUNT,
+                        new {id = marketId, accountId = accountId});
+                    resolve();
+                }
+            });
+        }
     }
 }

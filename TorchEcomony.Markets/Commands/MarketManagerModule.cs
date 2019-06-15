@@ -7,6 +7,7 @@ using Sandbox.Definitions;
 using Sandbox.Game.Entities;
 using Torch.Commands;
 using TorchEconomy;
+using TorchEconomy.Managers;
 using TorchEconomy.Markets.Data.Models;
 using TorchEconomy.Markets.Managers;
 using VRage.Game;
@@ -121,6 +122,12 @@ namespace TorchEconomy.Markets.Commands
             }
             
             var manager = EconomyPlugin.GetManager<MarketManager>();
+            manager.GetMarketByNameOrId(marketNameOrId, Context.Player.SteamUserId)
+                .Then(market =>
+                {
+                    
+                })
+                .Catch(error => Log.Error(error));
         }
 
         [Command("sell")]
@@ -140,6 +147,12 @@ namespace TorchEconomy.Markets.Commands
             }
             
             var manager = EconomyPlugin.GetManager<MarketManager>();
+            manager.GetMarketByNameOrId(marketNameOrId, Context.Player.SteamUserId)
+                .Then(market =>
+                {
+                    
+                })
+                .Catch(error => Log.Error(error));
         }
 
         [Command("open", "<marketNameOrId>: Opens the specified market for business.")]
@@ -151,6 +164,21 @@ namespace TorchEconomy.Markets.Commands
                 Context.Respond("You cannot do this while dead.");
                 return;
             }
+            
+            var manager = EconomyPlugin.GetManager<MarketManager>();
+            manager.GetMarketByNameOrId(marketNameOrId, Context.Player.SteamUserId)
+                .Then(market =>
+                {
+                    if (market.IsOpen)
+                    {
+                        Context.Respond("Market is already open!");
+                        return;
+                    }
+
+                    manager.SetMarketOpenStatus(market.Id, true)
+                        .Then(() => Context.Respond($"Mrkt#{market.Id} ({market.Name}) has been opened for business."));
+                })
+                .Catch(error => Log.Error(error));
         }
 
         [Command("close", "<marketNameOrId>: Closes the specified market for business.")]
@@ -162,6 +190,21 @@ namespace TorchEconomy.Markets.Commands
                 Context.Respond("You cannot do this while dead.");
                 return;
             }
+            
+            var manager = EconomyPlugin.GetManager<MarketManager>();
+            manager.GetMarketByNameOrId(marketNameOrId, Context.Player.SteamUserId)
+                .Then(market =>
+                {
+                    if (!market.IsOpen)
+                    {
+                        Context.Respond("Market is already closed!");
+                        return;
+                    }
+
+                    manager.SetMarketOpenStatus(market.Id, false)
+                        .Then(() => Context.Respond($"Mrkt#{market.Id} ({market.Name}) has been closed."));
+                })
+                .Catch(error => Log.Error(error));
         }
 
         [Command("account", "<marketNameOrId> <accountNameOrId>: Links an account to specified market to act as a coffer.")]
@@ -173,6 +216,23 @@ namespace TorchEconomy.Markets.Commands
                 Context.Respond("You cannot do this while dead.");
                 return;
             }
+            
+            var manager = EconomyPlugin.GetManager<MarketManager>();
+            var accountManager = EconomyPlugin.GetManager<AccountsManager>();
+            manager.GetMarketByNameOrId(marketNameOrId, Context.Player.SteamUserId)
+                .Then(market =>
+                {
+                    accountManager.GetAccount(Context.Player.SteamUserId, accountNameOrId)
+                        .Then(account =>
+                        {
+                            manager.SetMarketAccount(market.Id, account.Id).Then(() =>
+                                    Context.Respond(
+                                        $"Mrkt#{market.Id} ({market.Name}) has been successfully set to use Acct#{account.Id} ({account.Nickname}) as its coffer."))
+                                .Catch(error => { Context.Respond(error.Message); });
+                        })
+                        .Catch(error => { Context.Respond(error.Message); });
+                })
+                .Catch(error => Log.Error(error));
         }
 
         [Command("setbuyprice", "<marketNameOrId> <itemName> <newPricePer1>: Sets a price on a specified item at the specified market.")]
@@ -192,6 +252,12 @@ namespace TorchEconomy.Markets.Commands
             }
             
             var manager = EconomyPlugin.GetManager<MarketManager>();
+            manager.GetMarketByNameOrId(marketNameOrId, Context.Player.SteamUserId)
+                .Then(market =>
+                {
+                    
+                })
+                .Catch(error => Log.Error(error));
         }
 
         [Command("setsellprice", "<marketNameOrId> <itemName> <newPricePer1>: Sets a price on a specified item at the specified market.")]
@@ -211,6 +277,12 @@ namespace TorchEconomy.Markets.Commands
             }
             
             var manager = EconomyPlugin.GetManager<MarketManager>();
+            manager.GetMarketByNameOrId(marketNameOrId, Context.Player.SteamUserId)
+                .Then(market =>
+                {
+                    
+                })
+                .Catch(error => Log.Error(error));
         }
     }
 }
