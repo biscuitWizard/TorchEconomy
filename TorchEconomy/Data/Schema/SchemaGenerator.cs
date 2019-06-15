@@ -104,7 +104,16 @@ namespace TorchEconomy.Data.Schema
         protected virtual string ResolveDefaultValueAttribute(DefaultValueAttribute attribute)
         {
             if (attribute != null)
-                return $"DEFAULT '{attribute.DefaultValue}'";
+            {
+                var defaultValueString = "";
+                if (attribute.DefaultValue is bool)
+                    defaultValueString = (bool) attribute.DefaultValue ? "1" : "0";
+                else
+                    defaultValueString = attribute.DefaultValue.ToString();
+                
+                return $"DEFAULT '{defaultValueString}'";
+            }
+
             return "DEFAULT NULL";
         }
 
