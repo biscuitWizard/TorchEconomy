@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using NLog;
 
 namespace TorchEconomy
 {
@@ -219,6 +220,8 @@ namespace TorchEconomy
     /// </summary>
     public class Promise<PromisedT> : IPromise<PromisedT>, IPendingPromise<PromisedT>, IPromiseInfo
     {
+        private static readonly Logger Log = LogManager.GetLogger("Promises");
+        
         /// <summary>
         /// The exception when the promise is rejected.
         /// </summary>
@@ -289,6 +292,7 @@ namespace TorchEconomy
             }
             catch (Exception ex)
             {
+                Log.Error(ex);
                 Reject(ex);
             }
         }
@@ -352,6 +356,7 @@ namespace TorchEconomy
             }
             catch (Exception ex)
             {
+                Log.Error(ex);
                 rejectable.Reject(ex);
             }
         }
@@ -541,6 +546,7 @@ namespace TorchEconomy
                 }
                 catch(Exception cbEx)
                 {
+                    Log.Error(cbEx);
                     resultPromise.Reject(cbEx);
                 }
             };
@@ -569,6 +575,7 @@ namespace TorchEconomy
                 }
                 catch (Exception cbEx)
                 {
+                    Log.Error(cbEx);
                     resultPromise.Reject(cbEx);
                 }
             };
@@ -679,6 +686,7 @@ namespace TorchEconomy
                 }
                 catch (Exception callbackEx)
                 {
+                    Log.Error(callbackEx);
                     resultPromise.Reject(callbackEx);
                 }
             };
@@ -1015,6 +1023,7 @@ namespace TorchEconomy
                     onComplete();
                     promise.Reject(e);
                 } catch (Exception ne) {
+                    Log.Error(ne);
                     promise.Reject(ne);
                 }
             });
