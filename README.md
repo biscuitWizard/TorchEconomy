@@ -24,6 +24,7 @@ Frontier Economy's code, expanding and modifying it to make it a server-side onl
 * !econ transfer <playerNameOrId> <amount>: Transfers money from your primary account to the targeted player's primary account.
 * !econ move <fromAccount> <toAccount> <amount>: Manually transfer money between two accounts you own.
 
+### Admin Commands
 * !admin accounts give <playerNameOrId> <amount>: Admin command to give a player money. Sends it to their primary account. Amount may be negative.
 
 ### Using the API
@@ -41,6 +42,20 @@ It is currently possibly to interact directly with accounts using the API if pro
 * Configurable through Torch's WPF UI, allowing the adjustment of base ore prices.
 * Prices rise as players buy from NPCs, prices lower as players sell to NPCs, with prices normalizing over time.
 * Player tradezones can be configured to use a specific bank account, preventing overdrafting and griefing by mass sales.
+
+### Commands
+* !econ buy <itemName> <quantity>: Purchases a quantity of items from the market your ship is currently docked to.
+* !econ sell <itemName> <quantity>: Sells a quantity of items from your ship inventory to the market your ship is docked to.
+* !econ markets create <gridName> <marketName>: Creates a named market linked to the provided gridName. You must own a majority of the station.
+* !econ markets buy <marketNameOrId> <itemName> <pricePer1> <quantity>: Creates a buy order on the specified market. Must own market.
+* !econ markets sell <marketNameOrId> <itemName> <pricePer1> <quantity>: Creates a sell order on the specified market. Must own market.
+* !econ markets open <marketNameOrId>: Opens the specified market for business.
+* !econ markets close <marketNameOrId>: Closes the specified market for business.
+* !econ markets account <marketNameOrId> <accountNameOrId>: Links an account to specified market to act as a coffer.
+* !econ markets setprice <marketNameOrId> <itemName> <newPricePer1>: Sets a price on a specified item at the specified market.
+
+### Admin Commands
+* !admin markets delete <marketName>: Deletes a market.  
 
 ## TorchEconomy.ShipTrading (Incomplete)
 
