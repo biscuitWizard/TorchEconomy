@@ -3,6 +3,7 @@ using System.Linq;
 using System.Runtime.Remoting.Contexts;
 using System.Text;
 using NLog;
+using Sandbox.Definitions;
 using Sandbox.Game.Entities;
 using Torch.Commands;
 using TorchEconomy;
@@ -17,30 +18,8 @@ namespace TorchEconomy.Markets.Commands
     public class MarketManagerModule : EconomyCommandModule
     {
         private static readonly Logger Log = LogManager.GetLogger("Economy.Commands.TradeZone");
-//
-//        [Command("zones", "Lists all trade zones player is currently in.")]
-//        public void GetZones()
-//        {
-//            var tradeZoneManager = EconomyPlugin.GetManager<TradeZoneManager>();
-//
-//            var playerPosition = Context.Player.Character.GetPosition();
-//            var tradeZones = tradeZoneManager.GetTradeZonesInRange(playerPosition).ToArray();
-//            if (tradeZones.Length == 0)
-//            {
-//                Context.Respond("There are no trade zones in range of you.");
-//                return;
-//            }
-//            
-//            var stringBuilder = new StringBuilder("Nearby Trade Zones:");
-//            foreach (var tradeZone in tradeZones)
-//            {
-//                stringBuilder.AppendLine($"[{tradeZone.Name}] {tradeZone.Position.DistanceFrom(playerPosition)}m");
-//            }
-//
-//            Context.Respond(stringBuilder.ToString());
-//        }
 
-        [Command("list")]
+        [Command("list", "Lists all markets that you have permission to modify.")]
         public void ListOwnedMarkets()
         {
             var character = Context.Player.Character;
@@ -100,7 +79,7 @@ namespace TorchEconomy.Markets.Commands
 
             var manager = EconomyPlugin.GetManager<MarketManager>();
             
-            // Check we have ownership.
+            // Check we have grid ownership.
             if (!stationEntity.BigOwners.Contains(Context.Player.IdentityId))
             {
                 Context.Respond("You must own a majority of the grid to be able authorize a station as a market.");
@@ -123,6 +102,115 @@ namespace TorchEconomy.Markets.Commands
                         .Then(newMarket => { Context.Respond($"{marketName} has been successfully established."); })
                         .Catch(error => { Context.Respond($"[ERROR] Unable to create market: {error.Message}"); });
                 }).Catch(error => Log.Error(error));
+        }
+
+        [Command("buy", "Creates a buy order on the specified market. Must have permission to modify market.")]
+        public void SetBuyOrder(string marketNameOrId, string itemName, decimal pricePerOne, decimal quantity)
+        {
+            var character = Context.Player.Character;
+            if (character == null)
+            {
+                Context.Respond("You cannot do this while dead.");
+                return;
+            }
+            
+            if (!DefinitionResolver.TryGetDefinitionByName(itemName, out var itemDefinition))
+            {
+                Context.Respond($"Unable to find an item by the name of {itemName}");
+                return;
+            }
+            
+            var manager = EconomyPlugin.GetManager<MarketManager>();
+        }
+
+        [Command("sell")]
+        public void SetSellOrder(string marketNameOrId, string itemName, decimal pricePerOne, decimal quantity)
+        {
+            var character = Context.Player.Character;
+            if (character == null)
+            {
+                Context.Respond("You cannot do this while dead.");
+                return;
+            }
+            
+            if (!DefinitionResolver.TryGetDefinitionByName(itemName, out var itemDefinition))
+            {
+                Context.Respond($"Unable to find an item by the name of {itemName}");
+                return;
+            }
+            
+            var manager = EconomyPlugin.GetManager<MarketManager>();
+        }
+
+        [Command("open", "<marketNameOrId>: Opens the specified market for business.")]
+        public void OpenMarket(string marketNameOrId)
+        {
+            var character = Context.Player.Character;
+            if (character == null)
+            {
+                Context.Respond("You cannot do this while dead.");
+                return;
+            }
+        }
+
+        [Command("close", "<marketNameOrId>: Closes the specified market for business.")]
+        public void CloseMarket(string marketNameOrId)
+        {
+            var character = Context.Player.Character;
+            if (character == null)
+            {
+                Context.Respond("You cannot do this while dead.");
+                return;
+            }
+        }
+
+        [Command("account", "<marketNameOrId> <accountNameOrId>: Links an account to specified market to act as a coffer.")]
+        public void SetMarketAccount(string marketNameOrId, string accountNameOrId)
+        {
+            var character = Context.Player.Character;
+            if (character == null)
+            {
+                Context.Respond("You cannot do this while dead.");
+                return;
+            }
+        }
+
+        [Command("setbuyprice", "<marketNameOrId> <itemName> <newPricePer1>: Sets a price on a specified item at the specified market.")]
+        public void SetBuyOrderPrice(string marketNameOrId, string itemName, decimal newPrice)
+        {
+            var character = Context.Player.Character;
+            if (character == null)
+            {
+                Context.Respond("You cannot do this while dead.");
+                return;
+            }
+            
+            if (!DefinitionResolver.TryGetDefinitionByName(itemName, out var itemDefinition))
+            {
+                Context.Respond($"Unable to find an item by the name of {itemName}");
+                return;
+            }
+            
+            var manager = EconomyPlugin.GetManager<MarketManager>();
+        }
+
+        [Command("setsellprice", "<marketNameOrId> <itemName> <newPricePer1>: Sets a price on a specified item at the specified market.")]
+        public void SetSellOrderPrice(string marketNameOrId, string itemName, decimal newPrice)
+        {
+            var character = Context.Player.Character;
+            if (character == null)
+            {
+                Context.Respond("You cannot do this while dead.");
+                return;
+            }
+            
+            if (!DefinitionResolver.TryGetDefinitionByName(itemName, out var itemDefinition))
+            {
+                Context.Respond($"Unable to find an item by the name of {itemName}");
+                return;
+            }
+            
+            var manager = EconomyPlugin.GetManager<MarketManager>();
         }
     }
 }

@@ -64,6 +64,10 @@ namespace TorchEconomy
                         .CurrentSession
                         .Managers
                         .GetManager(typeof(IMultiplayerManagerServer)) as IMultiplayerManagerServer);
+
+                _.For<DefinitionResolver>()
+                    .Use(new DefinitionResolver())
+                    .Singleton();
             });
         }
     }

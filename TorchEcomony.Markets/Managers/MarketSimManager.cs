@@ -13,6 +13,7 @@ namespace TorchEconomy.Markets.Managers
 {
     public class MarketSimManager : BaseMarketManager
     {
+        private readonly DefinitionResolver _definitionResolver;
         private static readonly Logger Log = LogManager.GetLogger("Economy.Markets.Managers.Market_Simulation");
         
         private readonly Dictionary<MyDefinitionId, MarketValueItem> _itemValues 
@@ -21,8 +22,10 @@ namespace TorchEconomy.Markets.Managers
 //        private readonly Dictionary<MyDefinitionId, decimal> _prices = new Dictionary<MyDefinitionId, decimal>();
         private MyDefinitionManager _definitionManager;
         
-        public MarketSimManager(IConnectionFactory connectionFactory) : base(connectionFactory)
+        public MarketSimManager(IConnectionFactory connectionFactory, DefinitionResolver definitionResolver) 
+            : base(connectionFactory)
         {
+            _definitionResolver = definitionResolver;
         }
 
         public override void Start()
@@ -135,6 +138,8 @@ namespace TorchEconomy.Markets.Managers
         protected virtual void SetItemValue(MyDefinitionId id, decimal value)
         {
             var definition = _definitionManager.GetDefinition(id);
+            
+            _definitionResolver.Register(definition.DisplayNameText, id);
             _itemValues[id] = new MarketValueItem(definition, value);
         }
 

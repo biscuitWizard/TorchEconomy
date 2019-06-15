@@ -144,6 +144,7 @@
     <Compile Include="Commands\AdminModule.cs" />
     <Compile Include="Data\DataObjects\IDataObject.cs" />
     <Compile Include="Data\IConnectionFactory.cs" />
+    <Compile Include="Data\DefinitionResolver.cs" />
     <Compile Include="Data\MysqlConnectionFactory.cs" />
     <Compile Include="Data\Schema\DefaultValueAttribute.cs" />
     <Compile Include="Data\Schema\EnumAsByteAttribute.cs" />
@@ -197,9 +198,6 @@
   <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Data\CreateTables.sql" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\Linux\sqlite3" />

@@ -21,5 +21,9 @@ namespace TorchEconomy.Markets.Data.DataObjects
         [Required]
         [DefaultValue(false)]
         public bool IsDeleted { get; set; }
+        
+        [Required]
+        [DefaultValue(false)]
+        public bool IsOpen { get; set; }
     }
 }

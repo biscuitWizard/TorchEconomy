@@ -43,6 +43,8 @@ namespace TorchEconomy
             return GetContainer().GetInstance<IConnectionFactory>();
         }
         
+        public static DefinitionResolver DefinitionResolver { get; private set; }
+        
         private static readonly Logger Log = LogManager.GetLogger("Economy");
         
         public static EconomyPlugin Instance;
@@ -86,6 +88,7 @@ namespace TorchEconomy
                 Log.Warn("No session manager.  Economy system won't work.");
             
             GetConnectionFactory().Setup();
+            DefinitionResolver = GetContainer().GetInstance<DefinitionResolver>();
             Log.Info("Torch Economy Initialized!");
         }
 

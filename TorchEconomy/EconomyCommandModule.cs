@@ -12,15 +12,12 @@ namespace TorchEconomy
 		{
 			get { return EconomyPlugin.Instance.GetConnectionFactory(); }
 		}
-		protected ITorchBase Torch
-		{
-			get { return EconomyPlugin.Instance.Torch; }
-		}
 
-		protected EconomyConfig Config
-		{
-			get { return EconomyPlugin.Instance.Config; }
-		}
+		protected DefinitionResolver DefinitionResolver => EconomyPlugin.DefinitionResolver;
+
+		protected ITorchBase Torch => EconomyPlugin.Instance.Torch;
+
+		protected EconomyConfig Config => EconomyPlugin.Instance.Config;
 
 		protected T GetManager<T>() where T : BaseManager
 		{
