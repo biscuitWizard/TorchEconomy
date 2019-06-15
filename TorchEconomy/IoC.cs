@@ -30,9 +30,17 @@ namespace TorchEconomy
         {
             container.Configure(_ =>
             {
-                _.For<IConnectionFactory>()
-                    .Use<MysqlConnectionFactory>();
-                
+                if (EconomyPlugin.Instance.Config.MySQL)
+                {
+                    _.For<IConnectionFactory>()
+                        .Use<MysqlConnectionFactory>();
+                }
+                else if(EconomyPlugin.Instance.Config.SqlLite)
+                {
+                    _.For<IConnectionFactory>()
+                        .Use<SqliteConnectionFactory>();
+                }
+
                 _.Scan(s =>
                 {
                     // Assembly to scan.

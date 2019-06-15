@@ -4,13 +4,13 @@
     { 
         #region Accounts
         public const string SELECT_ACCOUNTS 
-            = "SELECT * FROM `Account` WHERE PlayerId = @playerId;";
+            = "SELECT * FROM `Account` WHERE PlayerId = @playerId AND `IsDeleted`=0;";
 
         public const string SELECT_PRIMARY_ACCOUNT
-            = "SELECT * FROM `Account` WHERE PlayerId = @playerId AND IsPrimary=1;";
+            = "SELECT * FROM `Account` WHERE PlayerId = @playerId AND IsPrimary=1 AND `IsDeleted`=0;";
 
         public const string SELECT_ACCOUNT
-            = "SELECT * FROM `Account` WHERE Id = @id";
+            = "SELECT * FROM `Account` WHERE Id = @id AND `IsDeleted`=0";
         
         public const string INSERT_ACCOUNT 
             = "INSERT INTO `Account` (`PlayerId`,`Balance`,`IsNPC`,`IsPrimary`,`Nickname`) VALUES(@playerId,@balance,@isNPC,@isPrimary,@nickname);";
@@ -20,8 +20,8 @@
             
         public const string MUTATE_ACCOUNT_PRIMARY
             = @"
-            UPDATE `Account` SET `IsPrimary` = 0 WHERE `PlayerId` = (SELECT `PlayerId` FROM `Account` WHERE `Id`=@id) AND `Id` > 0; 
-            UPDATE `Account` SET `IsPrimary` = @isPrimary WHERE `Id`=@id;";
+            UPDATE `Account` SET `IsPrimary` = 0 WHERE `PlayerId` = @playerId AND `Id` > 0 AND `IsDeleted`=0; 
+            UPDATE `Account` SET `IsPrimary` = 1 WHERE `Id`=@id;";
         
         #endregion
         

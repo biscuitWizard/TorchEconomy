@@ -31,9 +31,8 @@ namespace TorchEconomy.Commands
 				{
 					manager.AdjustAccountBalance(result.Id, amount);
 
-					Context.Respond($"Gave {player?.DisplayName} ${amount} {Config.CurrencyName}.");
-					ModCommunication.SendMessageTo(new DialogMessage("Transfer Received", null, 
-						$"You have been sent {amount}{EconomyPlugin.Instance.Config.CurrencyAbbreviation} by SYSTEM."), toPlayerId);
+					Context.Respond($"Gave {player?.DisplayName} ${Utilities.FriendlyFormatCurrency(amount)}.");
+					SendMessage(toPlayerId, $"You have been sent {Utilities.FriendlyFormatCurrency(amount)} by SYSTEM.");
 				});
 		}
 	}

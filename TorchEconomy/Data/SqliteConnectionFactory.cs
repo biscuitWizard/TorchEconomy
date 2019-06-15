@@ -19,7 +19,7 @@ namespace TorchEconomy.Data
 				CreateDatabase();
 			}
 			
-			var connection = new SqliteConnection("Data Source=" + DbPath);
+			var connection = new SqliteConnection(EconomyPlugin.Instance.Config.ConnectionString);
 			connection.Open();
 			
 			return connection;

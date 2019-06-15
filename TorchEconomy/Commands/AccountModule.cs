@@ -5,12 +5,14 @@ using Dapper;
 using NLog;
 using Torch.API.Managers;
 using Torch.Commands;
+using Torch.Commands.Permissions;
 using Torch.Mod;
 using Torch.Mod.Messages;
 using TorchEconomy.Data;
 using TorchEconomy.Data.DataObjects;
 using TorchEconomy.Managers;
 using VRage.Game;
+using VRage.Game.ModAPI;
 
 namespace TorchEconomy.Commands
 {
@@ -20,6 +22,7 @@ namespace TorchEconomy.Commands
         private static readonly Logger Log = LogManager.GetLogger("Economy.Commands.Account");
 
         [Command("accounts primary")]
+        [Permission(MyPromoteLevel.None)]
         public void SetPrimaryAccount(string accountIdString)
         {
             var manager = GetManager<AccountsManager>();
@@ -28,13 +31,14 @@ namespace TorchEconomy.Commands
             manager.GetAccount(playerId, accountIdString)
                 .Then(account =>
                 {
-                    manager.SetAccountAsPrimary(account.Id);
+                    manager.SetAccountAsPrimary(playerId, account.Id);
                     Context.Respond($"Acct#{account.Id} has been set as your primary account.");
                 })
                 .Catch(error => { Context.Respond(error.Message); });
         }
 
         [Command("accounts close")]
+        [Permission(MyPromoteLevel.None)]
         public void CloseAccount(string accountIdString)
         {
             var manager = GetManager<AccountsManager>();
@@ -43,6 +47,18 @@ namespace TorchEconomy.Commands
             manager.GetAccount(playerId, accountIdString)
                 .Then(account =>
                 {
+                    if (account.Nickname == "default")
+                    {
+                        Context.Respond("It is not possible to delete your default account.");
+                        return;
+                    }
+
+                    if (account.IsPrimary)
+                    {
+                        Context.Respond("It is not possible to delete an account marked as primary.");
+                        return;
+                    }
+                    
                     if (account.Balance != 0)
                     {
                         Context.Respond($"Acct#{account.Id}'s balance must be zero in order to close the account.");
@@ -56,6 +72,7 @@ namespace TorchEconomy.Commands
         }
 
         [Command("accounts open")]
+        [Permission(MyPromoteLevel.None)]
         public void OpenAccount(string accountNickname)
         {
             var manager = GetManager<AccountsManager>();
@@ -64,7 +81,7 @@ namespace TorchEconomy.Commands
             manager.GetAccounts(playerId)
                 .Then(accounts =>
                 {
-                    if (accounts.Count() >= Config.MaxPlayerAccounts)
+                    if (accounts.Count() + 1 >= Config.MaxPlayerAccounts)
                     {
                         Context.Respond(
                             $"You have reached the maximum number of open accounts. It is not possible to open another account.");
@@ -89,6 +106,7 @@ namespace TorchEconomy.Commands
         }
         
         [Command("logs", "<account id>: Lists the last 50 transactions to happen on the specified account.")]
+        [Permission(MyPromoteLevel.None)]
         public void TransactionLog(string accountIdString)
         {
             var manager = GetManager<AccountsManager>();
@@ -127,6 +145,7 @@ namespace TorchEconomy.Commands
         }
         
         [Command("balance", "Lists current bank account balance.")]
+        [Permission(MyPromoteLevel.None)]
         public void Balance()
         {
             var manager = GetManager<AccountsManager>();
@@ -143,9 +162,9 @@ namespace TorchEconomy.Commands
                 foreach (var account in accounts)
                 {
                     if (account.IsPrimary)
-                        responseBuilder.AppendLine($"+ Acct#{account.Id} [PRIMARY]: ${Utilities.FriendlyFormatCurrency(account.Balance)}");
+                        responseBuilder.AppendLine($"+ Acct#{account.Id} ({account.Nickname}) [PRIMARY]: ${Utilities.FriendlyFormatCurrency(account.Balance)}");
                     else
-                        responseBuilder.AppendLine($"+ Acct#{account.Id}: {Utilities.FriendlyFormatCurrency(account.Balance)}");
+                        responseBuilder.AppendLine($"+ Acct#{account.Id} ({account.Nickname}): {Utilities.FriendlyFormatCurrency(account.Balance)}");
                 }
 
                 responseBuilder.AppendLine($"Accounts Total: {Utilities.FriendlyFormatCurrency(accounts.Sum(a => a.Balance))}");
@@ -154,23 +173,34 @@ namespace TorchEconomy.Commands
             });
         }
 
-        [Command("give", "Alias for /transfer <target> <amount>")]
+        [Command("give", "Alias for !econ transfer <target> <amount>")]
+        [Permission(MyPromoteLevel.None)]
         public void GiveBalance(string target, decimal amount) { TransferBalance(target, amount); }
-        [Command("pay", "Alias for /transfer <target> <amount>")]
+        [Command("pay", "Alias for !econ transfer <target> <amount>")]
+        [Permission(MyPromoteLevel.None)]
         public void PayBalance(string target, decimal amount) { TransferBalance(target, amount); }
-        [Command("transfer", "Transfers currency to the target player.")]        
+        [Command("transfer", "Transfers currency to the target player.")]      
+        [Permission(MyPromoteLevel.None)]
         public void TransferBalance(string targetPlayerNameOrId, decimal amount)
         {
             var fromPlayerId = Context.Player.SteamUserId;
             var manager = GetManager<AccountsManager>();
-            
-            ulong.TryParse(targetPlayerNameOrId, out var toPlayerId);
-            toPlayerId = Utilities.GetPlayerByNameOrId(targetPlayerNameOrId)?.SteamUserId ?? toPlayerId;
 
-            if (toPlayerId == 0)
+            if (amount < new decimal(0.01))
             {
-                Context.Respond($"Player '{targetPlayerNameOrId}' not found or ID is invalid.");
+                Context.Respond($"'{amount}' is too small to transfer. Please choose a number higher than 0.01.");
                 return;
+            }
+            
+            if (!ulong.TryParse(targetPlayerNameOrId, out var toPlayerId))
+            {
+                var toPlayer = Utilities.GetPlayerByNameOrId(targetPlayerNameOrId);
+                if (toPlayer == null)
+                {
+                    Context.Respond($"Player '{targetPlayerNameOrId}' not found or ID is invalid.");
+                    return;
+                }
+                toPlayerId = toPlayer.SteamUserId;
             }
 
             if(toPlayerId == fromPlayerId)

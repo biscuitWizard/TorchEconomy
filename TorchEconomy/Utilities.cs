@@ -12,7 +12,7 @@ namespace TorchEconomy
     {
         public static string FriendlyFormatCurrency(decimal amount)
         {
-            var stringAmount = amount.ToString("#,##0");
+            var stringAmount = amount.ToString("#,##0.##");
             return $"{stringAmount}{EconomyPlugin.Instance.Config.CurrencyAbbreviation}";
         }
         

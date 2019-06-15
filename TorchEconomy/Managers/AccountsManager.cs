@@ -293,13 +293,13 @@ namespace TorchEconomy.Managers
         /// Sets a player's accountID as primary, and sets a player's all other accounts as non-primary.
         /// </summary>
         /// <param name="accountId"></param>
-        public void SetAccountAsPrimary(long accountId)
+        public void SetAccountAsPrimary(ulong playerId, long accountId)
         {
             using (var connection = ConnectionFactory.Open())
             {
                 connection.ExecuteAsync(
                     SQL.MUTATE_ACCOUNT_PRIMARY,
-                    new {id = accountId });
+                    new {id = accountId, playerId = playerId });
             }
         }
         

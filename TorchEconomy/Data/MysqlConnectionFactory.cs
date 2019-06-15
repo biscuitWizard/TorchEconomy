@@ -7,7 +7,7 @@ namespace TorchEconomy.Data
     {
         public IDbConnection Open()
         {
-            var connection = new MySqlConnection("Server=localhost;Database=space_engineers;Uid=root;Pwd=password;");
+            var connection = new MySqlConnection(EconomyPlugin.Instance.Config.ConnectionString);
             connection.Open();
             
             return connection;
