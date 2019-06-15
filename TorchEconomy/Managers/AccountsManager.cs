@@ -124,21 +124,26 @@ namespace TorchEconomy.Managers
                             isNPC = isNpc, isPrimary = firstAccount,
                             nickname = nickname
                         });
-                    
-                    primaryAccount = connection.QueryFirstOrDefault<AccountDataObject>(
-                        SQL.SELECT_PRIMARY_ACCOUNT,
+
+                    var accounts = connection.Query<AccountDataObject>(
+                        SQL.SELECT_ACCOUNTS,
                         new {playerId = playerId});
+                    var newAccount = accounts.First(a => a.Nickname == nickname);
                     
-                    // Create a transaction log.
-                    connection.ExecuteAsync(
-                        SQL.INSERT_TRANSACTION,
-                        new
-                        {
-                            toAccountId = primaryAccount.Id, fromAccountId = SystemAccountId,
-                            transactionAmount = initialBalance, transactedOn = DateTime.UtcNow.ToUnixTimestamp(),
-                            reason = "Initial account creation credit"
-                        });
-                    resolve(primaryAccount);
+                    if (initialBalance > 0)
+                    {
+                        // Create a transaction log.
+                        connection.ExecuteAsync(
+                            SQL.INSERT_TRANSACTION,
+                            new
+                            {
+                                toAccountId = newAccount.Id, fromAccountId = SystemAccountId,
+                                transactionAmount = initialBalance, transactedOn = DateTime.UtcNow.ToUnixTimestamp(),
+                                reason = "Initial account creation credit"
+                            });
+                    }
+
+                    resolve(newAccount);
                 }
             });
         }
