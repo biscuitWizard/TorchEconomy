@@ -20,7 +20,7 @@ namespace TorchEconomy.Markets.Commands
     [Category("econ markets")]
     public class MarketManagerModule : EconomyCommandModule
     {
-        private static readonly Logger Log = LogManager.GetLogger("Economy.Commands.TradeZone");
+        private static readonly Logger Log = LogManager.GetLogger("Economy.Commands.MarketManager");
 
         [Command("list", "Lists all markets that you have permission to modify.")]
         [Permission(MyPromoteLevel.None)]

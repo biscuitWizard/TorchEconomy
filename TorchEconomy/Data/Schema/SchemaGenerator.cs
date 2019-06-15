@@ -33,8 +33,10 @@ namespace TorchEconomy.Data.Schema
                 // Start table create statement.
                 var tableName = doType.Name.Replace("DataObject", "");
                 stringBuilder.AppendLine(GetCreateTableString(tableName));
-                
-                var properties = doType.GetProperties();
+
+                var properties = doType
+                    .GetProperties()
+                    .Where(p => p.GetCustomAttribute<IgnoreAttribute>() == null);
 
                 var fields = new List<string>();
                 PropertyInfo primaryKey = null;

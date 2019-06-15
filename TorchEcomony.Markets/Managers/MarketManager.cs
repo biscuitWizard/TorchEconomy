@@ -2,11 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using Dapper;
+using Sandbox.ModAPI;
 using TorchEconomy;
 using TorchEconomy.Data;
 using TorchEconomy.Data.DataObjects;
 using TorchEconomy.Managers;
 using TorchEconomy.Markets.Data.DataObjects;
+using VRage.Game.ModAPI;
 
 namespace TorchEconomy.Markets.Managers
 {
@@ -93,6 +95,28 @@ namespace TorchEconomy.Markets.Managers
                         SQL.MUTATE_MARKET_ACCOUNT,
                         new {id = marketId, accountId = accountId});
                     resolve();
+                }
+            });
+        }
+
+        public Promise<MarketDataObject> GetConnectedMarket(IMyCubeGrid fromGrid)
+        {
+            return new Promise<MarketDataObject>((resolve, reject) =>
+            {
+                using (var connection = ConnectionFactory.Open())
+                {
+                    var markets = connection.Query<MarketDataObject>(SQL.SELECT_MARKETS);
+                    
+                    foreach (var market in markets)
+                    {
+                        var marketGrid = MyAPIGateway.Entities.GetEntityById(market.ParentGridId) as IMyCubeGrid;
+                        if (MyAPIGateway.GridGroups.HasConnection(fromGrid, marketGrid,
+                            GridLinkTypeEnum.Logical))
+                        {
+                            resolve(market);
+                            return;
+                        }
+                    }
                 }
             });
         }

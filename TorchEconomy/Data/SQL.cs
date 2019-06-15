@@ -59,14 +59,11 @@
         #endregion
         
         #region Market Orders
-        public const string INSERT_MARKET_ORDER
-            = @"
-            INSERT INTO `MarketOrder` (`DefinitionIdHash`,`Quantity`,`Price`,`OrderType`,`TradeZoneId`)
-            VALUES(@definitionIdHash,@quantity,@price,@orderType,@tradeZoneId);";
-        
-        public const string SELECT_MARKET_ORDERS_FOR_TRADEZONE
-            = @"SELECT * FROM `MarketOrder` WHERE `TradeZoneId`=@tradeZoneId;";
+
+        public const string SELECT_MARKET_ORDERS =
+            @"SELECT * FROM `MarketOrder` WHERE `MarketId`=@marketId AND `IsDeleted`=0;";
+
         #endregion
-        
+
     }
 }

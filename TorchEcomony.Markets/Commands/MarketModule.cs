@@ -1,29 +1,99 @@
 using System;
+using System.Linq;
 using System.Text;
+using NLog;
 using Torch.Commands;
 using TorchEconomy.Markets.Data.Models;
+using TorchEconomy.Markets.Data.Types;
 using TorchEconomy.Markets.Managers;
 using VRage.Game;
+using VRage.Game.ModAPI;
 
 namespace TorchEconomy.Markets.Commands
 {
     [Category("econ")]
     public class MarketModule : EconomyCommandModule
     {
+        private static readonly Logger Log = LogManager.GetLogger("Economy.Commands.Markets");
+        
         [Command("list", "Lists available goods to buy.")]
         public void List()
         {
-            var marketManager = EconomyPlugin.GetManager<MarketSimManager>();
-            var stringBuilder = new StringBuilder("Available Items:");
-
-            var index = 0;
-            foreach (var item in marketManager.GetUniversalItems())
+            var marketManager = EconomyPlugin.GetManager<MarketManager>();
+            var marketOrderManager = EconomyPlugin.GetManager<MarketOrderManager>();
+            var marketSimManager = EconomyPlugin.GetManager<MarketSimManager>();
+            
+            var character = Context.Player.Character;
+            if (character == null)
             {
-                stringBuilder.AppendLine($"{index}. {item.FriendlyName}: ${item.FriendlyValue}");
-                index++;
+                Context.Respond("You cannot do that while dead.");
+                return;
+            }
+            
+            var controllingCube = Context.Player.Controller.ControlledEntity as IMyCubeBlock;
+            if (controllingCube == null)
+            {
+                Context.Respond("Trading by hand is not supported.");
+                return;
             }
 
-            Context.Respond(stringBuilder.ToString());
+            marketManager.GetConnectedMarket(controllingCube.CubeGrid)
+                .Then(market =>
+                {
+                    if (market == null)
+                    {
+                        Context.Respond("Unable to find any connected markets. Have you docked to a market?");
+                        return;
+                    }
+
+                    marketOrderManager
+                        .GetMarketOrders(market.Id)
+                        .Then(orders =>
+                        {
+                            var responseBuilder = new StringBuilder($"Mrkt#{market.Id} ({market.Name}) Inventory:");
+                            responseBuilder.AppendLine();
+
+                            var maxNameLength = 30;
+                            
+                            responseBuilder.AppendLine("+-- Buy Orders:");
+                            var buyOrders = orders.Where(o => o.OrderType == BuyOrderType.Buy).ToArray();
+                            if (buyOrders.Length == 0)
+                                responseBuilder.AppendLine("None");
+                            else
+                            {
+                                foreach (var order in buyOrders)
+                                {
+                                    var orderQuantity = (order.Quantity + "x").PadLeft(6);
+                                    var valueDifference =
+                                        marketSimManager.GetOrCalculateUniversalItemValue(order.MyDefinitionId);
+                                    responseBuilder.AppendLine(
+                                        $"+ {order.DefinitionId.PadRight(maxNameLength)} {orderQuantity}: {Utilities.FriendlyFormatCurrency(order.Price)} ({Utilities.FriendlyFormatCurrency(valueDifference)})");
+                                }
+                            }
+
+                            responseBuilder.AppendLine("+-- Sell Orders:");
+                            var sellOrders = orders.Where(o => o.OrderType == BuyOrderType.Sell).ToArray();
+                            if (sellOrders.Length == 0)
+                                responseBuilder.AppendLine("None");
+                            else
+                            {
+                                foreach (var order in sellOrders)
+                                {
+                                    var orderQuantity = (order.Quantity + "x").PadLeft(6);
+                                    var valueDifference =
+                                        marketSimManager.GetOrCalculateUniversalItemValue(order.MyDefinitionId);
+                                    responseBuilder.AppendLine(
+                                        $"+ {order.DefinitionId.PadRight(maxNameLength)} {orderQuantity}: {Utilities.FriendlyFormatCurrency(order.Price)} ({Utilities.FriendlyFormatCurrency(valueDifference)})");
+                                }
+                            }
+
+                            responseBuilder.AppendLine($"Total Orders: {orders.Length}");
+                            
+                            Context.Respond(responseBuilder.ToString());
+                        })
+                        .Catch(error => Log.Error(error));
+                })
+                .Catch(error => Log.Error(error));
         }
         
         [Command("buy", "<itemNameOrIndex> <quantity>: Purchases a quantity of items from nearby tradezones at the lowest prices available.")]
