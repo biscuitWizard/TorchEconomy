@@ -6,11 +6,13 @@ using NLog;
 using Sandbox.Definitions;
 using Sandbox.Game.Entities;
 using Torch.Commands;
+using Torch.Commands.Permissions;
 using TorchEconomy;
 using TorchEconomy.Managers;
 using TorchEconomy.Markets.Data.Models;
 using TorchEconomy.Markets.Managers;
 using VRage.Game;
+using VRage.Game.ModAPI;
 using VRage.ModAPI;
 
 namespace TorchEconomy.Markets.Commands
@@ -21,6 +23,7 @@ namespace TorchEconomy.Markets.Commands
         private static readonly Logger Log = LogManager.GetLogger("Economy.Commands.TradeZone");
 
         [Command("list", "Lists all markets that you have permission to modify.")]
+        [Permission(MyPromoteLevel.None)]
         public void ListOwnedMarkets()
         {
             var character = Context.Player.Character;
@@ -54,6 +57,7 @@ namespace TorchEconomy.Markets.Commands
         }
 
         [Command("create", "<stationGridName> <newMarketName>: Creates a market using the specified station grid and names it based on the new market name.")]
+        [Permission(MyPromoteLevel.None)]
         public void CreateMarket(string stationGridName, string marketName)
         {
             var character = Context.Player.Character;
@@ -106,6 +110,7 @@ namespace TorchEconomy.Markets.Commands
         }
 
         [Command("buy", "Creates a buy order on the specified market. Must have permission to modify market.")]
+        [Permission(MyPromoteLevel.None)]
         public void SetBuyOrder(string marketNameOrId, string itemName, decimal pricePerOne, decimal quantity)
         {
             var character = Context.Player.Character;
@@ -131,6 +136,7 @@ namespace TorchEconomy.Markets.Commands
         }
 
         [Command("sell")]
+        [Permission(MyPromoteLevel.None)]
         public void SetSellOrder(string marketNameOrId, string itemName, decimal pricePerOne, decimal quantity)
         {
             var character = Context.Player.Character;
@@ -156,6 +162,7 @@ namespace TorchEconomy.Markets.Commands
         }
 
         [Command("open", "<marketNameOrId>: Opens the specified market for business.")]
+        [Permission(MyPromoteLevel.None)]
         public void OpenMarket(string marketNameOrId)
         {
             var character = Context.Player.Character;
@@ -182,6 +189,7 @@ namespace TorchEconomy.Markets.Commands
         }
 
         [Command("close", "<marketNameOrId>: Closes the specified market for business.")]
+        [Permission(MyPromoteLevel.None)]
         public void CloseMarket(string marketNameOrId)
         {
             var character = Context.Player.Character;
@@ -208,6 +216,7 @@ namespace TorchEconomy.Markets.Commands
         }
 
         [Command("account", "<marketNameOrId> <accountNameOrId>: Links an account to specified market to act as a coffer.")]
+        [Permission(MyPromoteLevel.None)]
         public void SetMarketAccount(string marketNameOrId, string accountNameOrId)
         {
             var character = Context.Player.Character;
@@ -236,6 +245,7 @@ namespace TorchEconomy.Markets.Commands
         }
 
         [Command("setbuyprice", "<marketNameOrId> <itemName> <newPricePer1>: Sets a price on a specified item at the specified market.")]
+        [Permission(MyPromoteLevel.None)]
         public void SetBuyOrderPrice(string marketNameOrId, string itemName, decimal newPrice)
         {
             var character = Context.Player.Character;
@@ -261,6 +271,7 @@ namespace TorchEconomy.Markets.Commands
         }
 
         [Command("setsellprice", "<marketNameOrId> <itemName> <newPricePer1>: Sets a price on a specified item at the specified market.")]
+        [Permission(MyPromoteLevel.None)]
         public void SetSellOrderPrice(string marketNameOrId, string itemName, decimal newPrice)
         {
             var character = Context.Player.Character;
