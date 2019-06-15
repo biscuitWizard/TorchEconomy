@@ -43,7 +43,34 @@ namespace TorchEconomy.Markets.Commands
         [Command("list")]
         public void ListOwnedMarkets()
         {
-            
+            var character = Context.Player.Character;
+            if (character == null)
+            {
+                Context.Respond("You are dead. Stop entering commands. Please.");
+                return;
+            }
+
+            var manager = EconomyPlugin.GetManager<MarketManager>();
+            manager.GetMarkets()
+                .Then(markets =>
+                {
+                    var ownedMarkets = markets
+                        .Where(m => m.CreatorId == Context.Player.SteamUserId)
+                        .ToArray();
+                    var responseBuilder = new StringBuilder("Markets:");
+                    responseBuilder.AppendLine();
+
+                    foreach (var ownedMarket in ownedMarkets)
+                    {
+                        responseBuilder.AppendLine($"+ Mrkt#{ownedMarket.Id} ({ownedMarket.Name})");
+                        responseBuilder.AppendLine($"+-- Account#{ownedMarket.AccountId}, Range: {ownedMarket.Range}m");
+                    }
+
+                    responseBuilder.AppendLine($"Total Markets: {ownedMarkets.Length}");
+                    
+                    SendMessage(Context.Player.SteamUserId, responseBuilder.ToString());
+                })
+                .Catch(error => Log.Error(error));;
         }
 
         [Command("create", "<stationGridName> <newMarketName>: Creates a market using the specified station grid and names it based on the new market name.")]
@@ -52,7 +79,7 @@ namespace TorchEconomy.Markets.Commands
             var character = Context.Player.Character;
             if (character == null)
             {
-                Context.Respond("You are dead. You cant trade ships while dead.");
+                Context.Respond("You are dead. You cannot create markets while dead.");
                 return;
             }
 
