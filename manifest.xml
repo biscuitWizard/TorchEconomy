@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <PluginManifest xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <Name>Economy</Name>
-  <Guid>3f70631b-65fe-4902-a1c1-68db1bc6a5eb</Guid>
+  <Guid>7e97fc70-b8c8-4c07-a380-588cfbb9e20e</Guid>
   <Repository>biscuitWizard/TorchEconomy</Repository>
-  <Version>v0.0</Version>
+  <Version>v1.0</Version>
 </PluginManifest>

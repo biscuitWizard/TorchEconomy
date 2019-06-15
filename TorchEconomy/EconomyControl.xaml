@@ -14,8 +14,8 @@
             <StackPanel>
                 <Label Content="Provider" FontWeight="Bold"/>
                 <StackPanel Orientation="Horizontal">
-                    <CheckBox Content="SQLite" IsChecked="{Binding SqlLite}" Margin="10,0,10,0"></CheckBox>
-                    <CheckBox Content="MySQL" IsChecked="{Binding MySQL}" Margin="10,0,10,0"></CheckBox>
+                    <!-- <CheckBox Content="SQLite" IsChecked="{Binding SqlLite}" Margin="10,0,10,0" IsEnabled="False"></CheckBox> -->
+                    <CheckBox Content="MySQL" IsChecked="{Binding MySQL}" Margin="10,0,10,0" IsEnabled="False"></CheckBox>
                 </StackPanel>
                 
                 <Label Content="Connection String" FontWeight="Bold"/>

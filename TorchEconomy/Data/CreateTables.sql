@@ -15,9 +15,10 @@
 CREATE TABLE IF NOT EXISTS `Account` (
   `Id` bigint(8) NOT NULL AUTO_INCREMENT,
   `PlayerId` decimal(20,0) NOT NULL,
-  `Balance` float NOT NULL,
+  `Balance` decimal(20,2) NOT NULL,
   `IsNPC` tinyint(1) NOT NULL DEFAULT '0',
   `IsPrimary` tinyint(1) NOT NULL DEFAULT '0',
+  `Nickname` varchar(32) DEFAULT 'default',
   `IsDeleted` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`Id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
@@ -28,7 +29,7 @@ CREATE TABLE IF NOT EXISTS `Transaction` (
   `Id` bigint(8) NOT NULL AUTO_INCREMENT,
   `ToAccountId` bigint(8) NOT NULL,
   `FromAccountId` bigint(8) NOT NULL,
-  `TransactionAmount` float NOT NULL,
+  `TransactionAmount` decimal(20,2) NOT NULL,
   `TransactedOn` int(8) NOT NULL,
   `Reason` varchar(256) DEFAULT NULL,
   PRIMARY KEY (`Id`)
@@ -56,7 +57,7 @@ CREATE TABLE IF NOT EXISTS `MarketOrder` (
   `BuyOrderType` int(8) NOT NULL,
   `DefinitionId` varchar(128) NOT NULL,
   `Quantity` int(8) NOT NULL,
-  `Price` float NOT NULL,
+  `Price` decimal(20,2) NOT NULL,
   `CreatedOn` int(8) NOT NULL,
   PRIMARY KEY (`Id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;

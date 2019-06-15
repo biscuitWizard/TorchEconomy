@@ -16,8 +16,11 @@ namespace TorchEconomy
             StartingFunds = 2000000;
             CurrencyName = "Credits";
             CurrencyAbbreviation = "C";
-            SqlLite = true;
-            ConnectionStringEnabled = false;
+            MySQL = true;
+            ConnectionStringEnabled = true;
+            ConnectionString = "Server=localhost;Database=space_engineers;Uid=root;Pwd=password;";
+//            SqlLite = true;
+//            ConnectionStringEnabled = false;
             TransactionKey = Guid.NewGuid().ToString();
             ForceTransactionCheck = true;
             MaxPlayerAccounts = 10;

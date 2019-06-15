@@ -69,7 +69,6 @@ namespace TorchEconomy
             Instance = this;
 
             Log.Info("Loading Torch Economy...");
-            
             // Load up the configuration
             string path = Path.Combine(StoragePath, "Economy.cfg");
             Log.Info($"Attempting to load config from {path}");
@@ -82,8 +81,7 @@ namespace TorchEconomy
             else
                 Log.Warn("No session manager.  Economy system won't work.");
             
-            
-            
+            GetConnectionFactory().Setup();
             Log.Info("Torch Economy Initialized!");
         }
 

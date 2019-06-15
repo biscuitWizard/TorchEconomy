@@ -12,13 +12,16 @@ namespace TorchEconomy.Data
 
 		public static string DbPath => Path.Combine(EconomyPlugin.Instance.StoragePath, DatabaseName);
 
-		public IDbConnection Open()
+		public void Setup()
 		{
 			if (!File.Exists(DbPath))
 			{
 				CreateDatabase();
 			}
-			
+		}
+
+		public IDbConnection Open()
+		{
 			var connection = new SqliteConnection(EconomyPlugin.Instance.Config.ConnectionString);
 			connection.Open();
 			
