@@ -22,6 +22,7 @@ Frontier Economy's code, expanding and modifying it to make it a server-side onl
 * !econ accounts close <account#OrName>: Closes the account # provided it has 0 money.
 * !econ accounts open <accountName>: Opens a new account with the provided nickname. Players are limited to 10 of these.
 * !econ transfer <playerNameOrId> <amount>: Transfers money from your primary account to the targeted player's primary account.
+* !econ move <fromAccount> <toAccount> <amount>: Manually transfer money between two accounts you own.
 
 * !admin accounts give <playerNameOrId> <amount>: Admin command to give a player money. Sends it to their primary account. Amount may be negative.
 
