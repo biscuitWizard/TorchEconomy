@@ -47,7 +47,7 @@ namespace TorchEconomy
         public static EconomyPlugin Instance;
         public EconomyConfig Config => _config?.Data;
         /// <inheritdoc />
-        public UserControl GetControl() => _control ?? (_control = new EconomyControl() { DataContext = Config/*, IsEnabled = false*/});
+        public UserControl GetControl() => _control ?? (_control = new EconomyControl(this) { DataContext = Config/*, IsEnabled = false*/});
         
         
         private Persistent<EconomyConfig> _config;
@@ -64,6 +64,9 @@ namespace TorchEconomy
         public override void Init(ITorchBase torch)
         {
             base.Init(torch);
+            
+            // Set static instance.
+            Instance = this;
 
             Log.Info("Loading Torch Economy...");
             
@@ -79,8 +82,7 @@ namespace TorchEconomy
             else
                 Log.Warn("No session manager.  Economy system won't work.");
             
-            // Set static instance.
-            Instance = this;
+            
             
             Log.Info("Torch Economy Initialized!");
         }
@@ -126,6 +128,12 @@ namespace TorchEconomy
         public void Save()
         {
             _config.Save();
+        }
+
+        public void NewConfig()
+        {
+            _config = new Persistent<EconomyConfig>("", new EconomyConfig());;
+            _config.Path = Path.Combine(StoragePath, "Economy.cfg");
         }
     }
 }

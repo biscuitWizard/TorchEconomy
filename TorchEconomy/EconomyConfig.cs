@@ -1,6 +1,8 @@
-﻿using ProtoBuf;
+﻿using System;
+using ProtoBuf;
 using Torch;
 using Torch.Views;
+using TorchEconomy.Data;
 
 namespace TorchEconomy
 {
@@ -11,22 +13,25 @@ namespace TorchEconomy
         
         public EconomyConfig()
         {
-            _startingFunds = 2000000;
-            _currencyName = "Credits";
-            _currencyName = "C";
-            _sqlLite = true;
-            _connectionStringDisabled = true;
+            StartingFunds = 2000000;
+            CurrencyName = "Credits";
+            CurrencyAbbreviation = "C";
+            SqlLite = true;
+            ConnectionStringEnabled = false;
+            TransactionKey = Guid.NewGuid().ToString();
+            ForceTransactionCheck = true;
+            MaxPlayerAccounts = 10;
         }
 
         //[Display(Name = "Database Connection String", GroupName = "Database Settings", Order = 0, Description = "Set backend server connection to store economy data for players.")]
         private string _connectionString;
         public string ConnectionString { get => _connectionString; set => SetValue(ref _connectionString, value); }
 
-        private bool _connectionStringDisabled;
-        public bool ConnectionStringDisabled
+        private bool _connectionStringEnabled;
+        public bool ConnectionStringEnabled
         {
-            get => _connectionStringDisabled;
-            set => SetValue(ref _connectionStringDisabled, value);
+            get => _connectionStringEnabled;
+            set => SetValue(ref _connectionStringEnabled, value);
         }
         
         private bool _sqlLite;
@@ -36,7 +41,9 @@ namespace TorchEconomy
             set
             {
                 SetValue(ref _sqlLite, value);
-                ConnectionStringDisabled = value;
+                ConnectionStringEnabled = !value;
+                if (value)
+                    ConnectionString = "Data Source=" + SqliteConnectionFactory.DbPath;
             }
         }
 
@@ -69,8 +76,7 @@ namespace TorchEconomy
             set => SetValue(ref _forceTransactionCheck, value);
         }
 
-        public int _maxPlayerAccounts;
-
+        private int _maxPlayerAccounts;
         public int MaxPlayerAccounts
         {
             get => _maxPlayerAccounts;

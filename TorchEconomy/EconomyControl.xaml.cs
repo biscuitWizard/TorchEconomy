@@ -37,11 +37,17 @@ namespace TorchEconomy
         private static readonly Regex _numericRegex = new Regex("[^0-9.-]+");
         private void PreviewNumericInput(object sender, TextCompositionEventArgs e)
         {
-            e.Handled = !_numericRegex.IsMatch(e.Text);
+            e.Handled = _numericRegex.IsMatch(e.Text);
         }
 
         private void SaveConfig_OnClick(object sender, RoutedEventArgs e)
         {
+            Plugin.Save();
+        }
+
+        private void RevertConfig_OnClick(object sender, RoutedEventArgs e)
+        {
+            Plugin.NewConfig();
             Plugin.Save();
         }
     }

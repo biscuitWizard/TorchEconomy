@@ -117,15 +117,7 @@ namespace TorchEconomy.Commands
                                 $"{operation} {from}==>{to} [${log.TransactionAmount}]: {log.Reason}");
                         }
                     
-                        EconomyPlugin.Instance
-                            .Torch
-                            .CurrentSession?
-                            .Managers?
-                            .GetManager<IChatManagerServer>()?
-                            .SendMessageAsOther("Server",
-                                responseBuilder.ToString(),
-                                MyFontEnum.Blue,
-                                playerId);
+                        SendMessage(Context.Player.SteamUserId, responseBuilder.ToString());
                     });
                 })
                 .Catch(error =>
@@ -158,15 +150,7 @@ namespace TorchEconomy.Commands
 
                 responseBuilder.AppendLine($"Accounts Total: {accounts.Sum(a => a.Balance)}");
             
-                EconomyPlugin.Instance
-                    .Torch
-                    .CurrentSession?
-                    .Managers?
-                    .GetManager<IChatManagerServer>()?
-                    .SendMessageAsOther("Server",
-                        responseBuilder.ToString(),
-                        MyFontEnum.Green,
-                        playerId);
+                SendMessage(Context.Player.SteamUserId, responseBuilder.ToString());
             });
         }
 
@@ -217,10 +201,8 @@ namespace TorchEconomy.Commands
                             manager.AdjustAccountBalance(toAccount.Id, amount, fromAccount.Id, 
                                 $"{Context.Player.DisplayName} is transferring {amount}.");
                            
-                            ModCommunication.SendMessageTo(new DialogMessage("Transfer Received", null, 
-                                $"You have been sent {amount}{EconomyPlugin.Instance.Config.CurrencyAbbreviation} by {Context.Player.DisplayName}."), toPlayerId);
-                            ModCommunication.SendMessageTo(new DialogMessage("Transfer Sent", null, 
-                                $"You have sent {amount}{EconomyPlugin.Instance.Config.CurrencyAbbreviation} to {targetPlayerNameOrId}."), fromPlayerId);
+                            SendMessage(toPlayerId, $"You have been sent {amount}{EconomyPlugin.Instance.Config.CurrencyAbbreviation} by {Context.Player.DisplayName}.");
+                            SendMessage(fromPlayerId, $"You have sent {amount}{EconomyPlugin.Instance.Config.CurrencyAbbreviation} to {targetPlayerNameOrId}.");
                         });
                 });
         }

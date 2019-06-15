@@ -12,27 +12,37 @@
     <StackPanel>
         <GroupBox Header="Connection Details">
             <StackPanel>
-                <Label Content="Provider"/>
+                <Label Content="Provider" FontWeight="Bold"/>
                 <StackPanel Orientation="Horizontal">
-                    <CheckBox Content="SQLite" Checked="{Binding SqlLite}"></CheckBox>
-                    <CheckBox Content="MySQL" Checked="{Binding MySQL}"></CheckBox>
+                    <CheckBox Content="SQLite" IsChecked="{Binding SqlLite}" Margin="10,0,10,0"></CheckBox>
+                    <CheckBox Content="MySQL" IsChecked="{Binding MySQL}" Margin="10,0,10,0"></CheckBox>
                 </StackPanel>
-                <Label Content="Connection String"/>
-                <TextBox Text="{Binding ConnectionString}" IsEnabled="{Binding ConnectionStringDisabled}"/>
+                
+                <Label Content="Connection String" FontWeight="Bold"/>
+                <TextBox Text="{Binding ConnectionString}" IsEnabled="{Binding ConnectionStringEnabled}"/>
             </StackPanel>
         </GroupBox>
-        <Label Content="Starting Funds"/>
-        <TextBox Text="{Binding StartingFunds}" PreviewTextInput="PreviewNumericInput"/>
-        <Label Content="Max Player Bank Accounts"/>
-        <TextBox Text="{Binding MaxPlayerAccounts}" PreviewTextInput="PreviewNumericInput"/>
-        <Label Content="Currency Name"/>
-        <TextBox Text="{Binding CurrencyName}"/>
-        <Label Content="Currency Abbreviation"/>
-        <TextBox Text="{Binding CurrencyAbbreviation}"/>
-        <Label Content="Transaction Key"/>
-        <TextBox Text="{Binding TransactionKey}"/>
         
-        <Separator/>
-        <Button Content="Save Config" Click="SaveConfig_OnClick"/>
+        <Label Content="Starting Funds" FontWeight="Bold"/>
+        <TextBox Text="{Binding StartingFunds}" PreviewTextInput="PreviewNumericInput"/>
+        
+        <Label Content="Max Player Bank Accounts" FontWeight="Bold"/>
+        <TextBox Text="{Binding MaxPlayerAccounts}" PreviewTextInput="PreviewNumericInput"/>
+        
+        <Label Content="Currency Name" FontWeight="Bold"/>
+        <TextBox Text="{Binding CurrencyName}"/>
+        
+        <Label Content="Currency Abbreviation" FontWeight="Bold"/>
+        <TextBox Text="{Binding CurrencyAbbreviation}"/>
+        
+        <Label Content="Transaction Key" FontWeight="Bold"/>
+        <TextBox Text="{Binding TransactionKey}"/>
+        <CheckBox Content="Force Transaction Checks" IsChecked="{Binding ForceTransactionCheck}"></CheckBox>
+        
+        <Separator Margin="0,10,0,10"/>
+        <StackPanel Orientation="Horizontal">
+            <Button Content="Save Config" Click="SaveConfig_OnClick" Margin="5,0,5,0" Padding="10,5,10,5"/>
+            <!-- <Button Content="Revert Config" Click="RevertConfig_OnClick" Margin="5,0,5,0" Padding="10,5,10,5"/> -->
+        </StackPanel>
     </StackPanel>
 </UserControl>
