@@ -46,6 +46,7 @@ It is currently possibly to interact directly with accounts using the API if pro
 ### Commands
 * !econ buy <itemName> <quantity>: Purchases a quantity of items from the market your ship is currently docked to.
 * !econ sell <itemName> <quantity>: Sells a quantity of items from your ship inventory to the market your ship is docked to.
+* !econ markets list: Lists all markets that you have permission to modify.
 * !econ markets create <gridName> <marketName>: Creates a named market linked to the provided gridName. You must own a majority of the station.
 * !econ markets buy <marketNameOrId> <itemName> <pricePer1> <quantity>: Creates a buy order on the specified market. Must own market.
 * !econ markets sell <marketNameOrId> <itemName> <pricePer1> <quantity>: Creates a sell order on the specified market. Must own market.
