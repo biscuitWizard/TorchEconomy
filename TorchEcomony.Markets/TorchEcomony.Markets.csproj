@@ -76,6 +76,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Commands\AdminModule.cs" />
+    <Compile Include="Commands\MarketManagerModule.cs" />
     <Compile Include="Commands\MarketModule.cs" />
     <Compile Include="Data\DataObjects\MarketOrderDataObject.cs" />
     <Compile Include="Data\DataObjects\MarketDataObject.cs" />
