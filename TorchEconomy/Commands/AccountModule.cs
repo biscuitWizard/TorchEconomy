@@ -173,6 +173,58 @@ namespace TorchEconomy.Commands
             });
         }
 
+        [Command("move", "<fromAccount> <toAccount> <amount>: Manually transfer money between two accounts you own.")]
+        public void MoveBalance(string fromAccountNameOrId, string toAccountNameOrId, decimal amount)
+        {
+            var fromPlayerId = Context.Player.SteamUserId;
+            var manager = GetManager<AccountsManager>();
+
+            if (amount < new decimal(0.01))
+            {
+                Context.Respond($"'{amount}' is too small to transfer. Please choose a number higher than 0.01.");
+                return;
+            }
+
+            manager
+                .GetAccounts(fromPlayerId)
+                .Then(rawAccounts =>
+                {
+                    var accounts = rawAccounts.ToArray();
+                    
+                    AccountDataObject fromAccount;
+                    AccountDataObject toAccount;
+
+                    if (long.TryParse(fromAccountNameOrId, out var fromAccountId))
+                        fromAccount = accounts.FirstOrDefault(a => a.Id == fromAccountId);
+                    fromAccount = accounts.FirstOrDefault(a => a.Nickname.Equals(fromAccountNameOrId, StringComparison.InvariantCultureIgnoreCase));
+
+                    if (fromAccount == null)
+                    {
+                        Context.Respond($"Cannot find an account by the name of '{fromAccountNameOrId}'.");
+                        return;
+                    }
+
+                    if (fromAccount.Balance < amount)
+                    {
+                        Context.Respond($"Acct#{fromAccount.Id} is short {amount - fromAccount.Balance} to make that transfer.");
+                        return;
+                    }
+                    
+                    if (long.TryParse(fromAccountNameOrId, out var toAccountId))
+                        toAccount = accounts.FirstOrDefault(a => a.Id == toAccountId);
+                    toAccount = accounts.FirstOrDefault(a => a.Nickname.Equals(toAccountNameOrId, StringComparison.InvariantCultureIgnoreCase));
+                    
+                    if (toAccount == null)
+                    {
+                        Context.Respond($"Cannot find an account by the name of '{toAccountNameOrId}'.");
+                        return;
+                    }
+                    
+                    manager.AdjustAccountBalance(toAccount.Id, amount, fromAccount.Id, "Self-transfer between owned accounts.");
+                    SendMessage(fromPlayerId, $"Successfully transferred {Utilities.FriendlyFormatCurrency(amount)} from Acct#{fromAccount.Id} to Acct#{toAccount.Id}.");
+                });
+        }
+
         [Command("give", "Alias for !econ transfer <target> <amount>")]
         [Permission(MyPromoteLevel.None)]
         public void GiveBalance(string target, decimal amount) { TransferBalance(target, amount); }
