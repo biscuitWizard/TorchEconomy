@@ -14,9 +14,12 @@ namespace TorchEconomy.Markets.Data.DataObjects
         [Required]
         public float Range { get; set; }
         [Required]
+        public ulong CreatorId { get; set; }
+        [Required]
         public long ParentGridId { get; set; }
         public long? AccountId { get; set; }
         [Required]
+        [DefaultValue(false)]
         public bool IsDeleted { get; set; }
     }
 }

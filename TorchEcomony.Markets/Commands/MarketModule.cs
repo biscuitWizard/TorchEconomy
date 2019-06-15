@@ -1,13 +1,15 @@
 ﻿using System;
 using System.Linq;
+using System.Runtime.Remoting.Contexts;
 using System.Text;
 using NLog;
-using Sandbox.ModAPI;
+using Sandbox.Game.Entities;
 using Torch.Commands;
+using TorchEconomy;
 using TorchEconomy.Markets.Data.Models;
 using TorchEconomy.Markets.Managers;
 using VRage.Game;
-using VRage.Game.ModAPI.Ingame;
+using VRage.ModAPI;
 
 namespace TorchEconomy.Markets.Commands
 {
@@ -47,19 +49,26 @@ namespace TorchEconomy.Markets.Commands
                 Context.Respond("You are dead. You cant trade ships while dead.");
                 return;
             }
-            
-            var entity = MyAPIGateway.Entities.GetEntityByName(stationGridName) as VRage.Game.ModAPI.IMyCubeGrid;
-            if (entity == null
-                || !entity.IsStatic)
+
+            MyCubeGrid stationEntity = null;
+            if (!Utilities.TryGetEntityByNameOrId(stationGridName, out IMyEntity entity))
             {
-                Context.Respond("Unable to find a station by the name of '{stationGridName}'.");
+                Context.Respond($"Unable to find a station by the name of '{stationGridName}'.");
+                return;
+            }
+            
+            stationEntity = entity as MyCubeGrid;
+            if (stationEntity == null
+                || !stationEntity.IsStatic)
+            {
+                Context.Respond($"Unable to find a station by the name of '{stationGridName}'.");
                 return;
             }
 
             var manager = EconomyPlugin.GetManager<MarketManager>();
             
             // Check we have ownership.
-            if (!entity.BigOwners.Contains(Context.Player.IdentityId))
+            if (!stationEntity.BigOwners.Contains(Context.Player.IdentityId))
             {
                 Context.Respond("You must own a majority of the grid to be able authorize a station as a market.");
                 return;
@@ -69,6 +78,7 @@ namespace TorchEconomy.Markets.Commands
             manager.GetMarkets()
                 .Then(markets =>
                 {
+                    Log.Info("Received markets");
                     if (markets.Any(m => m.ParentGridId == entity.EntityId))
                     {
                         Context.Respond("This station is already marked as a market.");
@@ -79,7 +89,7 @@ namespace TorchEconomy.Markets.Commands
                             EconomyMarketsPlugin.Instance.Config.DefaultMarketRange)
                         .Then(newMarket => { Context.Respond($"{marketName} has been successfully established."); })
                         .Catch(error => { Context.Respond($"[ERROR] Unable to create market: {error.Message}"); });
-                });
+                }).Catch(error => Log.Error(error));
         }
 
         [Command("list", "Lists available goods to buy.")]

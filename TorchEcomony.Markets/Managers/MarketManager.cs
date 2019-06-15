@@ -26,7 +26,7 @@ namespace TorchEconomy.Markets.Managers
                 {
                     connection.Execute(
                         SQL.INSERT_MARKET,
-                        new {parentGridId = parentGridId, creatorPlayerId = creatorPlayerId,
+                        new {parentGridId = parentGridId, creatorId = creatorPlayerId,
                             name = marketName, @range = range});
 
                     var market = connection.QueryFirst<MarketDataObject>(
