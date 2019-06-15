@@ -114,7 +114,7 @@ namespace TorchEconomy.Commands
                                 : log.FromAccountId.ToString();
                         
                             responseBuilder.AppendLine(
-                                $"{operation} {from}==>{to} [${log.TransactionAmount}]: {log.Reason}");
+                                $"{operation} {from}==>{to} [{Utilities.FriendlyFormatCurrency(log.TransactionAmount)}]: {log.Reason}");
                         }
                     
                         SendMessage(Context.Player.SteamUserId, responseBuilder.ToString());
@@ -143,12 +143,12 @@ namespace TorchEconomy.Commands
                 foreach (var account in accounts)
                 {
                     if (account.IsPrimary)
-                        responseBuilder.AppendLine($"+ Acct#{account.Id} [PRIMARY]: ${account.Balance}");
+                        responseBuilder.AppendLine($"+ Acct#{account.Id} [PRIMARY]: ${Utilities.FriendlyFormatCurrency(account.Balance)}");
                     else
-                        responseBuilder.AppendLine($"+ Acct#{account.Id}: ${account.Balance}");
+                        responseBuilder.AppendLine($"+ Acct#{account.Id}: {Utilities.FriendlyFormatCurrency(account.Balance)}");
                 }
 
-                responseBuilder.AppendLine($"Accounts Total: {accounts.Sum(a => a.Balance)}");
+                responseBuilder.AppendLine($"Accounts Total: {Utilities.FriendlyFormatCurrency(accounts.Sum(a => a.Balance))}");
             
                 SendMessage(Context.Player.SteamUserId, responseBuilder.ToString());
             });
@@ -185,7 +185,7 @@ namespace TorchEconomy.Commands
                     if (fromAccount.Balance - amount < 0)
                     {
                         Context.Respond(
-                            $"Lacking {amount - fromAccount.Balance}{EconomyPlugin.Instance.Config.CurrencyAbbreviation} to complete that transfer.");
+                            $"Lacking {Utilities.FriendlyFormatCurrency(amount - fromAccount.Balance)} to complete that transfer.");
                         return;
                     }
 
@@ -201,8 +201,8 @@ namespace TorchEconomy.Commands
                             manager.AdjustAccountBalance(toAccount.Id, amount, fromAccount.Id, 
                                 $"{Context.Player.DisplayName} is transferring {amount}.");
                            
-                            SendMessage(toPlayerId, $"You have been sent {amount}{EconomyPlugin.Instance.Config.CurrencyAbbreviation} by {Context.Player.DisplayName}.");
-                            SendMessage(fromPlayerId, $"You have sent {amount}{EconomyPlugin.Instance.Config.CurrencyAbbreviation} to {targetPlayerNameOrId}.");
+                            SendMessage(toPlayerId, $"You have been sent {Utilities.FriendlyFormatCurrency(amount)} by {Context.Player.DisplayName}.");
+                            SendMessage(fromPlayerId, $"You have sent {Utilities.FriendlyFormatCurrency(amount)} to {targetPlayerNameOrId}.");
                         });
                 });
         }

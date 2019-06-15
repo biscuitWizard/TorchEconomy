@@ -10,6 +10,10 @@ namespace TorchEconomy
 {
     public static class Utilities
     {
+        public static string FriendlyFormatCurrency(decimal amount)
+        {
+            return $"{amount}{EconomyPlugin.Instance.Config.CurrencyAbbreviation}";
+        }
         
         public static double DistanceFrom(this VRageMath.Vector3 start, VRageMath.Vector3 end)
         {
