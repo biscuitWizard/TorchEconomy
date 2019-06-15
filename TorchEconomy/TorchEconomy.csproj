@@ -142,8 +142,16 @@
   <ItemGroup>
     <Compile Include="Commands\AccountModule.cs" />
     <Compile Include="Commands\AdminModule.cs" />
+    <Compile Include="Data\DataObjects\IDataObject.cs" />
     <Compile Include="Data\IConnectionFactory.cs" />
     <Compile Include="Data\MysqlConnectionFactory.cs" />
+    <Compile Include="Data\Schema\DefaultValueAttribute.cs" />
+    <Compile Include="Data\Schema\MySQLSchemaGenerator.cs" />
+    <Compile Include="Data\Schema\PrimaryKeyAttribute.cs" />
+    <Compile Include="Data\Schema\RequiredAttribute.cs" />
+    <Compile Include="Data\Schema\SchemaGenerator.cs" />
+    <Compile Include="Data\Schema\SQLiteSchemaGenerator.cs" />
+    <Compile Include="Data\Schema\StringLengthAttribute.cs" />
     <Compile Include="Data\SQL.cs" />
     <Compile Include="Data\SqliteConnectionFactory.cs" />
     <Compile Include="EconomyCommandModule.cs" />
@@ -175,6 +183,7 @@
     <Compile Include="EconomyControl.xaml.cs">
       <DependentUpon>EconomyControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Resources\SQLiteInstaller.cs" />
     <Compile Include="Support.cs" />
     <Compile Include="Utilities.cs" />
   </ItemGroup>
@@ -190,6 +199,11 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Data\CreateTables.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\Linux\sqlite3" />
+    <EmbeddedResource Include="Resources\Mac\sqlite3" />
+    <EmbeddedResource Include="Resources\Windows\sqlite3.dll" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

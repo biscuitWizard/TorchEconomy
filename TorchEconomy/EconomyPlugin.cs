@@ -18,6 +18,7 @@ using Torch.Session;
 using Torch.Views;
 using TorchEconomy.Data;
 using TorchEconomy.Managers;
+using TorchEconomy.Resources;
 using VRage.Game;
 
 namespace TorchEconomy
@@ -74,6 +75,9 @@ namespace TorchEconomy
             Log.Info($"Attempting to load config from {path}");
             _config = Persistent<EconomyConfig>.Load(path);
 
+            // Build the SQLite dependencies.
+            SQLiteInstaller.CheckSQLiteInstalled();
+            
             // Associate Torch containers for lifetime management.
             _sessionManager = Torch.Managers.GetManager(typeof(TorchSessionManager)) as TorchSessionManager;
             if (_sessionManager != null)

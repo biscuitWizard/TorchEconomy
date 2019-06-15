@@ -1,33 +1,36 @@
-﻿using System.Data;
-using System.IO;
-using System.Reflection;
+﻿using System;
+using System.Data;
 using Dapper;
 using MySql.Data.MySqlClient;
+using NLog;
+using TorchEconomy.Data.Schema;
 
 namespace TorchEconomy.Data
 {
     public class MysqlConnectionFactory : IConnectionFactory
     {
+        private static readonly Logger Log = LogManager.GetLogger("Economy.MysqlConnectionFactory");
+        
         public void Setup()
         {
             using (var connection = Open())
             {
-                using (var stream = Assembly
-                    .GetAssembly(typeof(EconomyPlugin))
-                    .GetManifestResourceStream("TorchEconomy.Data.CreateTables.sql"))
+                try
                 {
-                    using (var reader = new StreamReader(stream))
-                    {
-                        string createTablesSql = reader.ReadToEnd();
-                        connection.Execute(createTablesSql);
-                    }
+                    var schemaGenerator = new MySQLSchemaGenerator();
+                    var sql = schemaGenerator.Generate();
+                    connection.Execute(sql);
+                }
+                catch (Exception e)
+                {
+                    Log.Error(e);
                 }
             }
         }
 
         public IDbConnection Open()
         {
-            var connection = new MySqlConnection(EconomyPlugin.Instance.Config.ConnectionString);
+            var connection = new MySqlConnection(EconomyPlugin.Instance.Config.MySQLConnectionString);
             connection.Open();
             
             return connection;

@@ -14,12 +14,13 @@
             <StackPanel>
                 <Label Content="Provider" FontWeight="Bold"/>
                 <StackPanel Orientation="Horizontal">
-                    <!-- <CheckBox Content="SQLite" IsChecked="{Binding SqlLite}" Margin="10,0,10,0" IsEnabled="False"></CheckBox> -->
-                    <CheckBox Content="MySQL" IsChecked="{Binding MySQL}" Margin="10,0,10,0" IsEnabled="False"></CheckBox>
+                    <CheckBox Content="SQLite" IsChecked="{Binding SqlLite}" Margin="10,0,10,0"></CheckBox>
+                    <CheckBox Content="MySQL" IsChecked="{Binding MySQL}" Margin="10,0,10,0"></CheckBox>
                 </StackPanel>
                 
                 <Label Content="Connection String" FontWeight="Bold"/>
-                <TextBox Text="{Binding ConnectionString}" IsEnabled="{Binding ConnectionStringEnabled}"/>
+                <TextBox Text="{Binding MySQLConnectionString}" IsEnabled="{Binding ConnectionStringEnabled}" Visibility="{Binding MySQLConnectionStringVisibility}"/>
+                <TextBox Text="{Binding SQLiteConnectionString}" IsEnabled="{Binding ConnectionStringEnabled}" Visibility="{Binding SQLiteConnectionStringVisibility}"/>
             </StackPanel>
         </GroupBox>
         

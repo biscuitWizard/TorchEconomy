@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Windows;
 using ProtoBuf;
 using Torch;
 using Torch.Views;
@@ -16,20 +17,30 @@ namespace TorchEconomy
             StartingFunds = 2000000;
             CurrencyName = "Credits";
             CurrencyAbbreviation = "C";
-            MySQL = true;
-            ConnectionStringEnabled = true;
-            ConnectionString = "Server=localhost;Database=space_engineers;Uid=root;Pwd=password;";
-//            SqlLite = true;
-//            ConnectionStringEnabled = false;
+            MySQLConnectionString = "Server=localhost;Database=space_engineers;Uid=root;Pwd=password;";
+            SQLiteConnectionString = "Data Source=" + SqliteConnectionFactory.DbPath;
+            SqlLite = true;
+            ConnectionStringEnabled = false;
             TransactionKey = Guid.NewGuid().ToString();
             ForceTransactionCheck = true;
             MaxPlayerAccounts = 10;
         }
 
         //[Display(Name = "Database Connection String", GroupName = "Database Settings", Order = 0, Description = "Set backend server connection to store economy data for players.")]
-        private string _connectionString;
-        public string ConnectionString { get => _connectionString; set => SetValue(ref _connectionString, value); }
-
+        private string _mySQLConnectionString;
+        public string MySQLConnectionString { get => _mySQLConnectionString; set => SetValue(ref _mySQLConnectionString, value); }
+        public Visibility MySQLConnectionStringVisibility
+        {
+            get => _mysql ? Visibility.Visible : Visibility.Collapsed;
+        }
+        
+        private string _sqliteConnectionString;
+        public string SQLiteConnectionString { get => _sqliteConnectionString; set => SetValue(ref _sqliteConnectionString, value); }
+        public Visibility SQLiteConnectionStringVisibility
+        {
+            get => _sqlite ? Visibility.Visible : Visibility.Collapsed;
+        }
+        
         private bool _connectionStringEnabled;
         public bool ConnectionStringEnabled
         {
@@ -37,16 +48,14 @@ namespace TorchEconomy
             set => SetValue(ref _connectionStringEnabled, value);
         }
         
-        private bool _sqlLite;
+        private bool _sqlite;
         public bool SqlLite
         {
-            get => _sqlLite;
+            get => _sqlite;
             set
             {
-                SetValue(ref _sqlLite, value);
+                SetValue(ref _sqlite, value);
                 ConnectionStringEnabled = !value;
-                if (value)
-                    ConnectionString = "Data Source=" + SqliteConnectionFactory.DbPath;
             }
         }
 
