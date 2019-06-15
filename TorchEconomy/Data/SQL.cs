@@ -35,16 +35,17 @@
              VALUES(@fromAccountId,@toAccountId,@transactionAmount,@transactedOn,@reason);";
         #endregion
         
-        #region Trade Zones
+        #region Markets
         public const string INSERT_MARKET
             = @"
             INSERT INTO `Market` (`Name`,`ParentGridId`,`Range`,`CreatorPlayerId`) 
             VALUES(@name,@parentGridId,@range,@creatorPlayerId);";
-        public const string SELECT_TRADEZONES
-            = @"SELECT * FROM `Market`;";
+        
+        public const string SELECT_MARKETS
+            = @"SELECT * FROM `Market` WHERE IsDeleted=0;";
 
         public const string SELECT_MARKET_BY_GRID
-            = @"SELECT * FROM `Market` WHERE `ParentGridId`=@parentGridId;";
+            = @"SELECT * FROM `Market` WHERE `ParentGridId`=@parentGridId AND IsDeleted=0;";
         #endregion
         
         #region Market Orders

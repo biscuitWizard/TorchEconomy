@@ -36,5 +36,16 @@ namespace TorchEconomy.Markets.Managers
                 }
             });
         }
+
+        public Promise<MarketDataObject[]> GetMarkets()
+        {
+            return new Promise<MarketDataObject[]>((resolve, reject) =>
+            {
+                using (var connection = ConnectionFactory.Open())
+                {
+                    resolve(connection.Query<MarketDataObject>(SQL.SELECT_MARKETS).ToArray());
+                }
+            });
+        }
     }
 }

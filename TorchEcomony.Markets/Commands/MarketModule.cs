@@ -11,7 +11,7 @@ using VRage.Game.ModAPI.Ingame;
 
 namespace TorchEconomy.Markets.Commands
 {
-    [Category("econ market")]
+    [Category("econ markets")]
     public class MarketModule : EconomyCommandModule
     {
         private static readonly Logger Log = LogManager.GetLogger("Economy.Commands.TradeZone");
@@ -48,7 +48,7 @@ namespace TorchEconomy.Markets.Commands
                 return;
             }
             
-            var entity = MyAPIGateway.Entities.GetEntityByName(stationGridName) as IMyCubeGrid;
+            var entity = MyAPIGateway.Entities.GetEntityByName(stationGridName) as VRage.Game.ModAPI.IMyCubeGrid;
             if (entity == null
                 || !entity.IsStatic)
             {
@@ -57,9 +57,29 @@ namespace TorchEconomy.Markets.Commands
             }
 
             var manager = EconomyPlugin.GetManager<MarketManager>();
-            manager.CreateMarket(entity.EntityId, Context.Player.SteamUserId, marketName, 
-                EconomyMarketsPlugin.Instance.Config.DefaultMarketRange);
-            Context.Respond($"{marketName} has been successfully established.");
+            
+            // Check we have ownership.
+            if (!entity.BigOwners.Contains(Context.Player.IdentityId))
+            {
+                Context.Respond("You must own a majority of the grid to be able authorize a station as a market.");
+                return;
+            }
+            
+            // Market checks to see if the station is already registered.
+            manager.GetMarkets()
+                .Then(markets =>
+                {
+                    if (markets.Any(m => m.ParentGridId == entity.EntityId))
+                    {
+                        Context.Respond("This station is already marked as a market.");
+                        return;
+                    }
+
+                    manager.CreateMarket(entity.EntityId, Context.Player.SteamUserId, marketName,
+                            EconomyMarketsPlugin.Instance.Config.DefaultMarketRange)
+                        .Then(newMarket => { Context.Respond($"{marketName} has been successfully established."); })
+                        .Catch(error => { Context.Respond($"[ERROR] Unable to create market: {error.Message}"); });
+                });
         }
 
         [Command("list", "Lists available goods to buy.")]

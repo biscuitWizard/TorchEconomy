@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<PluginManifest xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <Name>Torch Economy.Markets</Name>
+  <Guid>7e97fc70-b8c8-4c07-a380-588cfbb9e21e</Guid>
+  <Repository>biscuitWizard/TorchEconomy.Markets</Repository>
+  <Version>v1.0</Version>
+</PluginManifest>
