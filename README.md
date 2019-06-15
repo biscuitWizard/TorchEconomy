@@ -56,6 +56,17 @@ It is currently possibly to interact directly with accounts using the API if pro
 
 ### Admin Commands
 * !admin markets delete <marketName>: Deletes a market.  
+* !admin markets createNPC <gridName> <marketName> <industry>: Creates an NPC market of the specified industry type at the provider grid.
+  
+### About NPC Markets
+There are four market types:
+* Industrial: Buys military products high, Sells ore/ingots cheap
+* Consumer: Buys ore/ingots high, Sells components cheap
+* Research: Buys components high, Sells research commodity items cheap
+* Military: Buys research commodity items high, and sells military commodity items cheap.
+
+If you'll notice, markets sell Industrial -> Consumer -> Research -> Military -> Industrial.
+
 
 ## TorchEconomy.ShipTrading (Incomplete)
 
