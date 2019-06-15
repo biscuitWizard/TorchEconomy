@@ -196,7 +196,8 @@ namespace TorchEconomy.Commands
 
                     if (long.TryParse(fromAccountNameOrId, out var fromAccountId))
                         fromAccount = accounts.FirstOrDefault(a => a.Id == fromAccountId);
-                    fromAccount = accounts.FirstOrDefault(a => a.Nickname.Equals(fromAccountNameOrId, StringComparison.InvariantCultureIgnoreCase));
+                    else
+                        fromAccount = accounts.FirstOrDefault(a => a.Nickname.Equals(fromAccountNameOrId, StringComparison.InvariantCultureIgnoreCase));
 
                     if (fromAccount == null)
                     {
@@ -212,7 +213,8 @@ namespace TorchEconomy.Commands
                     
                     if (long.TryParse(fromAccountNameOrId, out var toAccountId))
                         toAccount = accounts.FirstOrDefault(a => a.Id == toAccountId);
-                    toAccount = accounts.FirstOrDefault(a => a.Nickname.Equals(toAccountNameOrId, StringComparison.InvariantCultureIgnoreCase));
+                    else
+                        toAccount = accounts.FirstOrDefault(a => a.Nickname.Equals(toAccountNameOrId, StringComparison.InvariantCultureIgnoreCase));
                     
                     if (toAccount == null)
                     {
