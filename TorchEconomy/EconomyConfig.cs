@@ -29,16 +29,20 @@ namespace TorchEconomy
         //[Display(Name = "Database Connection String", GroupName = "Database Settings", Order = 0, Description = "Set backend server connection to store economy data for players.")]
         private string _mySQLConnectionString;
         public string MySQLConnectionString { get => _mySQLConnectionString; set => SetValue(ref _mySQLConnectionString, value); }
+
+        private Visibility _mySQLConnectionStringVisibility;
         public Visibility MySQLConnectionStringVisibility
         {
-            get => _mysql ? Visibility.Visible : Visibility.Collapsed;
+            get => _mySQLConnectionStringVisibility; set => SetValue(ref _mySQLConnectionStringVisibility, value); 
         }
         
         private string _sqliteConnectionString;
         public string SQLiteConnectionString { get => _sqliteConnectionString; set => SetValue(ref _sqliteConnectionString, value); }
+
+        private Visibility _sqliteConnectionStringVisibility;
         public Visibility SQLiteConnectionStringVisibility
         {
-            get => _sqlite ? Visibility.Visible : Visibility.Collapsed;
+            get => _sqliteConnectionStringVisibility; set => SetValue(ref _sqliteConnectionStringVisibility, value); 
         }
         
         private bool _connectionStringEnabled;
@@ -56,11 +60,18 @@ namespace TorchEconomy
             {
                 SetValue(ref _sqlite, value);
                 ConnectionStringEnabled = !value;
+                SQLiteConnectionStringVisibility = value ? Visibility.Visible : Visibility.Collapsed;
             }
         }
 
         private bool _mysql;
-        public bool MySQL { get => _mysql; set => SetValue(ref _mysql, value); }
+        public bool MySQL { get => _mysql;
+            set
+            {
+                SetValue(ref _mysql, value); 
+                MySQLConnectionStringVisibility = value ? Visibility.Visible : Visibility.Collapsed;
+            }
+        }
 
         private decimal _startingFunds;
         [ProtoMember(101)]
