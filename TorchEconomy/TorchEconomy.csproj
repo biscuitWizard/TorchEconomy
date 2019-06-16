@@ -146,6 +146,7 @@
     <Compile Include="Data\IConnectionFactory.cs" />
     <Compile Include="Data\DefinitionResolver.cs" />
     <Compile Include="Data\IDataObject.cs" />
+    <Compile Include="Data\IDataProvider.cs" />
     <Compile Include="Data\MysqlConnectionFactory.cs" />
     <Compile Include="Data\Schema\DefaultValueAttribute.cs" />
     <Compile Include="Data\Schema\EnumAsByteAttribute.cs" />

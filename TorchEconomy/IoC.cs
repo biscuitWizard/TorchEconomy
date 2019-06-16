@@ -56,6 +56,22 @@ namespace TorchEconomy
                     // All managers should be singletons.
                     s.Convention<SingletonConvention<BaseManager>>();
                 });
+                
+                _.Scan(s =>
+                {
+                    // Assembly to scan.
+                    var assemblies = AppDomain
+                        .CurrentDomain
+                        .GetAssemblies()
+                        .Where(a => a.GetName().Name.StartsWith("TorchEconomy.") 
+                                    || a.GetName().Name == "TorchEconomy")
+                        .ToList();
+                    foreach (var assembly in assemblies)
+                        s.Assembly(assembly);
+
+                    // All data providers should be singletons.
+                    s.Convention<SingletonConvention<IDataProvider>>();
+                });
 
                 _.For<IMultiplayerManagerServer>()
                     .Use((context) => EconomyPlugin
