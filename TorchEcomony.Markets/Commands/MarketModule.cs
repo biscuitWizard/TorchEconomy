@@ -328,7 +328,7 @@ namespace TorchEconomy.Markets.Commands
             terminalSystem.GetBlocksOfType(blocks);
 
             var remaining = quantity;
-            foreach (var cargoBlock in blocks)
+            foreach (var cargoBlock in blocks.Where(b => b.CubeGrid.EntityId == fromGrid.EntityId))
             {
                 var inventory = cargoBlock.GetInventory();
                 var available = (decimal)inventory.GetItemAmount(itemDefinition.Id);
@@ -356,7 +356,7 @@ namespace TorchEconomy.Markets.Commands
             terminalSystem.GetBlocksOfType(blocks);
             
             var remaining = quantity;
-            foreach (var cargoBlock in blocks)
+            foreach (var cargoBlock in blocks.Where(b => b.CubeGrid.EntityId == toGrid.EntityId))
             {
                 var inventory = (MyInventoryBase)cargoBlock.GetInventory();
                 var available = (decimal)inventory.ComputeAmountThatFits(itemDefinition.Id);
