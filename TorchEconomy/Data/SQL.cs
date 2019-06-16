@@ -4,8 +4,6 @@ namespace TorchEconomy.Data
 {
     public static class SQL
     {
-        
-
         #region Accounts
         public const string SELECT_ACCOUNTS 
             = "SELECT * FROM `Account` WHERE PlayerId = @playerId AND `IsDeleted`=0;";
@@ -79,6 +77,9 @@ namespace TorchEconomy.Data
 
         public const string MUTATE_ORDER_PRICE =
             @"UPDATE `MarketOrder` SET `Price`=@price WHERE `Id`=@id";
+        
+        public const string MUTATE_ORDER_QUANTITY =
+            @"UPDATE `MarketOrder` SET `Quantity`=@quantity WHERE `Id`=@id";
 
         public const string DELETE_MARKET_ORDER =
             @"UPDATE `MarketOrder` SET `IsDeleted` = 1 WHERE `Id`=@id;";

@@ -1,13 +1,18 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using NLog;
 using Sandbox.Definitions;
+using Sandbox.ModAPI;
 using Torch.Commands;
+using TorchEconomy.Managers;
 using TorchEconomy.Markets.Data.Models;
 using TorchEconomy.Markets.Data.Types;
 using TorchEconomy.Markets.Managers;
+using VRage;
 using VRage.Game;
+using VRage.Game.Entity;
 using VRage.Game.ModAPI;
 
 namespace TorchEconomy.Markets.Commands
@@ -92,64 +97,287 @@ namespace TorchEconomy.Markets.Commands
         }
         
         [Command("buy", "<itemNameOrIndex> <quantity>: Purchases a quantity of items from nearby tradezones at the lowest prices available.")]
-        public void Buy(string itemNameOrIndex, decimal quantity)
+        public void Buy(string itemName, decimal quantity)
         {
-//            var stringBuilder = new StringBuilder("Available Items: ");
-            var marketManager = EconomyPlugin.GetManager<MarketSimManager>();
-
-            var marketItem = default(MarketValueItem);
-            if (int.TryParse(itemNameOrIndex, out var index))
+            var character = Context.Player.Character;
+            if (character == null)
             {
-                // Find the item by tradezone index.
-            }
-            else
-            {
-                marketItem = marketManager.GetUniversalMarketValueItem(itemNameOrIndex);
-            }
-
-            if (!IsValidQuantity(marketItem, quantity))
-                return;
-            if (quantity <= 0)
-            {
-                Context.Respond("Invalid quantity, or you dont have any to trade!");
-                return;
-            }
-
-            var buyingPlayer = Context.Player;
-            var buyingCharacter = buyingPlayer.Character;
-            // TODO: do players in Cryochambers count as a valid trading partner? They should be alive, but the connected player may be offline.
-            // I think we'll have to do lower level checks to see if a physical player is Online.
-            if (buyingCharacter == null)
-            {
-                // Player has no body. Could mean they are dead.
-                // Either way, there is no inventory.
-                Context.Respond( "You are dead. You cannot trade while dead.");
-//                EconomyScript.Instance.ServerLogger.WriteVerbose("Action /Sell Create aborted by Steam Id '{0}' -- player is dead.", SenderSteamId);
+                Context.Respond("You cannot do this while dead.");
                 return;
             }
             
-            var playerInventory = buyingCharacter.GetInventory();
-            Support.InventoryAdd(playerInventory, (VRage.MyFixedPoint)quantity, marketItem.Definition.Id);
+            if (quantity < new decimal(0.01))
+            {
+                Context.Respond($"{quantity} is too low. Please use a higher value.");
+                return;
+            }
+            
+            if (!DefinitionResolver.TryGetDefinitionByName(itemName, out var itemDefinition))
+            {
+                Context.Respond($"Unable to find an item by the name of {itemName}");
+                return;
+            }
+            
+            var controllingCube = Context.Player.Controller.ControlledEntity as IMyCubeBlock;
+            if (controllingCube == null)
+            {
+                Context.Respond("Trading by hand is not supported.");
+                return;
+            }
+
+
+            var marketManager = GetManager<MarketManager>();
+            var orderManager = GetManager<MarketOrderManager>();
+            var accountManager = GetManager<AccountsManager>();
+            marketManager.GetConnectedMarket(controllingCube.CubeGrid)
+                .Then(market =>
+                {
+                    if (market == null)
+                    {
+                        Context.Respond("Unable to find any connected markets. Have you docked to a market?");
+                        return;
+                    }
+
+                    orderManager.GetMarketOrder(BuyOrderType.Sell, market.Id, itemDefinition.Id)
+                        .Then(order =>
+                        {
+                            if (order == null)
+                            {
+                                Context.Respond($"Unable to find any sell orders for {itemDefinition.DisplayNameText}.");
+                                return;
+                            }
+
+                            if (order.Quantity < quantity)
+                            {
+                                Context.Respond($"Trying to buy more than the seller has. Seller only has {order.Quantity}.");
+                                return;
+                            }
+
+                            orderManager.UpdateOrderQuantity(order.Id, order.Quantity - quantity)
+                                .Catch(error => Log.Error(error));
+                            
+                            // Actually do the transfer... fuck.
+                            var stationGrid = MyAPIGateway.Entities.GetEntityById(market.ParentGridId);
+                            
+                            accountManager.GetPrimaryAccount(Context.Player.SteamUserId)
+                                .Then(account =>
+                                {
+                                    var sellAmount = quantity * order.Price;
+                                    TransferInventory(stationGrid as IMyCubeGrid, controllingCube.CubeGrid,
+                                        itemDefinition as MyPhysicalItemDefinition, quantity, true, false)
+                                        .Then(() =>
+                                        {
+                                            accountManager.AdjustAccountBalance(market.AccountId.Value, sellAmount,
+                                                account.Id,
+                                                $"Exchanged {quantity}x {itemDefinition.DisplayNameText} for {Utilities.FriendlyFormatCurrency(sellAmount)}.");
+                                            Context.Respond($"Exchanged {quantity}x {itemDefinition.DisplayNameText} for {Utilities.FriendlyFormatCurrency(sellAmount)}.");
+                                        }).
+                                        Catch(error => Context.Respond(error.Message));
+                                    
+                                })
+                                .Catch(error => Log.Error(error));
+                            
+                        })
+                        .Catch(error => Log.Error(error));
+                })
+                .Catch(error => Log.Error(error));
         }
 
         [Command("sell", "<itemName> <quantity>: Attempts to sell a quantity of items to nearby trade zones at best possible price from character inventory and ship inventory.")]
         public void Sell(string itemName, decimal quantity)
         {
-
-        }
-
-        private bool IsValidQuantity(MarketValueItem marketItem, decimal quantity)
-        {
-            if (marketItem.Definition.Id.TypeId != typeof(MyObjectBuilder_Ore) && marketItem.Definition.Id.TypeId != typeof(MyObjectBuilder_Ingot))
+            var character = Context.Player.Character;
+            if (character == null)
             {
-                if (quantity != Math.Truncate(quantity))
-                {
-                    Context.Respond("You must provide a whole number for the quantity of that item.");
-                    return false;
-                }
+                Context.Respond("You cannot do this while dead.");
+                return;
+            }
+            
+            if (quantity < new decimal(0.01))
+            {
+                Context.Respond($"{quantity} is too low. Please use a higher value.");
+                return;
+            }
+            
+            if (!DefinitionResolver.TryGetDefinitionByName(itemName, out var itemDefinition))
+            {
+                Context.Respond($"Unable to find an item by the name of {itemName}");
+                return;
+            }
+            
+            var controllingCube = Context.Player.Controller.ControlledEntity as IMyCubeBlock;
+            if (controllingCube == null)
+            {
+                Context.Respond("Trading by hand is not supported.");
+                return;
             }
 
-            return true;
+
+            var marketManager = GetManager<MarketManager>();
+            var orderManager = GetManager<MarketOrderManager>();
+            var accountManager = GetManager<AccountsManager>();
+            marketManager.GetConnectedMarket(controllingCube.CubeGrid)
+                .Then(market =>
+                {
+                    if (market == null)
+                    {
+                        Context.Respond("Unable to find any connected markets. Have you docked to a market?");
+                        return;
+                    }
+
+                    orderManager.GetMarketOrder(BuyOrderType.Buy, market.Id, itemDefinition.Id)
+                        .Then(order =>
+                        {
+                            if (order == null)
+                            {
+                                Context.Respond($"Unable to find any buy orders for {itemDefinition.DisplayNameText}.");
+                                return;
+                            }
+
+                            if (order.Quantity < quantity)
+                            {
+                                Context.Respond($"Trying to sell more than the order desires by {quantity - order.Quantity}. Buy order only wants {order.Quantity}.");
+                                return;
+                            }
+
+                            orderManager.UpdateOrderQuantity(order.Id, order.Quantity - quantity)
+                                .Catch(error => Log.Error(error));
+                            
+                            // Actually do the transfer... fuck.
+                            var stationGrid = MyAPIGateway.Entities.GetEntityById(market.ParentGridId);
+                            
+                            accountManager.GetPrimaryAccount(Context.Player.SteamUserId)
+                                .Then(account =>
+                                {
+                                    var sellAmount = quantity * order.Price;
+                                    TransferInventory(controllingCube.CubeGrid, stationGrid as IMyCubeGrid,
+                                        itemDefinition as MyPhysicalItemDefinition, quantity, false, true)
+                                        .Then(() =>
+                                        {
+                                            accountManager.AdjustAccountBalance(account.Id, sellAmount,
+                                                market.AccountId,
+                                                $"Exchanged {quantity}x {itemDefinition.DisplayNameText} for {Utilities.FriendlyFormatCurrency(sellAmount)}.");
+                                            Context.Respond($"Exchanged {quantity}x {itemDefinition.DisplayNameText} for {Utilities.FriendlyFormatCurrency(sellAmount)}.");
+                                        }).
+                                        Catch(error => Context.Respond(error.Message));
+                                    
+                                })
+                                .Catch(error => Log.Error(error));
+                            
+                        })
+                        .Catch(error => Log.Error(error));
+                })
+                .Catch(error => Log.Error(error));
+        }
+
+        private Promise TransferInventory(IMyCubeGrid fromGrid, IMyCubeGrid toGrid, MyPhysicalItemDefinition itemDefinition,
+            decimal quantity, bool fromGridIsNpc = false, bool toGridIsNpc = false)
+        {
+            return new Promise((resolve, reject) =>
+            {
+                var payloadMass = quantity * (decimal)itemDefinition.Mass;
+                
+                if (!fromGridIsNpc)
+                {
+                    var fromTerminalSystem = MyAPIGateway.TerminalActionsHelper.GetTerminalSystemForGrid(fromGrid);
+                    var fromBlocks = new List<IMyCargoContainer>();
+                    fromTerminalSystem.GetBlocksOfType(fromBlocks);
+
+                    var storedAmount =
+                        fromBlocks
+                            .Select(c => c.GetInventory())
+                            .Sum(i => (decimal) i.GetItemAmount(itemDefinition.Id));
+                    if (storedAmount < quantity)
+                    {
+                        reject(new Exception(
+                            $"Inventory lacks {quantity - storedAmount}x {itemDefinition.DisplayNameText} to sell. Inventory only has {storedAmount}."));
+                        return;
+                    }
+                }
+
+                if (!toGridIsNpc)
+                {
+                    var toTerminalSystem = MyAPIGateway.TerminalActionsHelper.GetTerminalSystemForGrid(toGrid);
+                    var toBlocks = new List<IMyCargoContainer>();
+                    toTerminalSystem.GetBlocksOfType(toBlocks);
+                    
+                    var availableMass =
+                        toBlocks
+                            .Select(c => c.GetInventory())
+                            .Where(i => !i.IsFull)
+                            .Sum(i => (decimal) (i.MaxVolume - i.CurrentVolume));
+                    if (availableMass < payloadMass)
+                    {
+                        reject(new Exception(
+                            $"Inventory lacks the required space to hold the payload. Required Mass: {payloadMass}, Available Mass: {availableMass}."));
+                        return;
+                    }
+                }
+                
+                // We're clear to change inventories...
+                if (!fromGridIsNpc)
+                    RemoveItems(fromGrid, itemDefinition, quantity);
+                if(!toGridIsNpc)
+                    AddItems(toGrid, itemDefinition, quantity);
+
+                resolve();
+            });
+        }
+
+        private void RemoveItems(IMyCubeGrid fromGrid, MyPhysicalItemDefinition itemDefinition, decimal quantity)
+        {
+            var terminalSystem = MyAPIGateway.TerminalActionsHelper.GetTerminalSystemForGrid(fromGrid);
+            var blocks = new List<IMyCargoContainer>();
+            terminalSystem.GetBlocksOfType(blocks);
+
+            var remaining = quantity;
+            foreach (var cargoBlock in blocks)
+            {
+                var inventory = cargoBlock.GetInventory();
+                var available = (decimal)inventory.GetItemAmount(itemDefinition.Id);
+
+                if (available > remaining)
+                {
+                    inventory.RemoveItemsOfType((MyFixedPoint)remaining, itemDefinition.Id);
+                    remaining = 0;
+                }
+                else
+                {
+                    inventory.RemoveItemsOfType((MyFixedPoint)available, itemDefinition.Id);
+                    remaining -= available;
+                }
+
+                if (remaining == 0)
+                    return;
+            }
+        }
+
+        private void AddItems(IMyCubeGrid toGrid, MyPhysicalItemDefinition itemDefinition, decimal quantity)
+        {
+            var terminalSystem = MyAPIGateway.TerminalActionsHelper.GetTerminalSystemForGrid(toGrid);
+            var blocks = new List<IMyCargoContainer>();
+            terminalSystem.GetBlocksOfType(blocks);
+            
+            var remaining = quantity;
+            foreach (var cargoBlock in blocks)
+            {
+                var inventory = (MyInventoryBase)cargoBlock.GetInventory();
+                var available = (decimal)inventory.ComputeAmountThatFits(itemDefinition.Id);
+
+                if (available >= remaining)
+                {
+                    ((IMyInventory) inventory).BetterAddItems((MyFixedPoint)remaining, itemDefinition.Id);
+                    remaining = 0;
+                }
+                else if(available > 0)
+                {
+                    ((IMyInventory) inventory).BetterAddItems((MyFixedPoint)available, itemDefinition.Id);
+                    remaining -= available;
+                }
+
+                if (remaining == 0)
+                    return;
+            }
         }
     }
 }

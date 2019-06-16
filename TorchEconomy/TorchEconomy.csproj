@@ -163,6 +163,7 @@
     <Compile Include="Data\DataObjects\AccountDataObject.cs" />
     <Compile Include="Data\DataObjects\TransactionDataObject.cs" />
     <Compile Include="HudAPIv2.cs" />
+    <Compile Include="InventoryExtensions.cs" />
     <Compile Include="IoC.cs" />
     <Compile Include="LazyProperty.cs" />
     <Compile Include="Managers\AccountsManager.cs" />

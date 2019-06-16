@@ -19,11 +19,15 @@ namespace TorchEconomy.Markets.Data.DataObjects
         public long ParentGridId { get; set; }
         public long? AccountId { get; set; }
         [Required]
-        [DefaultValue(false)]
+        [TorchEconomy.Data.Schema.DefaultValue(false)]
         public bool IsDeleted { get; set; }
         
         [Required]
         [DefaultValue(false)]
         public bool IsOpen { get; set; }
+        
+        [Required]
+        [DefaultValue(false)]
+        public bool IsNPC { get; set; }
     }
 }

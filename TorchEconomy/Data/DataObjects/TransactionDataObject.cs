@@ -13,7 +13,7 @@ namespace TorchEconomy.Data.DataObjects
         [Required]
         public decimal TransactionAmount { get; set; }
         [Required]
-        public double TransactedOn { get; set; }
+        public int TransactedOn { get; set; }
         [StringLength(256)]
         public string Reason { get; set; }
     }

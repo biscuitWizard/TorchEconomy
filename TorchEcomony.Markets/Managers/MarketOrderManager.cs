@@ -103,5 +103,19 @@ namespace TorchEconomy.Markets.Managers
                 }
             });
         }
+
+        public Promise UpdateOrderQuantity(long orderId, decimal newQuantity)
+        {
+            return new Promise((resolve, reject) =>
+            {
+                using (var connection = ConnectionFactory.Open())
+                {
+                    connection.Execute(
+                        SQL.MUTATE_ORDER_QUANTITY,
+                        new {id = orderId, quantity = newQuantity});
+                    resolve();
+                }
+            });
+        }
     }
 }
