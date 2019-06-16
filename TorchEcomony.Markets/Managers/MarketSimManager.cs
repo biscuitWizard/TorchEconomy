@@ -112,6 +112,9 @@ namespace TorchEconomy.Markets.Managers
         protected virtual void SetItemValue(MyDefinitionId id, decimal value)
         {
             var definition = _definitionManager.GetDefinition(id);
+            if (definition.Id.TypeId.IsNull
+                || string.IsNullOrEmpty(definition.Id.SubtypeName))
+                return; // Skip this entry. It's useless.
             
             _definitionResolver.Register(definition.DisplayNameText, id);
             _itemValues[id] = new MarketValueItem(definition, value);
