@@ -142,9 +142,10 @@
   <ItemGroup>
     <Compile Include="Commands\AccountModule.cs" />
     <Compile Include="Commands\AdminModule.cs" />
-    <Compile Include="Data\DataObjects\IDataObject.cs" />
+    <Compile Include="Data\DataObjects\NPCDataObject.cs" />
     <Compile Include="Data\IConnectionFactory.cs" />
     <Compile Include="Data\DefinitionResolver.cs" />
+    <Compile Include="Data\IDataObject.cs" />
     <Compile Include="Data\MysqlConnectionFactory.cs" />
     <Compile Include="Data\Schema\DefaultValueAttribute.cs" />
     <Compile Include="Data\Schema\EnumAsByteAttribute.cs" />
@@ -157,6 +158,7 @@
     <Compile Include="Data\Schema\StringLengthAttribute.cs" />
     <Compile Include="Data\SQL.cs" />
     <Compile Include="Data\SqliteConnectionFactory.cs" />
+    <Compile Include="Data\Types\IndustryTypeEnum.cs" />
     <Compile Include="EconomyCommandModule.cs" />
     <Compile Include="EconomyConfig.cs" />
     <Compile Include="EconomyPlugin.cs" />
@@ -205,6 +207,12 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\Windows\sqlite3.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\Corporations.Consumer.txt" />
+    <EmbeddedResource Include="Resources\Corporations.Industrial.txt" />
+    <EmbeddedResource Include="Resources\Corporations.Military.txt" />
+    <EmbeddedResource Include="Resources\Corporations.Research.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

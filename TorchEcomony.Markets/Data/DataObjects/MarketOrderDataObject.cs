@@ -1,4 +1,5 @@
 ﻿using Sandbox.Definitions;
+using TorchEconomy.Data;
 using TorchEconomy.Data.DataObjects;
 using TorchEconomy.Data.Schema;
 using TorchEconomy.Markets.Data.Types;

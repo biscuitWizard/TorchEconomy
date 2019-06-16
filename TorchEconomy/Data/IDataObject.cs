@@ -1,4 +1,4 @@
-namespace TorchEconomy.Data.DataObjects
+namespace TorchEconomy.Data
 {
     public interface IDataObject
     {

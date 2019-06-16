@@ -20,7 +20,7 @@ namespace TorchEconomy
 
             if (inventory.CanItemsBeAdded(inventoryItem.Amount, definitionId))
             {
-                inventory.AddItems(inventoryItem.Amount, (MyObjectBuilder_PhysicalObject)inventoryItem.PhysicalContent, -1);
+                inventory.AddItems(inventoryItem.Amount, inventoryItem.PhysicalContent, -1);
                 return true;
             }
 

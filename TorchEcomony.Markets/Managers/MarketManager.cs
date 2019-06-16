@@ -116,11 +116,9 @@ namespace TorchEconomy.Markets.Managers
                             resolve(market);
                             return;
                         }
-                        else
-                        {
-                            reject(new LogicLevelException("Unable to find any connected markets. Have you docked to a market?"));
-                        }
                     }
+                    
+                    reject(new LogicLevelException("Unable to find any connected markets. Have you docked to a market?"));
                 }
             });
         }

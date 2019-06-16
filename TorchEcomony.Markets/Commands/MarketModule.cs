@@ -286,7 +286,7 @@ namespace TorchEconomy.Markets.Commands
                             .Sum(i => (decimal) i.GetItemAmount(itemDefinition.Id));
                     if (storedAmount < quantity)
                     {
-                        reject(new Exception(
+                        reject(new LogicLevelException(
                             $"Inventory lacks {quantity - storedAmount}x {itemDefinition.DisplayNameText} to sell. Inventory only has {storedAmount}."));
                         return;
                     }
@@ -305,7 +305,7 @@ namespace TorchEconomy.Markets.Commands
                             .Sum(i => (decimal) (i.MaxVolume - i.CurrentVolume));
                     if (availableMass < payloadMass)
                     {
-                        reject(new Exception(
+                        reject(new LogicLevelException(
                             $"Inventory lacks the required space to hold the payload. Required Mass: {payloadMass}, Available Mass: {availableMass}."));
                         return;
                     }

@@ -1,6 +1,8 @@
 ﻿using System;
+using TorchEconomy.Data;
 using TorchEconomy.Data.DataObjects;
 using TorchEconomy.Data.Schema;
+using TorchEconomy.Markets.Data.Types;
 
 namespace TorchEconomy.Markets.Data.DataObjects
 {

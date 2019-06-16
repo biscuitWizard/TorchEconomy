@@ -83,7 +83,6 @@
     <Compile Include="Data\DataObjects\MarketDataObject.cs" />
     <Compile Include="Data\Models\MarketValueItem.cs" />
     <Compile Include="Data\Types\BuyOrderType.cs" />
-    <Compile Include="Data\Types\IndustryTypeEnum.cs" />
     <Compile Include="EconomyMarketConfig.cs" />
     <Compile Include="EconomyMarketsPlugin.cs" />
     <Compile Include="Managers\BaseMarketManager.cs" />

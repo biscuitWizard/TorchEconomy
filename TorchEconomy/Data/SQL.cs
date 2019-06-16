@@ -86,5 +86,14 @@ namespace TorchEconomy.Data
 
         #endregion
 
+        #region NPCs
+
+        public const string INSERT_NPC =
+            @"INSERT INTO `NPC` (`Name`,`IndustryType`) VALUES(@name,@industryType);";
+
+        public const string SELECT_NPCS =
+            @"SELECT * FROM `NPC` WHERE `IsDeleted`=0;";
+
+        #endregion
     }
 }

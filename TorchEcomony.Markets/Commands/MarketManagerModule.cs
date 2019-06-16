@@ -321,12 +321,14 @@ namespace TorchEconomy.Markets.Commands
         }
         
         [Command("buy.remove", "<marketNameOrId> <itemName>: Removes a buy order completely.")]
+        [Permission(MyPromoteLevel.None)]
         public void RemoveBuyOrder(string marketNameOrId, string itemName)
         {
             RemoveOrder(BuyOrderType.Buy, marketNameOrId, itemName);   
         }
 
         [Command("sell.remove", "<marketNameOrId> <itemName>: Removes a sell order completely.")]
+        [Permission(MyPromoteLevel.None)]
         public void RemoveSellOrder(string marketNameOrId, string itemName)
         {
             RemoveOrder(BuyOrderType.Sell, marketNameOrId, itemName);
