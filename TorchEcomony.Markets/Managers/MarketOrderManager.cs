@@ -49,6 +49,22 @@ namespace TorchEconomy.Markets.Managers
                             orderType = (int)orderType
                         });
 
+                    GetMarketOrder(orderType, marketId, itemDefinitionId)
+                        .Then(resolve)
+                        .Catch(reject);
+                }
+            });
+        }
+
+        public Promise<MarketOrderDataObject> GetMarketOrder(BuyOrderType orderType, long marketId, 
+            MyDefinitionId itemDefinitionId)
+        {
+            return new Promise<MarketOrderDataObject>((resolve, reject) =>
+            {
+                using (var connection = ConnectionFactory.Open())
+                {
+                    var definitionHash = itemDefinitionId.ToString();
+
                     resolve(connection.QueryFirstOrDefault<MarketOrderDataObject>(
                         SQL.SELECT_MARKET_ORDER_BY_ITEM,
                         new
@@ -56,6 +72,34 @@ namespace TorchEconomy.Markets.Managers
                             marketId = marketId, definitionId = definitionHash,
                             orderType = (int) orderType
                         }));
+                }
+            });
+        }
+
+        public Promise UpdateOrderPrice(long orderId, decimal newPrice)
+        {
+            return new Promise((resolve, reject) =>
+            {
+                using (var connection = ConnectionFactory.Open())
+                {
+                    connection.Execute(
+                        SQL.MUTATE_ORDER_PRICE,
+                        new {id = orderId, price = newPrice});
+                    resolve();
+                }
+            });
+        }
+
+        public Promise DeleteOrder(long orderId)
+        {
+            return new Promise((resolve, reject) =>
+            {
+                using (var connection = ConnectionFactory.Open())
+                {
+                    connection.Execute(
+                        SQL.DELETE_MARKET_ORDER,
+                        new {id = orderId});
+                    resolve();
                 }
             });
         }

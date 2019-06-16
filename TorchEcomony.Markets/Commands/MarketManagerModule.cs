@@ -258,10 +258,22 @@ namespace TorchEconomy.Markets.Commands
                 .Catch(error => Log.Error(error));
         }
 
-        [Command("setbuyprice", "<marketNameOrId> <itemName> <newPricePer1>: Sets a price on a specified item at the specified market.")]
+        [Command("buy.price", "<marketNameOrId> <itemName> <newPricePer1>: Sets a price on a specified item at the specified market.")]
         [Permission(MyPromoteLevel.None)]
         public void SetBuyOrderPrice(string marketNameOrId, string itemName, decimal newPrice)
         {
+            UpdateOrderPrice(BuyOrderType.Buy, marketNameOrId, itemName, newPrice);
+        }
+
+        [Command("sell.price", "<marketNameOrId> <itemName> <newPricePer1>: Sets a price on a specified item at the specified market.")]
+        [Permission(MyPromoteLevel.None)]
+        public void SetSellOrderPrice(string marketNameOrId, string itemName, decimal newPrice)
+        {
+            UpdateOrderPrice(BuyOrderType.Sell, marketNameOrId, itemName, newPrice);
+        }
+
+        private void UpdateOrderPrice(BuyOrderType orderType, string marketNameOrId, string itemName, decimal newPrice)
+        {
             var character = Context.Player.Character;
             if (character == null)
             {
@@ -274,19 +286,50 @@ namespace TorchEconomy.Markets.Commands
                 Context.Respond($"Unable to find an item by the name of {itemName}");
                 return;
             }
+
+            if (newPrice < new decimal(0.01))
+            {
+                Context.Respond($"{newPrice} is too small. Please use a higher value.");
+                return;
+            }
             
             var manager = EconomyPlugin.GetManager<MarketManager>();
+            var orderManager = EconomyPlugin.GetManager<MarketOrderManager>();
             manager.GetMarketByNameOrId(marketNameOrId, Context.Player.SteamUserId)
                 .Then(market =>
                 {
+                    if (market == null)
+                    {
+                        Context.Respond($"Unable to find market by name or id of '{marketNameOrId}'.");
+                        return;
+                    }
                     
+                    orderManager.GetMarketOrder(orderType, market.Id, itemDefinition.Id)
+                        .Then(order =>
+                        {
+                            orderManager.UpdateOrderPrice(order.Id, newPrice)
+                                .Then(() => Context.Respond(
+                                    $"Successfully updated Order#{order.Id}'s price to {Utilities.FriendlyFormatCurrency(newPrice)}."))
+                                .Catch(error => Log.Error(error));
+                        })
+                        .Catch(error => Log.Error(error));
                 })
                 .Catch(error => Log.Error(error));
         }
+        
+        [Command("buy.remove", "<marketNameOrId> <itemName>: Removes a buy order completely.")]
+        public void RemoveBuyOrder(string marketNameOrId, string itemName)
+        {
+            RemoveOrder(BuyOrderType.Buy, marketNameOrId, itemName);   
+        }
 
-        [Command("setsellprice", "<marketNameOrId> <itemName> <newPricePer1>: Sets a price on a specified item at the specified market.")]
-        [Permission(MyPromoteLevel.None)]
-        public void SetSellOrderPrice(string marketNameOrId, string itemName, decimal newPrice)
+        [Command("sell.remove", "<marketNameOrId> <itemName>: Removes a sell order completely.")]
+        public void RemoveSellOrder(string marketNameOrId, string itemName)
+        {
+            RemoveOrder(BuyOrderType.Sell, marketNameOrId, itemName);
+        }
+
+        private void RemoveOrder(BuyOrderType orderType, string marketNameOrId, string itemName)
         {
             var character = Context.Player.Character;
             if (character == null)
@@ -302,10 +345,25 @@ namespace TorchEconomy.Markets.Commands
             }
             
             var manager = EconomyPlugin.GetManager<MarketManager>();
+            var orderManager = EconomyPlugin.GetManager<MarketOrderManager>();
             manager.GetMarketByNameOrId(marketNameOrId, Context.Player.SteamUserId)
                 .Then(market =>
                 {
+                    if (market == null)
+                    {
+                        Context.Respond($"Unable to find market by name or id of '{marketNameOrId}'.");
+                        return;
+                    }
                     
+                    orderManager.GetMarketOrder(orderType, market.Id, itemDefinition.Id)
+                        .Then(order =>
+                        {
+                            orderManager.DeleteOrder(order.Id)
+                                .Then(() => Context.Respond(
+                                    $"Successfully removed Order#{order.Id}."))
+                                .Catch(error => Log.Error(error));
+                        })
+                        .Catch(error => Log.Error(error));
                 })
                 .Catch(error => Log.Error(error));
         }

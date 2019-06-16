@@ -1,4 +1,6 @@
-﻿namespace TorchEconomy.Data
+﻿using System.Data;
+
+namespace TorchEconomy.Data
 {
     public static class SQL
     {
@@ -74,6 +76,12 @@
         public const string SELECT_MARKET_ORDER_BY_ITEM =
             @"SELECT * FROM `MarketOrder` WHERE `MarketId`=@marketId AND `IsDeleted`=0 
                               AND `DefinitionId`=@definitionId AND `OrderType`=@orderType";
+
+        public const string MUTATE_ORDER_PRICE =
+            @"UPDATE `MarketOrder` SET `Price`=@price WHERE `Id`=@id";
+
+        public const string DELETE_MARKET_ORDER =
+            @"UPDATE `MarketOrder` SET `IsDeleted` = 1 WHERE `Id`=@id;";
 
         #endregion
 
