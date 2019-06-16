@@ -10,7 +10,7 @@ namespace TorchEconomy.Markets.Data.Models
     {
         public MyDefinitionBase Definition { get; set; }
         public decimal Value { get; set; }
-        public IndustryTypeEnum[] IndustryTypes { get; }
+        public IndustryTypeEnum[] IndustryTypes { get; set; }
         public string FriendlyName
         {
             get { return Definition.DisplayNameText; }
@@ -22,14 +22,11 @@ namespace TorchEconomy.Markets.Data.Models
         }
 
         public MarketValueItem(MyDefinitionBase definition, decimal value, 
-            IEnumerable<IndustryTypeEnum> industryTypes = null)
+            IEnumerable<IndustryTypeEnum> industryTypes)
         {
             Definition = definition;
             Value = value;
-            if (industryTypes == null)
-                industryTypes = new[] {IndustryTypeEnum.None};
-            else
-                IndustryTypes = industryTypes.ToArray();
+            IndustryTypes = industryTypes.ToArray();
         }
     }
 }

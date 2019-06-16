@@ -47,6 +47,7 @@ namespace TorchEconomy.Markets.Managers
             Log.Info("Generating procedural market price data. This may take some time...");
             
             // set the ingot prices.
+            var definitions = MyDefinitionManager.Static.GetAllDefinitions().ToArray();
             foreach (var valueBinding in EconomyMarketsPlugin.Instance.Config.ValueDefinitionBindings)
             {
                 SetItemValue(valueBinding.DefinitionId, (decimal)valueBinding.Value);
