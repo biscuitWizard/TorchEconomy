@@ -2,6 +2,8 @@
 {
     public static class SQL
     {
+        
+
         #region Accounts
         public const string SELECT_ACCOUNTS 
             = "SELECT * FROM `Account` WHERE PlayerId = @playerId AND `IsDeleted`=0;";
@@ -62,6 +64,16 @@
 
         public const string SELECT_MARKET_ORDERS =
             @"SELECT * FROM `MarketOrder` WHERE `MarketId`=@marketId AND `IsDeleted`=0;";
+
+        public const string INSERT_OR_UPDATE_MARKET_ORDER =
+            @"INSERT IGNORE INTO `MarketOrder` (`OrderType`,`DefinitionId`,`Quantity`,`Price`,`MarketId`)
+                VALUES(@orderType,@definitionId,0,0,@marketId);
+              UPDATE `MarketOrder` SET `Quantity`=@quantity, `Price`=@price,`CreatedOn`=@createdOn
+                WHERE `MarketId`=@marketId AND `DefinitionId`=@definitionId AND `OrderType`=@orderType;";
+
+        public const string SELECT_MARKET_ORDER_BY_ITEM =
+            @"SELECT * FROM `MarketOrder` WHERE `MarketId`=@marketId AND `IsDeleted`=0 
+                              AND `DefinitionId`=@definitionId AND `OrderType`=@orderType";
 
         #endregion
 

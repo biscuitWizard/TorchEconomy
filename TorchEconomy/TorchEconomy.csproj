@@ -201,8 +201,6 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Resources\Linux\sqlite3" />
-    <EmbeddedResource Include="Resources\Mac\sqlite3" />
     <EmbeddedResource Include="Resources\Windows\sqlite3.dll" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

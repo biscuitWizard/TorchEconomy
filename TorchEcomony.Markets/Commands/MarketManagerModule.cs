@@ -10,6 +10,7 @@ using Torch.Commands.Permissions;
 using TorchEconomy;
 using TorchEconomy.Managers;
 using TorchEconomy.Markets.Data.Models;
+using TorchEconomy.Markets.Data.Types;
 using TorchEconomy.Markets.Managers;
 using VRage.Game;
 using VRage.Game.ModAPI;
@@ -119,6 +120,18 @@ namespace TorchEconomy.Markets.Commands
                 Context.Respond("You cannot do this while dead.");
                 return;
             }
+
+            if (quantity < new decimal(0.01))
+            {
+                Context.Respond($"{quantity} is too low. Please use a higher value.");
+                return;
+            }
+
+            if (pricePerOne < new decimal(0.01))
+            {
+                Context.Respond($"{pricePerOne} is too low. Please use a higher value.");
+                return;
+            }
             
             if (!DefinitionResolver.TryGetDefinitionByName(itemName, out var itemDefinition))
             {
@@ -127,10 +140,24 @@ namespace TorchEconomy.Markets.Commands
             }
             
             var manager = EconomyPlugin.GetManager<MarketManager>();
+            var orderManager = EconomyPlugin.GetManager<MarketOrderManager>();
             manager.GetMarketByNameOrId(marketNameOrId, Context.Player.SteamUserId)
                 .Then(market =>
                 {
-                    
+                    if (market == null)
+                    {
+                        Context.Respond($"Unable to find a market by the name or id of {marketNameOrId}.");
+                        return;
+                    }
+
+                    orderManager.UpdateOrAddMarketOrder(BuyOrderType.Buy, market.Id,
+                            itemDefinition.Id, pricePerOne, quantity)
+                        .Then(order =>
+                        {
+                            Context.Respond(
+                                $"Successfully created Order#{order.Id} for {quantity}x {itemDefinition.DisplayNameText} @ {Utilities.FriendlyFormatCurrency(pricePerOne)} per 1.");
+                        })
+                        .Catch(error => Log.Error(error));
                 })
                 .Catch(error => Log.Error(error));
         }

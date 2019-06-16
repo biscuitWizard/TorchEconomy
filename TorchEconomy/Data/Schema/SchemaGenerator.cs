@@ -36,7 +36,8 @@ namespace TorchEconomy.Data.Schema
 
                 var properties = doType
                     .GetProperties()
-                    .Where(p => p.GetCustomAttribute<IgnoreAttribute>() == null);
+                    .Where(p => p.GetCustomAttribute<IgnoreAttribute>() == null)
+                    .ToArray();
 
                 var fields = new List<string>();
                 PropertyInfo primaryKey = null;

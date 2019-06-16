@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using System.Text;
 using NLog;
+using Sandbox.Definitions;
 using Torch.Commands;
 using TorchEconomy.Markets.Data.Models;
 using TorchEconomy.Markets.Data.Types;
@@ -63,11 +64,12 @@ namespace TorchEconomy.Markets.Commands
                             {
                                 foreach (var order in buyOrders)
                                 {
+                                    var definition = MyDefinitionManager.Static.GetDefinition(order.MyDefinitionId);
                                     var orderQuantity = (order.Quantity + "x").PadLeft(6);
                                     var valueDifference =
                                         marketSimManager.GetOrCalculateUniversalItemValue(order.MyDefinitionId);
                                     responseBuilder.AppendLine(
-                                        $"+ {order.DefinitionId.PadRight(maxNameLength)} {orderQuantity}: {Utilities.FriendlyFormatCurrency(order.Price)} ({Utilities.FriendlyFormatCurrency(valueDifference)})");
+                                        $"+ {definition.DisplayNameText.PadRight(maxNameLength)} {orderQuantity}: {Utilities.FriendlyFormatCurrency(order.Price)} ({Utilities.FriendlyFormatCurrency(valueDifference)})");
                                 }
                             }
 
@@ -79,11 +81,12 @@ namespace TorchEconomy.Markets.Commands
                             {
                                 foreach (var order in sellOrders)
                                 {
+                                    var definition = MyDefinitionManager.Static.GetDefinition(order.MyDefinitionId);
                                     var orderQuantity = (order.Quantity + "x").PadLeft(6);
                                     var valueDifference =
                                         marketSimManager.GetOrCalculateUniversalItemValue(order.MyDefinitionId);
                                     responseBuilder.AppendLine(
-                                        $"+ {order.DefinitionId.PadRight(maxNameLength)} {orderQuantity}: {Utilities.FriendlyFormatCurrency(order.Price)} ({Utilities.FriendlyFormatCurrency(valueDifference)})");
+                                        $"+ {definition.DisplayNameText.PadRight(maxNameLength)} {orderQuantity}: {Utilities.FriendlyFormatCurrency(order.Price)} ({Utilities.FriendlyFormatCurrency(valueDifference)})");
                                 }
                             }
 
