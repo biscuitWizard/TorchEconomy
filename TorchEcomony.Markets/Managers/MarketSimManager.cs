@@ -215,10 +215,9 @@ namespace TorchEconomy.Markets.Managers
                         break;
                     case IndustryTypeEnum.Military:
                         // Military buys research trade goods at a high price.
-                        // Military sells industrial trade goods at a low price.
+                        // Military sells industrial trade goods & ammo at a low price.
                         marginFlux = new decimal(0.08);
-                        buyMarketItems.AddRange(GetUniversalItems<MyAmmoMagazineDefinition>());
-                        
+                        sellMarketItems.AddRange(GetUniversalItems<MyAmmoMagazineDefinition>());
                         break;
                 }
 
