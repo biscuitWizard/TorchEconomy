@@ -1,3 +1,5 @@
+using System;
+using NLog;
 using Torch.API;
 using Torch.API.Managers;
 using Torch.Commands;
@@ -8,6 +10,8 @@ namespace TorchEconomy
 {
 	public abstract class EconomyCommandModule : CommandModule
 	{
+		private static readonly Logger Log = LogManager.GetLogger("Economy.Commands");
+		
 		protected IConnectionFactory ConnectionFactory
 		{
 			get { return EconomyPlugin.Instance.GetConnectionFactory(); }
@@ -36,6 +40,17 @@ namespace TorchEconomy
 				return;
 			
 			manager.SendMessageAsOther("Server", message, null, targetSteamId);
+		}
+
+		protected void HandleError<TException>(TException exception) where TException : Exception
+		{
+			if(exception is LogicLevelException) 
+				Context.Respond(exception.Message);
+			else
+			{
+				Context.Respond("A server-side error has occurred. Check server logs for more details.");
+				Log.Error(exception);
+			}
 		}
 	}
 }

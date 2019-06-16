@@ -8,12 +8,7 @@ namespace TorchEconomy.Markets.Managers
 		protected BaseMarketManager(IConnectionFactory connectionFactory) : base(connectionFactory)
 		{
 		}
-		
-		protected EconomyMarketConfig MarketConfig
-		{
-			get { return EconomyMarketsPlugin.Instance.Config; }
-		}
 
-		
+		protected EconomyMarketConfig MarketConfig => EconomyMarketsPlugin.Instance.Config;
 	}
 }

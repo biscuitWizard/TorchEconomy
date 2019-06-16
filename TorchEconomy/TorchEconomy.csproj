@@ -166,9 +166,11 @@
     <Compile Include="InventoryExtensions.cs" />
     <Compile Include="IoC.cs" />
     <Compile Include="LazyProperty.cs" />
+    <Compile Include="LogicLevelException.cs" />
     <Compile Include="Managers\AccountsManager.cs" />
     <Compile Include="Managers\BaseManager.cs" />
     <Compile Include="Managers\MessageRouterManager.cs" />
+    <Compile Include="Managers\NPCManager.cs" />
     <Compile Include="Managers\TextHudAPIManager.cs" />
     <Compile Include="Messages\Accounts\AdjustBalanceMessage.cs" />
     <Compile Include="Messages\Accounts\CreateAccountMessage.cs" />

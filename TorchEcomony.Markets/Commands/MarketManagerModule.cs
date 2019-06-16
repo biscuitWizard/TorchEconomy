@@ -170,9 +170,9 @@ namespace TorchEconomy.Markets.Commands
                             Context.Respond(
                                 $"Successfully created Order#{order.Id} for {quantity}x {itemDefinition.DisplayNameText} @ {Utilities.FriendlyFormatCurrency(pricePerOne)} per 1.");
                         })
-                        .Catch(error => Log.Error(error));
+                        .Catch(HandleError);
                 })
-                .Catch(error => Log.Error(error));
+                .Catch(HandleError);
         }
 
         [Command("open", "<marketNameOrId>: Opens the specified market for business.")]
@@ -197,9 +197,10 @@ namespace TorchEconomy.Markets.Commands
                     }
 
                     manager.SetMarketOpenStatus(market.Id, true)
-                        .Then(() => Context.Respond($"Mrkt#{market.Id} ({market.Name}) has been opened for business."));
+                        .Then(() => Context.Respond($"Mrkt#{market.Id} ({market.Name}) has been opened for business."))
+                        .Catch(HandleError);
                 })
-                .Catch(error => Log.Error(error));
+                .Catch(HandleError);
         }
 
         [Command("close", "<marketNameOrId>: Closes the specified market for business.")]
@@ -224,9 +225,10 @@ namespace TorchEconomy.Markets.Commands
                     }
 
                     manager.SetMarketOpenStatus(market.Id, false)
-                        .Then(() => Context.Respond($"Mrkt#{market.Id} ({market.Name}) has been closed."));
+                        .Then(() => Context.Respond($"Mrkt#{market.Id} ({market.Name}) has been closed."))
+                        .Catch(HandleError);
                 })
-                .Catch(error => Log.Error(error));
+                .Catch(HandleError);
         }
 
         [Command("account", "<marketNameOrId> <accountNameOrId>: Links an account to specified market to act as a coffer.")]
@@ -248,14 +250,15 @@ namespace TorchEconomy.Markets.Commands
                     accountManager.GetAccount(Context.Player.SteamUserId, accountNameOrId)
                         .Then(account =>
                         {
-                            manager.SetMarketAccount(market.Id, account.Id).Then(() =>
+                            manager.SetMarketAccount(market.Id, account.Id)
+                                .Then(() =>
                                     Context.Respond(
                                         $"Mrkt#{market.Id} ({market.Name}) has been successfully set to use Acct#{account.Id} ({account.Nickname}) as its coffer."))
-                                .Catch(error => { Context.Respond(error.Message); });
+                                .Catch(HandleError);
                         })
-                        .Catch(error => { Context.Respond(error.Message); });
+                        .Catch(HandleError);
                 })
-                .Catch(error => Log.Error(error));
+                .Catch(HandleError);
         }
 
         [Command("buy.price", "<marketNameOrId> <itemName> <newPricePer1>: Sets a price on a specified item at the specified market.")]
@@ -310,11 +313,11 @@ namespace TorchEconomy.Markets.Commands
                             orderManager.UpdateOrderPrice(order.Id, newPrice)
                                 .Then(() => Context.Respond(
                                     $"Successfully updated Order#{order.Id}'s price to {Utilities.FriendlyFormatCurrency(newPrice)}."))
-                                .Catch(error => Log.Error(error));
+                                .Catch(HandleError);
                         })
-                        .Catch(error => Log.Error(error));
+                        .Catch(HandleError);
                 })
-                .Catch(error => Log.Error(error));
+                .Catch(HandleError);
         }
         
         [Command("buy.remove", "<marketNameOrId> <itemName>: Removes a buy order completely.")]
@@ -361,11 +364,11 @@ namespace TorchEconomy.Markets.Commands
                             orderManager.DeleteOrder(order.Id)
                                 .Then(() => Context.Respond(
                                     $"Successfully removed Order#{order.Id}."))
-                                .Catch(error => Log.Error(error));
+                                .Catch(HandleError);
                         })
-                        .Catch(error => Log.Error(error));
+                        .Catch(HandleError);
                 })
-                .Catch(error => Log.Error(error));
+                .Catch(HandleError);
         }
     }
 }

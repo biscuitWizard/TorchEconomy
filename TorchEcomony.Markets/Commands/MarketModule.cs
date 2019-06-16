@@ -6,6 +6,7 @@ using NLog;
 using Sandbox.Definitions;
 using Sandbox.ModAPI;
 using Torch.Commands;
+using Torch.Commands.Permissions;
 using TorchEconomy.Managers;
 using TorchEconomy.Markets.Data.Models;
 using TorchEconomy.Markets.Data.Types;
@@ -23,6 +24,7 @@ namespace TorchEconomy.Markets.Commands
         private static readonly Logger Log = LogManager.GetLogger("Economy.Commands.Markets");
         
         [Command("list", "Lists available goods to buy.")]
+        [Permission(MyPromoteLevel.None)]
         public void List()
         {
             var marketManager = EconomyPlugin.GetManager<MarketManager>();
@@ -91,12 +93,13 @@ namespace TorchEconomy.Markets.Commands
                             
                             Context.Respond(responseBuilder.ToString());
                         })
-                        .Catch(error => Log.Error(error));
+                        .Catch(HandleError);
                 })
-                .Catch(error => Log.Error(error));
+                .Catch(HandleError);
         }
         
         [Command("buy", "<itemNameOrIndex> <quantity>: Purchases a quantity of items from nearby tradezones at the lowest prices available.")]
+        [Permission(MyPromoteLevel.None)]
         public void Buy(string itemName, decimal quantity)
         {
             var character = Context.Player.Character;
@@ -132,12 +135,6 @@ namespace TorchEconomy.Markets.Commands
             marketManager.GetConnectedMarket(controllingCube.CubeGrid)
                 .Then(market =>
                 {
-                    if (market == null)
-                    {
-                        Context.Respond("Unable to find any connected markets. Have you docked to a market?");
-                        return;
-                    }
-
                     orderManager.GetMarketOrder(BuyOrderType.Sell, market.Id, itemDefinition.Id)
                         .Then(order =>
                         {
@@ -164,26 +161,27 @@ namespace TorchEconomy.Markets.Commands
                                 {
                                     var sellAmount = quantity * order.Price;
                                     TransferInventory(stationGrid as IMyCubeGrid, controllingCube.CubeGrid,
-                                        itemDefinition as MyPhysicalItemDefinition, quantity, true, false)
+                                        itemDefinition as MyPhysicalItemDefinition, quantity, market.IsNPC, false)
                                         .Then(() =>
                                         {
                                             accountManager.AdjustAccountBalance(market.AccountId.Value, sellAmount,
                                                 account.Id,
                                                 $"Exchanged {quantity}x {itemDefinition.DisplayNameText} for {Utilities.FriendlyFormatCurrency(sellAmount)}.");
                                             Context.Respond($"Exchanged {quantity}x {itemDefinition.DisplayNameText} for {Utilities.FriendlyFormatCurrency(sellAmount)}.");
-                                        }).
-                                        Catch(error => Context.Respond(error.Message));
+                                        })
+                                        .Catch(HandleError);
                                     
                                 })
-                                .Catch(error => Log.Error(error));
+                                .Catch(HandleError);
                             
                         })
-                        .Catch(error => Log.Error(error));
+                        .Catch(HandleError);
                 })
-                .Catch(error => Log.Error(error));
+                .Catch(HandleError);
         }
 
         [Command("sell", "<itemName> <quantity>: Attempts to sell a quantity of items to nearby trade zones at best possible price from character inventory and ship inventory.")]
+        [Permission(MyPromoteLevel.None)]
         public void Sell(string itemName, decimal quantity)
         {
             var character = Context.Player.Character;
@@ -251,23 +249,22 @@ namespace TorchEconomy.Markets.Commands
                                 {
                                     var sellAmount = quantity * order.Price;
                                     TransferInventory(controllingCube.CubeGrid, stationGrid as IMyCubeGrid,
-                                        itemDefinition as MyPhysicalItemDefinition, quantity, false, true)
+                                        itemDefinition as MyPhysicalItemDefinition, quantity, false, market.IsNPC)
                                         .Then(() =>
                                         {
                                             accountManager.AdjustAccountBalance(account.Id, sellAmount,
                                                 market.AccountId,
                                                 $"Exchanged {quantity}x {itemDefinition.DisplayNameText} for {Utilities.FriendlyFormatCurrency(sellAmount)}.");
                                             Context.Respond($"Exchanged {quantity}x {itemDefinition.DisplayNameText} for {Utilities.FriendlyFormatCurrency(sellAmount)}.");
-                                        }).
-                                        Catch(error => Context.Respond(error.Message));
-                                    
+                                        })
+                                        .Catch(HandleError);
                                 })
-                                .Catch(error => Log.Error(error));
+                                .Catch(HandleError);
                             
                         })
-                        .Catch(error => Log.Error(error));
+                        .Catch(HandleError);
                 })
-                .Catch(error => Log.Error(error));
+                .Catch(HandleError);
         }
 
         private Promise TransferInventory(IMyCubeGrid fromGrid, IMyCubeGrid toGrid, MyPhysicalItemDefinition itemDefinition,
