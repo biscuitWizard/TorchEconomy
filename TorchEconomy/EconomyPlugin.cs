@@ -14,6 +14,8 @@ using Torch.API;
 using Torch.API.Managers;
 using Torch.API.Plugins;
 using Torch.API.Session;
+using Torch.Server.Managers;
+using Torch.Server.ViewModels;
 using Torch.Session;
 using Torch.Views;
 using TorchEconomy.Data;
@@ -83,10 +85,25 @@ namespace TorchEconomy
             // Associate Torch containers for lifetime management.
             _sessionManager = Torch.Managers.GetManager(typeof(TorchSessionManager)) as TorchSessionManager;
             if (_sessionManager != null)
+            {
                 _sessionManager.SessionStateChanged += SessionChanged;
+                
+                // Add mod override for the economy client mod for client enhancements.
+                _sessionManager.AddOverrideMod(1772298664);
+//                var instanceManager = Torch
+//                    .Managers
+//                    .GetManager<InstanceManager>();
+//                    
+//                instanceManager.
+//                    .DedicatedConfig.Mods.Add(new ModItemInfo(new MyObjectBuilder_Checkpoint.ModItem(1772298664)));
+            }
             else
+            {
                 Log.Warn("No session manager.  Economy system won't work.");
-            
+            }
+
+
+
             GetConnectionFactory().Setup();
             DefinitionResolver = GetContainer().GetInstance<DefinitionResolver>();
             Log.Info("Torch Economy Initialized!");
