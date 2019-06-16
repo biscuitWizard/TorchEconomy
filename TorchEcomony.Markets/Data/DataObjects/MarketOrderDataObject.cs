@@ -45,11 +45,11 @@ namespace TorchEconomy.Markets.Data.DataObjects
         public string ToString(MarketSimManager simManager, int maxNameLength)
         {
             var definition = MyDefinitionManager.Static.GetDefinition(MyDefinitionId);
-            var orderQuantity = (Quantity + "x").PadLeft(6);
+            var orderQuantity = Quantity == -1 ? "Infinite" : (Quantity + "x").PadLeft(8);
             var valueDifference =
-                simManager.GetOrCalculateUniversalItemValue(MyDefinitionId);
+                Price - simManager.GetOrCalculateUniversalItemValue(MyDefinitionId);
             return
-                $"{definition.DisplayNameText.PadRight(maxNameLength)} {orderQuantity}: {Utilities.FriendlyFormatCurrency(Price)} ({Utilities.FriendlyFormatCurrency(valueDifference)})";
+                $"{definition.DisplayNameText.PadRight(maxNameLength)} {orderQuantity}: {Utilities.FriendlyFormatCurrency(Price)} (Avg: {Utilities.FriendlyFormatCurrency(valueDifference)})";
         }
     }
 }
