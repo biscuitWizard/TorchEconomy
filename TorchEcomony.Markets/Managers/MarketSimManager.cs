@@ -4,7 +4,10 @@ using System.Linq;
 using NLog;
 using Sandbox.Definitions;
 using TorchEconomy.Data;
+using TorchEconomy.Data.DataObjects;
+using TorchEconomy.Data.Types;
 using TorchEconomy.Managers;
+using TorchEconomy.Markets.Data.DataObjects;
 using TorchEconomy.Markets.Data.Models;
 using VRage.Game;
 using VRage.ObjectBuilders;
@@ -41,40 +44,11 @@ namespace TorchEconomy.Markets.Managers
         public void CalculateUniversalPrices()
         {
             Log.Info("Generating procedural market price data. This may take some time...");
-
-            var orePrices = new Dictionary<string, double>
-            {
-                { "Iron", .02 },
-                { "Nickel", .04 },
-                { "Silicon", .02 },
-                { "Cobalt", .05 },
-                { "Gold", .07 },
-                { "Silver", .09 },
-                { "Magnesium", .04},
-                { "Stone", 0.005 },
-                { "Uranium", .08 },
-                { "Default", .01 },
-                { "Platinum", .095 }
-            };
             
             // set the ingot prices.
-            var oreType = MyObjectBuilderType.Parse("MyObjectBuilder_Ore");
-            foreach (var oreDefinition in _definitionManager.GetPhysicalItemDefinitions())
+            foreach (var valueBinding in EconomyMarketsPlugin.Instance.Config.ValueDefinitionBindings)
             {
-                if (!oreDefinition.AvailableInSurvival)
-                    continue;
-                if (!oreDefinition.Enabled)
-                    continue;
-                if (oreDefinition.Id.TypeId != oreType)
-                    continue;
-
-                if (orePrices.TryGetValue(oreDefinition.Id.SubtypeId.String, out var value))
-                {
-                    SetItemValue(oreDefinition.Id, (decimal)value);
-                    continue;
-                }
-                
-                SetItemValue(oreDefinition.Id, (decimal)orePrices["Default"]);
+                SetItemValue(valueBinding.DefinitionId, (decimal)valueBinding.Value);
             }
 
             foreach (var scrapDefinition in _definitionManager
@@ -195,6 +169,38 @@ namespace TorchEconomy.Markets.Managers
                 throw new KeyNotFoundException("Unable to find item.");
 
             return itemValue.Value;
+        }
+
+        public Promise<MarketOrderDataObject[]> GenerateNPCOrders(NPCDataObject npc, MarketDataObject market)
+        {
+            return new Promise<MarketOrderDataObject[]>((resolve, reject) =>
+            {
+                decimal marginFlux = 0;
+                switch (npc.IndustryType)
+                {
+                    case IndustryTypeEnum.Industrial:
+                        // Industrial buys industrial trade goods at a high price.
+                        // Industrial buys ore at a moderate price.
+                        // Industrial sells ingots at a low price.
+                        marginFlux = new decimal(0.02);
+                        break;
+                    case IndustryTypeEnum.Consumer:
+                        // Consumer buys ingots at a high price.
+                        // Consumer sells components at a low price.
+                        marginFlux = new decimal(0.04);
+                        break;
+                    case IndustryTypeEnum.Research:
+                        // Research buys components at a high price.
+                        // Research sells research trade goods at a low price.
+                        marginFlux = new decimal(0.06);
+                        break;
+                    case IndustryTypeEnum.Military:
+                        // Military buys research trade goods at a high price.
+                        // Military sells industrial trade goods at a low price.
+                        marginFlux = new decimal(0.08);
+                        break;
+                }
+            });
         }
     }
 }

@@ -1,0 +1,34 @@
+﻿<UserControl x:Class="TorchEconomy.Markets.EconomyMarketsControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:torchEconomy="clr-namespace:TorchEconomy.Markets"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.DataContext>
+        <torchEconomy:EconomyMarketConfig/>
+    </UserControl.DataContext>
+    <StackPanel>
+        <GroupBox Header="Value Configuration">
+            <DataGrid ItemsSource="{Binding ValueDefinitionBindings}" AutoGenerateColumns="False" CanUserAddRows="False">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Definition Id" Binding="{Binding RawDefinitionId}" IsReadOnly="True" />
+                    <DataGridTextColumn Header="Value" Binding="{Binding Value}" />
+                </DataGrid.Columns>
+            </DataGrid>
+        </GroupBox>
+        
+        <Label Content="Energy Value per Second"/>
+        <TextBox Text="{Binding EnergySecondsValue}" PreviewTextInput="PreviewNumericInput"/>
+        
+        <Label Content="Default Market Range"/>
+        <TextBox Text="{Binding DefaultMarketRange}" PreviewTextInput="PreviewNumericInput"/>
+        
+        <Separator Margin="0,10,0,10"/>
+        <StackPanel Orientation="Horizontal">
+            <Button Content="Save Config" Click="SaveConfig_OnClick" Margin="5,0,5,0" Padding="10,5,10,5"/>
+            <!-- <Button Content="Revert Config" Click="RevertConfig_OnClick" Margin="5,0,5,0" Padding="10,5,10,5"/> -->
+        </StackPanel>
+    </StackPanel>
+</UserControl>

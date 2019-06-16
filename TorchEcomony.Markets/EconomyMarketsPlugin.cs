@@ -21,7 +21,7 @@ namespace TorchEconomy.Markets
 		public EconomyMarketConfig Config => _config?.Data;
 		
 		/// <inheritdoc />
-		public UserControl GetControl() => _control ?? (_control = new PropertyGrid() { DataContext = Config/*, IsEnabled = false*/});
+		public UserControl GetControl() => _control ?? (_control = new EconomyMarketsControl(this) { DataContext = Config/*, IsEnabled = false*/});
 
 		public override void Init(ITorchBase torch)
 		{
