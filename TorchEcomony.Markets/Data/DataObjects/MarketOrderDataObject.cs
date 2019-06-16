@@ -1,6 +1,8 @@
-﻿using TorchEconomy.Data.DataObjects;
+﻿using Sandbox.Definitions;
+using TorchEconomy.Data.DataObjects;
 using TorchEconomy.Data.Schema;
 using TorchEconomy.Markets.Data.Types;
+using TorchEconomy.Markets.Managers;
 using VRage.Game;
 
 namespace TorchEconomy.Markets.Data.DataObjects
@@ -38,5 +40,15 @@ namespace TorchEconomy.Markets.Data.DataObjects
         [Required]
         [DefaultValue(false)]
         public bool IsDeleted { get; set; }
+
+        public string ToString(MarketSimManager simManager, int maxNameLength)
+        {
+            var definition = MyDefinitionManager.Static.GetDefinition(MyDefinitionId);
+            var orderQuantity = (Quantity + "x").PadLeft(6);
+            var valueDifference =
+                simManager.GetOrCalculateUniversalItemValue(MyDefinitionId);
+            return
+                $"{definition.DisplayNameText.PadRight(maxNameLength)} {orderQuantity}: {Utilities.FriendlyFormatCurrency(Price)} ({Utilities.FriendlyFormatCurrency(valueDifference)})";
+        }
     }
 }

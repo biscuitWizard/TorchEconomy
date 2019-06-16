@@ -64,12 +64,8 @@ namespace TorchEconomy.Markets.Commands
                             {
                                 foreach (var order in buyOrders)
                                 {
-                                    var definition = MyDefinitionManager.Static.GetDefinition(order.MyDefinitionId);
-                                    var orderQuantity = (order.Quantity + "x").PadLeft(6);
-                                    var valueDifference =
-                                        marketSimManager.GetOrCalculateUniversalItemValue(order.MyDefinitionId);
                                     responseBuilder.AppendLine(
-                                        $"+ {definition.DisplayNameText.PadRight(maxNameLength)} {orderQuantity}: {Utilities.FriendlyFormatCurrency(order.Price)} ({Utilities.FriendlyFormatCurrency(valueDifference)})");
+                                        $"+ {order.ToString(marketSimManager, maxNameLength)}");
                                 }
                             }
 
@@ -81,12 +77,8 @@ namespace TorchEconomy.Markets.Commands
                             {
                                 foreach (var order in sellOrders)
                                 {
-                                    var definition = MyDefinitionManager.Static.GetDefinition(order.MyDefinitionId);
-                                    var orderQuantity = (order.Quantity + "x").PadLeft(6);
-                                    var valueDifference =
-                                        marketSimManager.GetOrCalculateUniversalItemValue(order.MyDefinitionId);
                                     responseBuilder.AppendLine(
-                                        $"+ {definition.DisplayNameText.PadRight(maxNameLength)} {orderQuantity}: {Utilities.FriendlyFormatCurrency(order.Price)} ({Utilities.FriendlyFormatCurrency(valueDifference)})");
+                                        $"+ {order.ToString(marketSimManager, maxNameLength)}");
                                 }
                             }
 
