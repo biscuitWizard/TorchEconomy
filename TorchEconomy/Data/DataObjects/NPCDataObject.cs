@@ -8,7 +8,7 @@ namespace TorchEconomy.Data.DataObjects
         [PrimaryKey]
         public long Id { get; set; }
         [Required]
-        [StringLength(32)]
+        [StringLength(64)]
         public string Name { get; set; }
         [Required]
         [DefaultValue(false)]

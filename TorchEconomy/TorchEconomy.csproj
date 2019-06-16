@@ -191,6 +191,7 @@
     <Compile Include="EconomyControl.xaml.cs">
       <DependentUpon>EconomyControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Resources\NameGeneratorHelper.cs" />
     <Compile Include="Resources\SQLiteInstaller.cs" />
     <Compile Include="Support.cs" />
     <Compile Include="Utilities.cs" />
@@ -213,6 +214,9 @@
     <EmbeddedResource Include="Resources\Corporations.Industrial.txt" />
     <EmbeddedResource Include="Resources\Corporations.Military.txt" />
     <EmbeddedResource Include="Resources\Corporations.Research.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\Names.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
