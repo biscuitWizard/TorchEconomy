@@ -39,7 +39,17 @@ namespace TorchEconomy.Markets
 				new ValueDefinitionBinding { RawDefinitionId = "MyObjectBuilder_Ore/Stone", Value = 0},
 				new ValueDefinitionBinding { RawDefinitionId = "MyObjectBuilder_Ore/Uranium", Value = .08},
 				new ValueDefinitionBinding { RawDefinitionId = "MyObjectBuilder_Ore/Default", Value = .01},
-				new ValueDefinitionBinding { RawDefinitionId = "MyObjectBuilder_Ore/Platinum", Value = .09}
+				new ValueDefinitionBinding { RawDefinitionId = "MyObjectBuilder_Ore/Platinum", Value = .09},
+				new ValueDefinitionBinding { RawDefinitionId = "Component/Research_AdvancedMedicine", Value = 1000},
+				new ValueDefinitionBinding { RawDefinitionId = "Component/Research_DataCore", Value = 1000},
+				new ValueDefinitionBinding { RawDefinitionId = "Component/Research_AncientUrn", Value = 1000},
+				new ValueDefinitionBinding { RawDefinitionId = "Component/Research_PrototypeTechnology", Value = 1000},
+				new ValueDefinitionBinding { RawDefinitionId = "Component/Research_ExperimentalChemicals", Value = 1000},
+				
+				new ValueDefinitionBinding { RawDefinitionId = "Component/Industrial_RadiationBaffle", Value = 10000},
+				new ValueDefinitionBinding { RawDefinitionId = "Component/Industrial_ThermalControlUnit", Value = 10000},
+				new ValueDefinitionBinding { RawDefinitionId = "Component/Industrial_PowerConverter", Value = 10000},
+				new ValueDefinitionBinding { RawDefinitionId = "Component/Industrial_MiningEquipment", Value = 10000},
 			};
 		}
 		private decimal _energySecondsValue;
