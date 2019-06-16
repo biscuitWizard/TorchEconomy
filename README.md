@@ -26,6 +26,16 @@ Frontier Economy's code, expanding and modifying it to make it a server-side onl
 
 ### Admin Commands
 * !admin accounts give <playerNameOrId> <amount>: Admin command to give a player money. Sends it to their primary account. Amount may be negative.
+  
+### Setup MySQL
+If you'd like to use MYSQL as the ADo.net data provider, it will require some setup.
+
+* Make sure to install your MySQL server first.
+* Make note of your username/password you set root as.
+* Using a command line mysql client or a GUI mysql client, create an empty database. By default the name we use is 'space_engineers'.
+* Configure the plugin's ConnectionString in Torch's WPF GUI, using the username/password you configured earlier. If you used a different database/schema name or port, put that here too.
+* Restart Torch for good measure!
+* Start the server and it should populate all the tables for you. Everything should be good now!
 
 ### Using the API
 Send requests to DS using the normal APIGateway (the Protobuf classes are under TorchEconomy/Messages). Messages from other mods should include the TransactionKey if ForceTransactionCheck is enabled in Torch Economy. Responses from Torch will be returned specifically to the client that requested them.
@@ -44,6 +54,8 @@ It is currently possibly to interact directly with accounts using the API if pro
 * Player tradezones can be configured to use a specific bank account, preventing overdrafting and griefing by mass sales.
 
 ### Commands
+* !econ values: Lists the global value for all items.
+* !econ list: Lists all items for sale at the market that you're currently docked with.
 * !econ buy <itemName> <quantity>: Purchases a quantity of items from the market your ship is currently docked to.
 * !econ sell <itemName> <quantity>: Sells a quantity of items from your ship inventory to the market your ship is docked to.
 * !econ markets list: Lists all markets that you have permission to modify.
@@ -53,7 +65,10 @@ It is currently possibly to interact directly with accounts using the API if pro
 * !econ markets open <marketNameOrId>: Opens the specified market for business.
 * !econ markets close <marketNameOrId>: Closes the specified market for business.
 * !econ markets account <marketNameOrId> <accountNameOrId>: Links an account to specified market to act as a coffer.
-* !econ markets setprice <marketNameOrId> <itemName> <newPricePer1>: Sets a price on a specified item at the specified market.
+* !econ markets buy.price <marketNameOrId> <itemName> <newPricePer1>: Sets a price on a specified item at the specified market.
+* !econ markets sell.price <marketNameOrId> <itemName> <newPricePer1>: Sets a price on a specified item at the specified market.
+* !econ markets buy.remove <marketNameOrId> <itemName>: Removes a buy order completely.
+* !econ markets sell.remove <marketNameOrId> <itemName>: Removes a sell order completely.
 
 ### Admin Commands
 * !admin markets delete <marketName>: Deletes a market.  
