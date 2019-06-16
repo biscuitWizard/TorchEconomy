@@ -52,5 +52,10 @@ namespace TorchEconomy
 				Log.Error(exception);
 			}
 		}
+
+		protected TProvider GetDataProvider<TProvider>() where TProvider : class, IDataProvider
+		{
+			return EconomyPlugin.GetDataProvider<TProvider>();
+		}
 	}
 }

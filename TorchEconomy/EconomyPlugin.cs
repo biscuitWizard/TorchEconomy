@@ -58,10 +58,16 @@ namespace TorchEconomy
         private UserControl _control;
         
         private readonly List<BaseManager> _managers = new List<BaseManager>();
+        private readonly List<IDataProvider> _dataProviders = new List<IDataProvider>();
 
         public static T GetManager<T>() where T : BaseManager
         {
             return Instance._managers.FirstOrDefault(m => m is T) as T;
+        }
+
+        public static TProvider GetDataProvider<TProvider>() where TProvider : class, IDataProvider
+        {
+            return Instance._dataProviders.FirstOrDefault(p => p is TProvider) as TProvider;
         }
         
         public override void Init(ITorchBase torch)
@@ -123,10 +129,20 @@ namespace TorchEconomy
             {
                 case TorchSessionState.Loaded:
                     _managers.Clear();
+                    _dataProviders.Clear();
                     
                     // Get all the managers.
                     var managers = GetContainer().GetAllInstances<BaseManager>();
                     _managers.AddRange(managers);
+                    
+                    // Get all the data providers.
+                    _dataProviders.AddRange(GetContainer().GetAllInstances<IDataProvider>());
+                    
+                    // Start the data providers.
+                    foreach (var dataProvider in _dataProviders)
+                    {
+                        dataProvider.Start();
+                    }
                     
                     // Start the managers.
                     foreach (var manager in _managers)
@@ -141,6 +157,7 @@ namespace TorchEconomy
                         manager.Stop();
                     }
                     _managers.Clear();
+                    _dataProviders.Clear();
                     break;
             }
         }

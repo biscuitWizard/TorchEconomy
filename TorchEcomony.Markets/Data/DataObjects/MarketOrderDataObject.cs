@@ -42,12 +42,12 @@ namespace TorchEconomy.Markets.Data.DataObjects
         [DefaultValue(false)]
         public bool IsDeleted { get; set; }
 
-        public string ToString(MarketSimManager simManager, int maxNameLength)
+        public string ToString(MarketSimulationProvider simulationProvider, int maxNameLength)
         {
             var definition = MyDefinitionManager.Static.GetDefinition(MyDefinitionId);
             var orderQuantity = Quantity == -1 ? "Infinite" : (Quantity + "x").PadLeft(8);
             var valueDifference =
-                Price - simManager.GetOrCalculateUniversalItemValue(MyDefinitionId);
+                Price - simulationProvider.GetOrCalculateUniversalItemValue(MyDefinitionId);
             return
                 $"{definition.DisplayNameText.PadRight(maxNameLength)} {orderQuantity}: {Utilities.FriendlyFormatCurrency(Price)} (Avg: {Utilities.FriendlyFormatCurrency(valueDifference)})";
         }

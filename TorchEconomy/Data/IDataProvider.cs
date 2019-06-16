@@ -7,7 +7,6 @@ namespace TorchEconomy.Data
 	/// </summary>
 	public interface IDataProvider
 	{
-		void OnStart();
-		void OnSessionLoaded();
+		void Start();
 	}
 }

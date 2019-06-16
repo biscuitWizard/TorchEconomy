@@ -8,6 +8,7 @@ using Sandbox.ModAPI;
 using Torch.Commands;
 using Torch.Commands.Permissions;
 using TorchEconomy.Managers;
+using TorchEconomy.Markets.Data;
 using TorchEconomy.Markets.Data.Models;
 using TorchEconomy.Markets.Data.Types;
 using TorchEconomy.Markets.Managers;
@@ -29,7 +30,7 @@ namespace TorchEconomy.Markets.Commands
         {
             var marketManager = EconomyPlugin.GetManager<MarketManager>();
             var marketOrderManager = EconomyPlugin.GetManager<MarketOrderManager>();
-            var marketSimManager = EconomyPlugin.GetManager<MarketSimManager>();
+            var marketSimManager = EconomyPlugin.GetManager<MarketSimulationManager>();
             
             var character = Context.Player.Character;
             if (character == null)
@@ -58,6 +59,7 @@ namespace TorchEconomy.Markets.Commands
                         .GetMarketOrders(market.Id)
                         .Then(orders =>
                         {
+                            var dataProvider = GetDataProvider<MarketSimulationProvider>();
                             var responseBuilder = new StringBuilder($"Mrkt#{market.Id} ({market.Name}) Inventory:");
                             responseBuilder.AppendLine();
 
@@ -72,7 +74,7 @@ namespace TorchEconomy.Markets.Commands
                                 foreach (var order in buyOrders)
                                 {
                                     responseBuilder.AppendLine(
-                                        $"+ {order.ToString(marketSimManager, maxNameLength)}");
+                                        $"+ {order.ToString(dataProvider, maxNameLength)}");
                                 }
                             }
 
@@ -85,7 +87,7 @@ namespace TorchEconomy.Markets.Commands
                                 foreach (var order in sellOrders)
                                 {
                                     responseBuilder.AppendLine(
-                                        $"+ {order.ToString(marketSimManager, maxNameLength)}");
+                                        $"+ {order.ToString(dataProvider, maxNameLength)}");
                                 }
                             }
 

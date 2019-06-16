@@ -16,14 +16,14 @@ using VRage.ObjectBuilders;
 
 namespace TorchEconomy.Markets.Managers
 {
-    public class MarketSimManager : BaseMarketManager
+    public class MarketSimulationManager : BaseMarketManager
     {
         private static readonly Logger Log = LogManager.GetLogger("Economy.Markets.Managers.Market_Simulation");
         
         private readonly MarketSimulationProvider _simulationProvider;
         private readonly DefinitionResolver _definitionResolver;
         
-        public MarketSimManager(IConnectionFactory connectionFactory, 
+        public MarketSimulationManager(IConnectionFactory connectionFactory, 
             MarketSimulationProvider simulationProvider,
             DefinitionResolver definitionResolver) 
             : base(connectionFactory)

@@ -2,6 +2,7 @@ using System.Linq;
 using System.Text;
 using Torch.Commands;
 using Torch.Commands.Permissions;
+using TorchEconomy.Markets.Data;
 using TorchEconomy.Markets.Managers;
 using VRage.Game.ModAPI;
 
@@ -14,13 +15,15 @@ namespace TorchEconomy.Markets.Commands
         [Permission(MyPromoteLevel.None)]
         public void GlobalValueList()
         {
-            var simManager = GetManager<MarketSimManager>();
+            var simManager = GetManager<MarketSimulationManager>();
 
             var responseBuilder = new StringBuilder("Global Value List:");
             responseBuilder.AppendLine();
 
             var index = 1;
-            var items = simManager.GetUniversalItems().ToArray();
+            var items = GetDataProvider<MarketSimulationProvider>()
+                .GetUniversalItems()
+                .ToArray();
             foreach (var item in items)
             {
                 

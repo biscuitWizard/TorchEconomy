@@ -28,7 +28,7 @@ namespace TorchEconomy.Markets.Data
             MarketConfig = marketConfig;
         }
 		
-		public void OnStart()
+		public void Start()
 		{
 			_definitionManager = MyDefinitionManager.Static;
 

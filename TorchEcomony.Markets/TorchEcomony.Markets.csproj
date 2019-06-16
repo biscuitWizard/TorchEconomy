@@ -96,7 +96,7 @@
     <Compile Include="EconomyMarketsPlugin.cs" />
     <Compile Include="Managers\BaseMarketManager.cs" />
     <Compile Include="Managers\MarketOrderManager.cs" />
-    <Compile Include="Managers\MarketSimManager.cs" />
+    <Compile Include="Managers\MarketSimulationManager.cs" />
     <Compile Include="Managers\MarketManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
