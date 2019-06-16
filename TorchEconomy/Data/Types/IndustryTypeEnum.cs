@@ -6,6 +6,8 @@ namespace TorchEconomy.Data.Types
         Industrial,
         Consumer,
         Research,
-        Military
+        Military,
+        Shipyard,
+        Service
     }
 }

@@ -121,7 +121,44 @@ namespace TorchEconomy.Markets.Managers
                 return; // Skip this entry. It's useless.
             
             _definitionResolver.Register(definition.DisplayNameText, id);
-            _itemValues[id] = new MarketValueItem(definition, value);
+
+            var industryTypes = new List<IndustryTypeEnum>();
+            
+            var subtype = id.SubtypeId.ToString();
+            if (subtype.StartsWith("Industrial_", StringComparison.InvariantCultureIgnoreCase))
+            {
+                industryTypes.Add(IndustryTypeEnum.Military);
+                industryTypes.Add(IndustryTypeEnum.Industrial);
+            } else if (definition is MyAmmoMagazineDefinition)
+            {
+                industryTypes.Add(IndustryTypeEnum.Military);
+            } else if (subtype.StartsWith("Research_", StringComparison.InvariantCultureIgnoreCase))
+            {
+                industryTypes.Add(IndustryTypeEnum.Research);
+                industryTypes.Add(IndustryTypeEnum.Military);
+            } else if (id.TypeId.ToString()
+                           .Equals("MyObjectBuilder_Ore", StringComparison.InvariantCultureIgnoreCase))
+            {
+                industryTypes.Add(IndustryTypeEnum.Industrial);
+            } else if (id.TypeId.ToString()
+                .Equals("MyObjectBuilder_Ingot", StringComparison.InvariantCultureIgnoreCase))
+            {
+                industryTypes.Add(IndustryTypeEnum.Industrial);
+                industryTypes.Add(IndustryTypeEnum.Consumer);
+            } else if (definition is MyComponentDefinitionBase)
+            {
+                industryTypes.Add(IndustryTypeEnum.Consumer);
+            }
+            
+            _itemValues[id] = new MarketValueItem(definition, value, industryTypes);
+        }
+
+        public MarketValueItem[] GetUniversalItems(IndustryTypeEnum industryType)
+        {
+            return _itemValues
+                .Values
+                .Where(v => v.IndustryTypes.Contains(industryType))
+                .ToArray();
         }
 
         public MarketValueItem[] GetUniversalItems<TDefType>() where TDefType : class
