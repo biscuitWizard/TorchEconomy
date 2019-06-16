@@ -35,10 +35,6 @@ namespace TorchEconomy.Markets.Data
 			_itemValues.Clear();
 			CalculateUniversalPrices();
 		}
-
-		public void OnSessionLoaded()
-		{
-		}
 		
 		public void CalculateUniversalPrices()
         {
