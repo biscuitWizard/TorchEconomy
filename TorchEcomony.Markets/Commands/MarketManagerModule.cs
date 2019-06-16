@@ -114,13 +114,26 @@ namespace TorchEconomy.Markets.Commands
         [Permission(MyPromoteLevel.None)]
         public void SetBuyOrder(string marketNameOrId, string itemName, decimal pricePerOne, decimal quantity)
         {
+            CreateOrder(BuyOrderType.Buy, marketNameOrId, itemName, pricePerOne, quantity);
+        }
+
+        [Command("sell", "Creates a sell order on the specified market. Must have permission to modify market.")]
+        [Permission(MyPromoteLevel.None)]
+        public void SetSellOrder(string marketNameOrId, string itemName, decimal pricePerOne, decimal quantity)
+        {
+            CreateOrder(BuyOrderType.Sell, marketNameOrId, itemName, pricePerOne, quantity);
+        }
+
+        private void CreateOrder(BuyOrderType orderType, string marketNameOrId, string itemName, decimal pricePerOne,
+            decimal quantity)
+        {
             var character = Context.Player.Character;
             if (character == null)
             {
                 Context.Respond("You cannot do this while dead.");
                 return;
             }
-
+            
             if (quantity < new decimal(0.01))
             {
                 Context.Respond($"{quantity} is too low. Please use a higher value.");
@@ -150,7 +163,7 @@ namespace TorchEconomy.Markets.Commands
                         return;
                     }
 
-                    orderManager.UpdateOrAddMarketOrder(BuyOrderType.Buy, market.Id,
+                    orderManager.UpdateOrAddMarketOrder(orderType, market.Id,
                             itemDefinition.Id, pricePerOne, quantity)
                         .Then(order =>
                         {
@@ -158,32 +171,6 @@ namespace TorchEconomy.Markets.Commands
                                 $"Successfully created Order#{order.Id} for {quantity}x {itemDefinition.DisplayNameText} @ {Utilities.FriendlyFormatCurrency(pricePerOne)} per 1.");
                         })
                         .Catch(error => Log.Error(error));
-                })
-                .Catch(error => Log.Error(error));
-        }
-
-        [Command("sell")]
-        [Permission(MyPromoteLevel.None)]
-        public void SetSellOrder(string marketNameOrId, string itemName, decimal pricePerOne, decimal quantity)
-        {
-            var character = Context.Player.Character;
-            if (character == null)
-            {
-                Context.Respond("You cannot do this while dead.");
-                return;
-            }
-            
-            if (!DefinitionResolver.TryGetDefinitionByName(itemName, out var itemDefinition))
-            {
-                Context.Respond($"Unable to find an item by the name of {itemName}");
-                return;
-            }
-            
-            var manager = EconomyPlugin.GetManager<MarketManager>();
-            manager.GetMarketByNameOrId(marketNameOrId, Context.Player.SteamUserId)
-                .Then(market =>
-                {
-                    
                 })
                 .Catch(error => Log.Error(error));
         }
