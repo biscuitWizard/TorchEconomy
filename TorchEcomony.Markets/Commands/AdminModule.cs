@@ -75,7 +75,13 @@ namespace TorchEconomy.Commands
                                         .Then(market =>
                                         {
                                             // Market is created.. Now to create buy orders.
-                                            
+                                            var simManager = GetManager<MarketSimManager>();
+                                            simManager.GenerateNPCOrders(npc, market)
+                                                .Then(() =>
+                                                {
+                                                    Context.Respond($"{npc.Name} has founded {market.Name}, specializing in {industryType} trade.");
+                                                })
+                                                .Catch(HandleError);
                                         })
                                         .Catch(HandleError);
                                 })

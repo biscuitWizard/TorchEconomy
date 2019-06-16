@@ -144,7 +144,7 @@ namespace TorchEconomy.Markets.Commands
                                 return;
                             }
 
-                            if (order.Quantity < quantity)
+                            if (order.Quantity != -1 && order.Quantity < quantity)
                             {
                                 Context.Respond($"Trying to buy more than the seller has. Seller only has {order.Quantity}.");
                                 return;
@@ -232,7 +232,7 @@ namespace TorchEconomy.Markets.Commands
                                 return;
                             }
 
-                            if (order.Quantity < quantity)
+                            if (order.Quantity != -1 && order.Quantity < quantity)
                             {
                                 Context.Respond($"Trying to sell more than the order desires by {quantity - order.Quantity}. Buy order only wants {order.Quantity}.");
                                 return;
