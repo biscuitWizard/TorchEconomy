@@ -71,7 +71,8 @@ namespace TorchEconomy.Commands
                                     // Now they have a bank account.. Time to make a station market.
                                     var marketName = NameGeneratorHelper.GetIndustryName(industryType);
 
-                                    marketManager.CreateMarket(stationEntity.EntityId, (ulong) npc.Id, marketName, 3000)
+                                    marketManager.CreateMarket(stationEntity.EntityId, (ulong) npc.Id, marketName, 
+                                            3000, npcAccount.Id, true, true)
                                         .Then(market =>
                                         {
                                             // Market is created.. Now to create buy orders.

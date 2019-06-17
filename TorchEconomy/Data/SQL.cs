@@ -40,8 +40,8 @@ namespace TorchEconomy.Data
         #region Markets
         public const string INSERT_MARKET
             = @"
-            INSERT INTO `Market` (`Name`,`ParentGridId`,`Range`,`CreatorId`) 
-            VALUES(@name,@parentGridId,@range,@creatorId);";
+            INSERT INTO `Market` (`Name`,`ParentGridId`,`Range`,`CreatorId`,`AccountId`,`IsOpen`,`IsNPC`) 
+            VALUES(@name,@parentGridId,@range,@creatorId,@accountId,@isOpen,@isNPC);";
         
         public const string SELECT_MARKETS
             = @"SELECT * FROM `Market` WHERE `IsDeleted`=0;";

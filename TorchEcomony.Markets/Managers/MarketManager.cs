@@ -20,7 +20,7 @@ namespace TorchEconomy.Markets.Managers
         }
 
         public Promise<MarketDataObject> CreateMarket(long parentGridId, ulong creatorPlayerId,
-            string marketName, float range)
+            string marketName, float range, long? accountId = null, bool isOpen = false, bool isNPC = false)
         {
             return new Promise<MarketDataObject>((resolve, reject) =>
             {
@@ -29,7 +29,9 @@ namespace TorchEconomy.Markets.Managers
                     connection.Execute(
                         SQL.INSERT_MARKET,
                         new {parentGridId = parentGridId, creatorId = creatorPlayerId,
-                            name = marketName, @range = range});
+                            name = marketName, range = range, accountId = accountId,
+                            isOpen = isOpen, isNPC = isNPC
+                        });
 
                     var market = connection.QueryFirst<MarketDataObject>(
                         SQL.SELECT_MARKET_BY_GRID,
