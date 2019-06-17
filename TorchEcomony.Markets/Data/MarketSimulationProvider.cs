@@ -209,10 +209,11 @@ namespace TorchEconomy.Markets.Data
             {
                 industryTypes[IndustryTypeEnum.Industrial] = MarketAffinity.Sell;
                 industryTypes[IndustryTypeEnum.Consumer] = MarketAffinity.Buy;
-            } else if (definition is MyComponentDefinitionBase)
+            } else if (id.TypeId.ToString()
+                .Equals("MyObjectBuilder_Component", StringComparison.InvariantCultureIgnoreCase))
             {
                 industryTypes[IndustryTypeEnum.Consumer] = MarketAffinity.Sell;
-                industryTypes[IndustryTypeEnum.Research] = MarketAffinity.Sell;
+                industryTypes[IndustryTypeEnum.Research] = MarketAffinity.Buy;
             }
             
             _itemValues[id] = new MarketValueItem(definition, value, industryTypes);
