@@ -11,12 +11,50 @@
     </UserControl.DataContext>
     <StackPanel>
         <GroupBox Header="Value Configuration">
-            <DataGrid ItemsSource="{Binding ValueDefinitionBindings}" AutoGenerateColumns="False" CanUserAddRows="False">
-                <DataGrid.Columns>
-                    <DataGridTextColumn Header="Definition Id" Binding="{Binding RawDefinitionId}" IsReadOnly="True" />
-                    <DataGridTextColumn Header="Value" Binding="{Binding Value}" />
-                </DataGrid.Columns>
-            </DataGrid>
+            <DockPanel LastChildFill="True">
+                <StackPanel DockPanel.Dock="Right">
+                    <Button Content="Add Item" Padding="10,5,10,5" Click="AddValueItem"/>
+                    <Button Content="Remove Item" Padding="10,5,10,5" Click="RemoveValueItem" DataContext="{Binding RelativeSource={RelativeSource Self}}" Name="ButtonValueRemoveItem"/>
+                </StackPanel>
+                
+                <DataGrid ItemsSource="{Binding ValueDefinitionBindings}" 
+                          AutoGenerateColumns="False" 
+                          CanUserAddRows="False" 
+                          ColumnWidth="*" 
+                          SelectedCellsChanged="ValueSelectionChanged" 
+                          Name="ValueDataGrid">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Definition Id" Binding="{Binding RawDefinitionId}">
+                            <DataGridTextColumn.CellStyle>
+                                <Style TargetType="DataGridCell">
+                                    <EventSetter Event="PreviewMouseDown" Handler="DataGridCell_PreviewMouseDown"/>
+                                </Style>
+                            </DataGridTextColumn.CellStyle>
+                        </DataGridTextColumn>
+                        <DataGridTextColumn Header="Value" Binding="{Binding Value}" />
+                    </DataGrid.Columns>
+                </DataGrid>
+            </DockPanel>
+        </GroupBox>
+        
+        <GroupBox Header="Blacklist">
+            <DockPanel LastChildFill="True" >
+                <StackPanel DockPanel.Dock="Right">
+                    <Button Content="Add Item" Padding="10,5,10,5" Click="AddBlacklistItem"/>
+                    <Button Content="Remove Item" Padding="10,5,10,5" Click="RemoveBlacklistItem" DataContext="{Binding RelativeSource={RelativeSource Self}}" Name="ButtonBlacklistRemoveItem"/>
+                </StackPanel>
+            
+                <DataGrid ColumnWidth="*" 
+                          CanUserAddRows="False" 
+                          ItemsSource="{Binding Blacklist}" 
+                          SelectedCellsChanged="BlacklistSelectionChanged" 
+                          Name="BlacklistDataGrid" 
+                          AutoGenerateColumns="False">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Definition Id" Binding="{Binding Value}" />
+                    </DataGrid.Columns>
+                </DataGrid>
+            </DockPanel>
         </GroupBox>
         
         <Label Content="Energy Value per Second"/>

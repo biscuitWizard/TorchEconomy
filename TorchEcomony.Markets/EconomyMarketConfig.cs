@@ -1,11 +1,17 @@
 using System.Collections.Generic;
 using Torch;
+using VRage.Collections;
 using VRage.Game;
 
 namespace TorchEconomy.Markets
 {
 	public class EconomyMarketConfig : ViewModel
 	{
+		public class BlacklistItem
+		{
+			public string Value { get; set; }
+		}
+		
 		public class ValueDefinitionBinding
 		{
 			public string RawDefinitionId { get; set; }
@@ -27,7 +33,7 @@ namespace TorchEconomy.Markets
 			EnergySecondsValue = 10;
 			DefaultMarketRange = 3000;
 			
-			ValueDefinitionBindings = new List<ValueDefinitionBinding>
+			ValueDefinitionBindings = new ObservableCollection<ValueDefinitionBinding>
 			{
 				new ValueDefinitionBinding { RawDefinitionId = "MyObjectBuilder_Ore/Iron", Value = .02},
 				new ValueDefinitionBinding { RawDefinitionId = "MyObjectBuilder_Ore/Nickel", Value = .034},
@@ -52,6 +58,7 @@ namespace TorchEconomy.Markets
 				new ValueDefinitionBinding { RawDefinitionId = "MyObjectBuilder_Component/Industrial_PowerConverter", Value = 10000},
 				new ValueDefinitionBinding { RawDefinitionId = "MyObjectBuilder_Component/Industrial_MiningEquipment", Value = 10000},
 			};
+			Blacklist = new ObservableCollection<BlacklistItem>();
 		}
 		private decimal _energySecondsValue;
 		public decimal EnergySecondsValue
@@ -67,11 +74,18 @@ namespace TorchEconomy.Markets
 			set => SetValue(ref _defaultMarketRange, value);
 		}
 
-		private List<ValueDefinitionBinding> _valueDefinitionBindings;
-		public List<ValueDefinitionBinding> ValueDefinitionBindings
+		private ObservableCollection<ValueDefinitionBinding> _valueDefinitionBindings;
+		public ObservableCollection<ValueDefinitionBinding> ValueDefinitionBindings
 		{
 			get => _valueDefinitionBindings;
 			set => SetValue(ref _valueDefinitionBindings, value);
+		}
+
+		private ObservableCollection<BlacklistItem> _blacklist;
+		public ObservableCollection<BlacklistItem> Blacklist
+		{
+			get => _blacklist;
+			set => SetValue(ref _blacklist, value);
 		}
 	}
 }

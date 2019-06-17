@@ -80,6 +80,7 @@ namespace TorchEconomy.Commands
                                             simManager.GenerateNPCOrders(npc, market)
                                                 .Then(() =>
                                                 {
+                                                    stationEntity.DisplayName = market.Name;
                                                     Context.Respond($"{npc.Name} has founded {market.Name}, specializing in {industryType} trade.");
                                                 })
                                                 .Catch(HandleError);
