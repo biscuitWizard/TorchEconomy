@@ -104,6 +104,20 @@ namespace TorchEconomy.Markets.Managers
             });
         }
 
+        public Promise DeleteMarketOrders(long marketId)
+        {
+            return new Promise((resolve, reject) =>
+            {
+                using (var connection = ConnectionFactory.Open())
+                {
+                    connection.Execute(
+                        SQL.DELETE_MARKET_ORDERS,
+                        new {marketId = marketId});
+                    resolve();
+                }
+            });
+        }
+
         public Promise UpdateOrderQuantity(long orderId, decimal newQuantity)
         {
             return new Promise((resolve, reject) =>

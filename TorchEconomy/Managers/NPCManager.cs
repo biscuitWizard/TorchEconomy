@@ -38,5 +38,18 @@ namespace TorchEconomy.Managers
                 }
             });
         }
+
+        public Promise<NPCDataObject> GetNPC(long id)
+        {
+            return new Promise<NPCDataObject>((resolve, reject) =>
+            {
+                using (var connection = ConnectionFactory.Open())
+                {
+                    resolve(connection.QueryFirstOrDefault<NPCDataObject>(
+                        "SELECT * FROM `NPC` WHERE `Id`=@id",
+                        new {id = id}));
+                }
+            });
+        }
     }
 }

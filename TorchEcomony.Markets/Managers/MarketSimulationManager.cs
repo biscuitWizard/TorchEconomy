@@ -2,6 +2,7 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using Dapper;
 using NLog;
 using Sandbox.Definitions;
 using TorchEconomy.Data;
@@ -33,6 +34,30 @@ namespace TorchEconomy.Markets.Managers
         {
             _simulationProvider = simulationProvider;
             _definitionResolver = definitionResolver;
+        }
+
+        public override void Start()
+        {
+            base.Start();
+
+            using (var connection = ConnectionFactory.Open())
+            {
+                var npcMarkets = connection.Query<MarketDataObject>(SQL.SELECT_MARKETS)
+                    .Where(m => m.IsNPC)
+                    .ToArray();
+                var orderManager = EconomyPlugin.GetManager<MarketOrderManager>();
+                var npcManager = EconomyPlugin.GetManager<NPCManager>();
+                
+                foreach (var npcMarket in npcMarkets)
+                {
+                    orderManager.DeleteMarketOrders(npcMarket.Id)
+                        .Then(() =>
+                        {
+                            npcManager.GetNPC((long)npcMarket.CreatorId)
+                                .Then(npc => { GenerateNPCOrders(npc, npcMarket); });
+                        });
+                }
+            }
         }
 
         public Promise GenerateNPCOrders(NPCDataObject npc, MarketDataObject market)

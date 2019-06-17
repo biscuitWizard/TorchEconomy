@@ -45,7 +45,7 @@ namespace TorchEconomy.Data
         
         public const string SELECT_MARKETS
             = @"SELECT * FROM `Market` WHERE `IsDeleted`=0;";
-
+        
         public const string SELECT_MARKET_BY_GRID
             = @"SELECT * FROM `Market` WHERE `ParentGridId`=@parentGridId AND `IsDeleted`=0;";
 
@@ -83,6 +83,9 @@ namespace TorchEconomy.Data
 
         public const string DELETE_MARKET_ORDER =
             @"UPDATE `MarketOrder` SET `IsDeleted` = 1 WHERE `Id`=@id;";
+        
+        public const string DELETE_MARKET_ORDERS =
+            @"UPDATE `MarketOrder` SET `IsDeleted` = 1 WHERE `Id`>0 AND `MarketId`=@marketId;";
 
         #endregion
 
