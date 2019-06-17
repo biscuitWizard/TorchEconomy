@@ -30,7 +30,7 @@ namespace TorchEconomy.Markets.Commands
             var character = Context.Player.Character;
             if (character == null)
             {
-                Context.Respond("You are dead. Stop entering commands. Please.");
+                Context.Respond("You cannot do this while dead.");
                 return;
             }
 
@@ -64,7 +64,7 @@ namespace TorchEconomy.Markets.Commands
             var character = Context.Player.Character;
             if (character == null)
             {
-                Context.Respond("You are dead. You cannot create markets while dead.");
+                Context.Respond("You cannot do this while dead.");
                 return;
             }
 
