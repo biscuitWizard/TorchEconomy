@@ -97,6 +97,10 @@ namespace TorchEconomy.Markets.Managers
                 var random = new Random();
                 foreach (var item in items)
                 {
+                    
+                    if (MarketConfig.Blacklist.Any(b => b.Value == item.Definition.Id.ToString()))
+                        continue; // This entry is blacklisted.
+                    
                     var affinity = item.IndustryAffinities[npc.IndustryType];
                     var minMarginFlux =(double)((marginFlux / 2m) * -1m);
                     var maxMarginFlux = (double)marginFlux;
