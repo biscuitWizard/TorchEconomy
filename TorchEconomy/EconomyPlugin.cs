@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Windows.Controls;
+using Sandbox;
 using Sandbox.Engine.Voxels;
 using Sandbox.ModAPI;
 using StructureMap;
@@ -14,6 +15,8 @@ using Torch.API;
 using Torch.API.Managers;
 using Torch.API.Plugins;
 using Torch.API.Session;
+using Torch.Server.Managers;
+using Torch.Server.ViewModels;
 using Torch.Session;
 using Torch.Views;
 using TorchEconomy.Data;
@@ -110,7 +113,24 @@ namespace TorchEconomy
 
             GetConnectionFactory().Setup();
             DefinitionResolver = GetContainer().GetInstance<DefinitionResolver>();
+            
+            Torch.GameStateChanged += OnGameStateChanged;
             Log.Info("Torch Economy Initialized!");
+        }
+
+        private void OnGameStateChanged(MySandboxGame game, TorchGameState newstate)
+        {
+            switch (newstate)
+            {
+                case TorchGameState.Creating:
+                    var instanceManager = Torch
+                        .Managers
+                        .GetManager(typeof(InstanceManager)) as InstanceManager;
+
+                    instanceManager?.DedicatedConfig.Mods
+                        .Add(new ModItemInfo(new MyObjectBuilder_Checkpoint.ModItem(1772298664)));
+                    break;
+            }
         }
 
         public override void Update()
