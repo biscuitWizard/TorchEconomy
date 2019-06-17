@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using NLog;
@@ -22,6 +23,8 @@ namespace TorchEconomy.Markets.Managers
         
         private readonly MarketSimulationProvider _simulationProvider;
         private readonly DefinitionResolver _definitionResolver;
+        private readonly ConcurrentDictionary<long, List<NPCMarketOrder>> _npcMarketOrders 
+            = new ConcurrentDictionary<long, List<NPCMarketOrder>>();
         
         public MarketSimulationManager(IConnectionFactory connectionFactory, 
             MarketSimulationProvider simulationProvider,

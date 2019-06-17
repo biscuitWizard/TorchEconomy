@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using NLog;
@@ -6,6 +7,7 @@ using Sandbox.Definitions;
 using TorchEconomy.Data;
 using TorchEconomy.Data.Types;
 using TorchEconomy.Markets.Data.Models;
+using TorchEconomy.Markets.Data.Types;
 using VRage.Game;
 
 namespace TorchEconomy.Markets.Data
@@ -122,7 +124,7 @@ namespace TorchEconomy.Markets.Data
         {
             return _itemValues
                 .Values
-                .Where(v => Enumerable.Contains(v.IndustryTypes, industryType))
+                .Where(v => v.IndustryAffinities.ContainsKey(industryType))
                 .ToArray();
         }
 
@@ -184,32 +186,33 @@ namespace TorchEconomy.Markets.Data
             
             _definitionResolver.Register(definition.DisplayNameText, id);
 
-            var industryTypes = new List<IndustryTypeEnum>();
+            var industryTypes = new ConcurrentDictionary<IndustryTypeEnum, MarketAffinity>();
             
             var subtype = id.SubtypeId.ToString();
             if (subtype.StartsWith("Industrial_", StringComparison.InvariantCultureIgnoreCase))
             {
-                industryTypes.Add(IndustryTypeEnum.Military);
-                industryTypes.Add(IndustryTypeEnum.Industrial);
+                industryTypes[IndustryTypeEnum.Military] = MarketAffinity.Sell;
+                industryTypes[IndustryTypeEnum.Industrial] = MarketAffinity.Buy;
             } else if (definition is MyAmmoMagazineDefinition)
             {
-                industryTypes.Add(IndustryTypeEnum.Military);
+                industryTypes[IndustryTypeEnum.Military] = MarketAffinity.Ambivalence;
             } else if (subtype.StartsWith("Research_", StringComparison.InvariantCultureIgnoreCase))
             {
-                industryTypes.Add(IndustryTypeEnum.Research);
-                industryTypes.Add(IndustryTypeEnum.Military);
+                industryTypes[IndustryTypeEnum.Research] = MarketAffinity.Sell;
+                industryTypes[IndustryTypeEnum.Military] = MarketAffinity.Buy;
             } else if (id.TypeId.ToString()
                 .Equals("MyObjectBuilder_Ore", StringComparison.InvariantCultureIgnoreCase))
             {
-                industryTypes.Add(IndustryTypeEnum.Industrial);
+                industryTypes[IndustryTypeEnum.Industrial] = MarketAffinity.Ambivalence;
             } else if (id.TypeId.ToString()
                 .Equals("MyObjectBuilder_Ingot", StringComparison.InvariantCultureIgnoreCase))
             {
-                industryTypes.Add(IndustryTypeEnum.Industrial);
-                industryTypes.Add(IndustryTypeEnum.Consumer);
+                industryTypes[IndustryTypeEnum.Industrial] = MarketAffinity.Sell;
+                industryTypes[IndustryTypeEnum.Consumer] = MarketAffinity.Buy;
             } else if (definition is MyComponentDefinitionBase)
             {
-                industryTypes.Add(IndustryTypeEnum.Consumer);
+                industryTypes[IndustryTypeEnum.Consumer] = MarketAffinity.Sell;
+                industryTypes[IndustryTypeEnum.Research] = MarketAffinity.Sell;
             }
             
             _itemValues[id] = new MarketValueItem(definition, value, industryTypes);

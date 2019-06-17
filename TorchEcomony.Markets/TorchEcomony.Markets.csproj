@@ -88,7 +88,9 @@
     <Compile Include="Data\DataObjects\MarketDataObject.cs" />
     <Compile Include="Data\MarketSimulationProvider.cs" />
     <Compile Include="Data\Models\MarketValueItem.cs" />
+    <Compile Include="Data\Models\NPCMarketOrder.cs" />
     <Compile Include="Data\Types\BuyOrderType.cs" />
+    <Compile Include="Data\Types\MarketAffinity.cs" />
     <Compile Include="EconomyMarketsControl.xaml.cs">
       <DependentUpon>EconomyMarketsControl.xaml</DependentUpon>
     </Compile>

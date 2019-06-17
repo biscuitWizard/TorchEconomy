@@ -1,7 +1,9 @@
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using TorchEconomy.Data.Types;
+using TorchEconomy.Markets.Data.Types;
 using VRage.Game;
 
 namespace TorchEconomy.Markets.Data.Models
@@ -10,7 +12,7 @@ namespace TorchEconomy.Markets.Data.Models
     {
         public MyDefinitionBase Definition { get; set; }
         public decimal Value { get; set; }
-        public IndustryTypeEnum[] IndustryTypes { get; set; }
+        public ConcurrentDictionary<IndustryTypeEnum, MarketAffinity> IndustryAffinities { get; set; }
         public string FriendlyName
         {
             get { return Definition.DisplayNameText; }
@@ -22,11 +24,11 @@ namespace TorchEconomy.Markets.Data.Models
         }
 
         public MarketValueItem(MyDefinitionBase definition, decimal value, 
-            IEnumerable<IndustryTypeEnum> industryTypes)
+            ConcurrentDictionary<IndustryTypeEnum, MarketAffinity> industryAffinities)
         {
             Definition = definition;
             Value = value;
-            IndustryTypes = industryTypes.ToArray();
+            IndustryAffinities = industryAffinities;
         }
     }
 }
