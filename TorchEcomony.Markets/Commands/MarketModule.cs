@@ -7,6 +7,8 @@ using Sandbox.Definitions;
 using Sandbox.ModAPI;
 using Torch.Commands;
 using Torch.Commands.Permissions;
+using Torch.Mod;
+using Torch.Mod.Messages;
 using TorchEconomy.Managers;
 using TorchEconomy.Markets.Data;
 using TorchEconomy.Markets.Data.Models;
@@ -60,7 +62,7 @@ namespace TorchEconomy.Markets.Commands
                         .Then(orders =>
                         {
                             var dataProvider = GetDataProvider<MarketSimulationProvider>();
-                            var responseBuilder = new StringBuilder($"Mrkt#{market.Id} ({market.Name}) Inventory:");
+                            var responseBuilder = new StringBuilder();
                             responseBuilder.AppendLine();
 
                             var maxNameLength = 30;
@@ -92,8 +94,9 @@ namespace TorchEconomy.Markets.Commands
                             }
 
                             responseBuilder.AppendLine($"Total Orders: {orders.Length}");
-                            
-                            Context.Respond(responseBuilder.ToString());
+                            ModCommunication.SendMessageTo(
+                                new DialogMessage($"Mrkt#{market.Id} ({market.Name}) Inventory:", null, null,
+                                    responseBuilder.ToString()), Context.Player.SteamUserId);
                         })
                         .Catch(HandleError);
                 })

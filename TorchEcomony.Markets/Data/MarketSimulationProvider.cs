@@ -184,7 +184,9 @@ namespace TorchEconomy.Markets.Data
             if (definition.Id.TypeId.IsNull
                 || string.IsNullOrEmpty(definition.Id.SubtypeName))
                 return; // Skip this entry. It's useless.
-            
+
+            if (String.IsNullOrEmpty(definition.DisplayNameText))
+                return; // Skip this entry. No friendly name.
             _definitionResolver.Register(definition.DisplayNameText, id);
 
             var industryTypes = new ConcurrentDictionary<IndustryTypeEnum, MarketAffinity>();
