@@ -195,7 +195,7 @@ namespace TorchEconomy.Markets.Data
                 industryTypes[IndustryTypeEnum.Industrial] = MarketAffinity.Buy;
             } else if (definition is MyAmmoMagazineDefinition)
             {
-                industryTypes[IndustryTypeEnum.Military] = MarketAffinity.Ambivalence;
+                industryTypes[IndustryTypeEnum.Military] = MarketAffinity.AmbivalentSell;
             } else if (subtype.StartsWith("Research_", StringComparison.InvariantCultureIgnoreCase))
             {
                 industryTypes[IndustryTypeEnum.Research] = MarketAffinity.Sell;
@@ -203,7 +203,7 @@ namespace TorchEconomy.Markets.Data
             } else if (id.TypeId.ToString()
                 .Equals("MyObjectBuilder_Ore", StringComparison.InvariantCultureIgnoreCase))
             {
-                industryTypes[IndustryTypeEnum.Industrial] = MarketAffinity.Ambivalence;
+                industryTypes[IndustryTypeEnum.Industrial] = MarketAffinity.AmbivalentBuy;
             } else if (id.TypeId.ToString()
                 .Equals("MyObjectBuilder_Ingot", StringComparison.InvariantCultureIgnoreCase))
             {

@@ -88,7 +88,7 @@ namespace TorchEconomy.Markets.Managers
 
                     var orderType = affinity == MarketAffinity.AmbivalentBuy
                                     || affinity == MarketAffinity.ExtremeBuy
-                                    || affinity == MarketAffinity.Sell
+                                    || affinity == MarketAffinity.Buy
                         ? BuyOrderType.Buy
                         : BuyOrderType.Sell;
 

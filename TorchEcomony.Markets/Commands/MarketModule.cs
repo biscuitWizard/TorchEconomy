@@ -152,9 +152,12 @@ namespace TorchEconomy.Markets.Commands
                                 return;
                             }
 
-                            orderManager.UpdateOrderQuantity(order.Id, order.Quantity - quantity)
-                                .Catch(error => Log.Error(error));
-                            
+                            if (order.Quantity != -1)
+                            {
+                                orderManager.UpdateOrderQuantity(order.Id, order.Quantity - quantity)
+                                    .Catch(error => Log.Error(error));
+                            }
+
                             // Actually do the transfer... fuck.
                             var stationGrid = MyAPIGateway.Entities.GetEntityById(market.ParentGridId);
                             
@@ -240,9 +243,13 @@ namespace TorchEconomy.Markets.Commands
                                 return;
                             }
 
-                            orderManager.UpdateOrderQuantity(order.Id, order.Quantity - quantity)
-                                .Catch(error => Log.Error(error));
-                            
+                            if (order.Quantity != -1)
+                            {
+                                // If quantity isn't infinite. Update order quantity.
+                                orderManager.UpdateOrderQuantity(order.Id, order.Quantity - quantity)
+                                    .Catch(error => Log.Error(error));
+                            }
+
                             // Actually do the transfer... fuck.
                             var stationGrid = MyAPIGateway.Entities.GetEntityById(market.ParentGridId);
                             
