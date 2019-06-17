@@ -40,9 +40,7 @@ namespace TorchEconomy.Markets.Managers
             return new Promise((resolve, reject) =>
             {
                 decimal marginFlux = 0;
-                MarketValueItem[] items = null;
-                var buyMarketItems = new List<MarketValueItem>();
-                var sellMarketItems = new List<MarketValueItem>();
+                var items = _simulationProvider.GetUniversalItems(npc.IndustryType);
                 
                 switch (npc.IndustryType)
                 {
@@ -50,46 +48,64 @@ namespace TorchEconomy.Markets.Managers
                         // Industrial buys industrial trade goods at a high price.
                         // Industrial buys ore at a moderate price.
                         // Industrial sells ingots at a low price.
-                        marginFlux = new decimal(0.02);
-                        items = _simulationProvider.GetUniversalItems(IndustryTypeEnum.Industrial);
+                        marginFlux = new decimal(0.04);
                         break;
                     case IndustryTypeEnum.Consumer:
                         // Consumer buys ingots at a high price.
                         // Consumer sells components at a low price.
-                        marginFlux = new decimal(0.04);
-                        items = _simulationProvider.GetUniversalItems(IndustryTypeEnum.Consumer);
+                        marginFlux = new decimal(0.08);
                         break;
                     case IndustryTypeEnum.Research:
                         // Research buys components at a high price.
                         // Research sells research trade goods at a low price.
-                        marginFlux = new decimal(0.06);
-                        items = _simulationProvider.GetUniversalItems(IndustryTypeEnum.Research);
+                        marginFlux = new decimal(0.12);
                         break;
                     case IndustryTypeEnum.Military:
                         // Military buys research trade goods at a high price.
                         // Military sells industrial trade goods & ammo at a low price.
-                        marginFlux = new decimal(0.08);
-                        items = _simulationProvider.GetUniversalItems(IndustryTypeEnum.Military);
+                        marginFlux = new decimal(0.16);
                         break;
                 }
 
                 var orderManager = EconomyPlugin.GetManager<MarketOrderManager>();
-                foreach (var item in buyMarketItems)
+                var npcOrders = new List<NPCMarketOrder>();
+                var random = new Random();
+                foreach (var item in items)
                 {
-                    var multiplier = (1 + marginFlux);
-                    if (npc.IndustryType == IndustryTypeEnum.Industrial)
-                        multiplier = 1; // Industrial override.
-                    
-                    orderManager.UpdateOrAddMarketOrder(BuyOrderType.Buy, market.Id, item.Definition.Id,
-                        item.Value * multiplier, -1);
-                }
-                
-                foreach (var item in sellMarketItems)
-                {
-                    orderManager.UpdateOrAddMarketOrder(BuyOrderType.Sell, market.Id, item.Definition.Id,
-                        item.Value * (1 - marginFlux), -1);
+                    var affinity = item.IndustryAffinities[npc.IndustryType];
+                    var minMarginFlux =(double)((marginFlux / 2m) * -1m);
+                    var maxMarginFlux = (double)marginFlux;
+                    var orderMarginFlux = random.NextRange(minMarginFlux, maxMarginFlux);
+
+                    var order = new NPCMarketOrder
+                    {
+                        DesiredStock = 10000,
+                        Definition = item.Definition,
+                        MarketId = market.Id,
+                        MarginFlux = new decimal(orderMarginFlux),
+                        DemandMultiplier = 1
+                    };
+
+                    var orderType = affinity == MarketAffinity.AmbivalentBuy
+                                    || affinity == MarketAffinity.ExtremeBuy
+                                    || affinity == MarketAffinity.Sell
+                        ? BuyOrderType.Buy
+                        : BuyOrderType.Sell;
+
+                    var basePrice = _simulationProvider.GetUniversalItemValue(item.Definition.Id);
+                    var price = basePrice;
+                    if (orderType == BuyOrderType.Buy)
+                        price = price * (1m + order.MarginFlux);
+                    else
+                        price = price * (1m - order.MarginFlux);
+
+                    orderManager.UpdateOrAddMarketOrder(orderType, market.Id, item.Definition.Id,
+                        price, -1)
+                        .Then(newOrder => { order.OrderId = newOrder.Id; });
+                    npcOrders.Add(order);
                 }
 
+                _npcMarketOrders[market.Id] = npcOrders;
                 resolve();
             });
         }

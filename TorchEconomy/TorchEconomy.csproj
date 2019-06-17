@@ -192,6 +192,7 @@
     <Compile Include="EconomyControl.xaml.cs">
       <DependentUpon>EconomyControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="RandomExtensions.cs" />
     <Compile Include="Resources\NameGeneratorHelper.cs" />
     <Compile Include="Resources\SQLiteInstaller.cs" />
     <Compile Include="Support.cs" />

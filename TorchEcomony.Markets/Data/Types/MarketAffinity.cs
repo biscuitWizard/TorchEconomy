@@ -4,7 +4,8 @@ namespace TorchEconomy.Markets.Data.Types
 	{
 		Buy,
 		Sell,
-		Ambivalence,
+		AmbivalentBuy,
+		AmbivalentSell,
 		ExtremeBuy,
 		ExtremeSell
 	}
