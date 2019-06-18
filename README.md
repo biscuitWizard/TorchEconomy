@@ -92,6 +92,11 @@ There are four market types:
 
 If you'll notice, markets sell Industrial -\> Consumer -\> Research -\> Military -\> Industrial.
 
+#### Special NPC Markets (Coming Soon)
+There are two special/unique NPC markets that can be setup.
+* Service: Service markets are refuel points for the weary ship. They offer recharge and refuel options, making battery powered hydrogen-only ships very viable.
+* (Will be added with TorchEconomy.ShipTrading) Shipyard: Shipyards will buy components at a high price, but also offer a space for ships to spawn. Prefab ships can spawn around shipyards and are always for sale. 
+
 ### Suggested Plugin Setup
 It's recommended that servers set up four markets minimum for their server. The commands to do this are:
 * !admin markets createNPC \<someGridName\> Industrial
