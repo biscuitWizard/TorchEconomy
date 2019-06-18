@@ -58,9 +58,9 @@ It is currently possibly to interact directly with accounts using the API if pro
 * !econ list: Lists all items for sale at the market that you're currently docked with.
 * !econ buy \<itemName\> \<quantity\>: Purchases a quantity of items from the market your ship is currently docked to.
 * !econ sell \<itemName\> \<quantity\>: Sells a quantity of items from your ship inventory to the market your ship is docked to.
-* (Coming Soon) !econ refuel h2: Refuels the hydrogen on your ship.
-* (Coming Soon) !econ refuel o2: Refuels the oxygen on your ship.
-* (Coming Soon) !econ recharge: Recharges the batteries on your ship.
+* !econ refuel h2: Refuels the hydrogen on your ship.
+* !econ refuel o2: Refuels the oxygen on your ship.
+* !econ recharge: Recharges the batteries on your ship.
 * !econ markets list: Lists all markets that you have permission to modify.
 * !econ markets create \<gridName\> \<marketName\>: Creates a named market linked to the provided gridName. You must own a majority of the station.
 * !econ markets buy \<marketNameOrId\> \<itemName\> \<pricePer1\> \<quantity\>: Creates a buy order on the specified market. Must own market.
@@ -72,14 +72,16 @@ It is currently possibly to interact directly with accounts using the API if pro
 * !econ markets sell.price \<marketNameOrId\> \<itemName\> \<newPricePer1\>: Sets a price on a specified item at the specified market.
 * !econ markets buy.remove \<marketNameOrId\> \<itemName\>: Removes a buy order completely.
 * !econ markets sell.remove \<marketNameOrId\> \<itemName\>: Removes a sell order completely.
-* (Coming Soon) !econ markets buy.quantity \<marketNameOrId\> \<itemName\> \<newQuantity\>: Sets a new quantity on a buy order at the specified market.
-* (Coming Soon) !econ markets sell.quantity \<marketNameOrId\> \<itemName\> \<newQuantity\>: Sets a new quantity on a sell order at the specified market.
+* !econ markets buy.quantity \<marketNameOrId\> \<itemName\> \<newQuantity\>: Sets a new quantity on a buy order at the specified market.
+* !econ markets sell.quantity \<marketNameOrId\> \<itemName\> \<newQuantity\>: Sets a new quantity on a sell order at the specified market.
 
 ### Admin Commands
 * !admin markets createNPC \<gridName\> \<industry\>: Creates an NPC market of the specified industry type at the provider grid.
 * (Coming Soon) !admin markets delete \<marketNameOrId\>: Deletes a market.  
-* (Coming Soon) !admin markets buy.price \<marketNameOrId\> \<itemName\> \<newPrice\>: Overrides a buy price on a market.
-* (Coming Soon) !admin markets sell.price \<marketNameOrId\> \<itemName\> \<newPrice\>: Overrides a sell price on a market.
+* !admin markets buy.price \<marketNameOrId\> \<itemName\> \<newPrice\>: Overrides a buy price on a market.
+* !admin markets sell.price \<marketNameOrId\> \<itemName\> \<newPrice\>: Overrides a sell price on a market.
+* !admin markets buy.quantity \<marketNameOrId\> \<itemName\> \<newQuantity\>: Overrides a buy order quantity on a market.
+* !admin markets sell.quantity \<marketNameOrId\> \<itemName\> \<newQuantity\>: Overrides a sell order quantity on a market.
 * (Coming Soon) !admin markets buy \<marketNameOrId\> \<itemName\> \<newPricePer1\>: Sets a price on a specified item at the specified market.
 * (Coming Soon) !admin markets sell \<marketNameOrId\> \<itemName\> \<newPricePer1\>: Sets a price on a specified item at the specified market.
   
