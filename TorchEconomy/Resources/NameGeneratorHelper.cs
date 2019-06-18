@@ -25,6 +25,8 @@ namespace TorchEconomy.Resources
                 case IndustryTypeEnum.Industrial:
                     manifestResource = "TorchEconomy.Resources.Corporations.Industrial.txt";
                     break;
+                default:
+                    return $"Testificate {industryType} Station";
             }
 
             using (Stream stream = Assembly
