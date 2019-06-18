@@ -372,5 +372,64 @@ namespace TorchEconomy.Markets.Commands
                 })
                 .Catch(HandleError);
         }
+        
+        [Command("buy.quantity", "<marketNameOrId> <itemName> <newQuantity>: Sets a new quantity on a buy order at the specified market.")]
+        [Permission(MyPromoteLevel.None)]
+        public void SetBuyOrderQuantity(string marketNameOrId, string itemName, decimal newQuantity)
+        {
+            UpdateOrderQuantity(BuyOrderType.Buy, marketNameOrId, itemName, newQuantity);
+        }
+
+        [Command("sell.quantity", "<marketNameOrId> <itemName> <newQuantity>: Sets a new quantity on a sell order at the specified market.")]
+        [Permission(MyPromoteLevel.None)]
+        public void SetSellOrderQuantity(string marketNameOrId, string itemName, decimal newQuantity)
+        {
+            UpdateOrderQuantity(BuyOrderType.Sell, marketNameOrId, itemName, newQuantity);
+        }
+        
+        private void UpdateOrderQuantity(BuyOrderType orderType, string marketNameOrId, string itemName, decimal newQuantity)
+        {
+            var character = Context.Player.Character;
+            if (character == null)
+            {
+                Context.Respond("You cannot do this while dead.");
+                return;
+            }
+            
+            if (!DefinitionResolver.TryGetDefinitionByName(itemName, out var itemDefinition))
+            {
+                Context.Respond($"Unable to find an item by the name of {itemName}");
+                return;
+            }
+
+            if (newQuantity < new decimal(0.01))
+            {
+                Context.Respond($"{newQuantity} is too small. Please use a higher value.");
+                return;
+            }
+            
+            var manager = EconomyPlugin.GetManager<MarketManager>();
+            var orderManager = EconomyPlugin.GetManager<MarketOrderManager>();
+            manager.GetMarketByNameOrId(marketNameOrId, Context.Player.SteamUserId)
+                .Then(market =>
+                {
+                    if (market == null)
+                    {
+                        Context.Respond($"Unable to find market by name or id of '{marketNameOrId}'.");
+                        return;
+                    }
+                    
+                    orderManager.GetMarketOrder(orderType, market.Id, itemDefinition.Id)
+                        .Then(order =>
+                        {
+                            orderManager.UpdateOrderQuantity(order.Id, newQuantity)
+                                .Then(() => Context.Respond(
+                                    $"Successfully updated Order#{order.Id}'s quantity to {newQuantity}."))
+                                .Catch(HandleError);
+                        })
+                        .Catch(HandleError);
+                })
+                .Catch(HandleError);
+        }
     }
 }
