@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using NLog;
 using Sandbox.Definitions;
+using Sandbox.Game.Entities;
 using Sandbox.ModAPI;
 using Torch.Commands;
 using Torch.Commands.Permissions;
@@ -466,6 +467,7 @@ namespace TorchEconomy.Markets.Commands
 
             var marketManager = GetManager<MarketManager>();
             var npcManager = GetManager<NPCManager>();
+            var accountManager = GetManager<AccountsManager>();
             marketManager.GetConnectedMarket(controllingCube.CubeGrid)
                 .Then(market =>
                 {
@@ -489,6 +491,45 @@ namespace TorchEconomy.Markets.Commands
                                 Context.Respond("Only Service Stations can recharge ships.");
                                 return;
                             }
+
+
+                            accountManager.GetPrimaryAccount(Context.Player.SteamUserId)
+                                .Then(account =>
+                                {
+                                    var terminalSystem = MyAPIGateway.TerminalActionsHelper.GetTerminalSystemForGrid(controllingCube.CubeGrid);
+                                    var blocks = new List<IMyBatteryBlock>();
+                                    terminalSystem.GetBlocksOfType(blocks);
+
+                                    var energyDeficit = 0f;
+                                    foreach (var battery in blocks.Cast<MyBatteryBlock>())
+                                    {
+                                        energyDeficit += battery.MaxStoredPower - battery.CurrentStoredPower;
+                                    }
+                                    
+                                    var energyCost = EconomyMarketsPlugin.Instance.Config.EnergySecondsValue;
+                                    var maxPossibleCharge = account.Balance / (energyCost / 1000m);
+
+                                    var chargeCredit = Math.Min((float)maxPossibleCharge, energyDeficit);
+                                    var cost = (decimal)chargeCredit * (energyCost / 1000m);
+                                    foreach (var battery in blocks.Cast<MyBatteryBlock>())
+                                    {
+                                        var chargeNeeded = battery.MaxStoredPower - battery.CurrentStoredPower;
+                                        if (chargeNeeded <= chargeCredit)
+                                        {
+                                            battery.CurrentStoredPower = battery.CurrentStoredPower + chargeNeeded;
+                                            chargeCredit -= chargeNeeded;
+                                        }
+                                        else
+                                        {
+                                            battery.CurrentStoredPower = battery.CurrentStoredPower + chargeCredit;
+                                            break;
+                                        }
+                                    }
+
+                                    accountManager.AdjustAccountBalance(account.Id, cost * -1, null,
+                                        $"Recharge for {energyDeficit}Mw.");
+                                    Context.Respond($"Your ship has been charged {energyDeficit}MW for {Utilities.FriendlyFormatCurrency(cost)}.");
+                                }).Catch(HandleError);
                         })
                         .Catch(HandleError);
                 })
