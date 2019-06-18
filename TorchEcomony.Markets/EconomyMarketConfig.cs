@@ -75,6 +75,36 @@ namespace TorchEconomy.Markets
 			set => SetValue(ref _defaultMarketRange, value);
 		}
 
+//		/// <summary>
+//		/// How many markets may a player own?
+//		/// </summary>
+//		private int _playerMarketLimit;
+//		public int PlayerMarketLimit
+//		{
+//			get => _playerMarketLimit;
+//			set => SetValue(ref _playerMarketLimit, value);
+//		}
+
+		/// <summary>
+		/// How much does it cost to open a market?
+		/// </summary>
+		private decimal _createMarketCost;
+		public decimal CreateMarketCost
+		{
+			get => _createMarketCost;
+			set => SetValue(ref _createMarketCost, value);
+		}
+
+		/// <summary>
+		/// Can players own markets?
+		/// </summary>
+		private bool _playerOwnedMarkets;
+		public bool PlayerOwnedMarkets
+		{
+			get => _playerOwnedMarkets;
+			set => SetValue(ref _playerOwnedMarkets, value);
+		}
+
 		private ObservableCollection<ValueDefinitionBinding> _valueDefinitionBindings;
 		public ObservableCollection<ValueDefinitionBinding> ValueDefinitionBindings
 		{

@@ -63,6 +63,11 @@
         <Label Content="Default Market Range"/>
         <TextBox Text="{Binding DefaultMarketRange}" PreviewTextInput="PreviewNumericInput"/>
         
+        <Label Content="Create Market Cost"/>
+        <TextBox Text="{Binding CreateMarketCost}" PreviewTextInput="PreviewNumericInput"/>
+        
+        <CheckBox Content="Player Owned Markets" IsChecked="{Binding PlayerOwnedMarkets}"/>
+        
         <Separator Margin="0,10,0,10"/>
         <StackPanel Orientation="Horizontal">
             <Button Content="Save Config" Click="SaveConfig_OnClick" Margin="5,0,5,0" Padding="10,5,10,5"/>

@@ -185,8 +185,15 @@ namespace TorchEconomy.Markets.Commands
                 Context.Respond("You cannot do this while dead.");
                 return;
             }
+
+            if (!EconomyMarketsPlugin.Instance.Config.PlayerOwnedMarkets)
+            {
+                Context.Respond("The server has disabled players from creating new markets.");
+                return;
+            }
             
             var manager = EconomyPlugin.GetManager<MarketManager>();
+            var accountManager = EconomyPlugin.GetManager<AccountsManager>();
             manager.GetMarketByNameOrId(marketNameOrId, Context.Player.SteamUserId)
                 .Then(market =>
                 {
@@ -196,9 +203,23 @@ namespace TorchEconomy.Markets.Commands
                         return;
                     }
 
-                    manager.SetMarketOpenStatus(market.Id, true)
-                        .Then(() => Context.Respond($"Mrkt#{market.Id} ({market.Name}) has been opened for business."))
-                        .Catch(HandleError);
+                    accountManager.GetPrimaryAccount(Context.Player.SteamUserId)
+                        .Then(account =>
+                        {
+                            var createMarketCost = EconomyMarketsPlugin.Instance.Config.CreateMarketCost;
+                            if (account.Balance < createMarketCost)
+                            {
+                                Context.Respond(
+                                    $"Insufficient funds to create market. Requires {Utilities.FriendlyFormatCurrency(createMarketCost)}.");
+                                return;
+                            }
+
+                            accountManager.AdjustAccountBalance(account.Id, createMarketCost * -1, null,
+                                "Opening new market.");
+                            manager.SetMarketOpenStatus(market.Id, true)
+                                .Then(() => Context.Respond($"Mrkt#{market.Id} ({market.Name}) has been opened for business."))
+                                .Catch(HandleError);
+                        });
                 })
                 .Catch(HandleError);
         }

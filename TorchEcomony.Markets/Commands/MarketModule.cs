@@ -493,7 +493,7 @@ namespace TorchEconomy.Markets.Commands
                                     }
 
                                     var friendlyBoughtAmount = Math.Round(purchasedGasAmount, 2);
-                                    accountManager.AdjustAccountBalance(account.Id, cost, null,
+                                    accountManager.AdjustAccountBalance(account.Id, cost * -1, null,
                                         $"Bought {friendlyBoughtAmount}kg of {gasType}.");
 
                                     Context.Respond(
