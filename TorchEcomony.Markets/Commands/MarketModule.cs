@@ -9,6 +9,7 @@ using Torch.Commands;
 using Torch.Commands.Permissions;
 using Torch.Mod;
 using Torch.Mod.Messages;
+using TorchEconomy.Data.Types;
 using TorchEconomy.Managers;
 using TorchEconomy.Markets.Data;
 using TorchEconomy.Markets.Data.Models;
@@ -387,6 +388,111 @@ namespace TorchEconomy.Markets.Commands
                 if (remaining == 0)
                     return;
             }
+        }
+        
+        [Command("refuel", "<gasType>: Refuels the hydrogen on your ship.")]
+        [Permission(MyPromoteLevel.None)]
+        public void Refuel(string gasType)
+        {
+            var character = Context.Player.Character;
+            if (character == null)
+            {
+                Context.Respond("You cannot do this while dead.");
+                return;
+            }
+
+            if (!gasType.Equals("o2", StringComparison.InvariantCultureIgnoreCase)
+                && !gasType.Equals("h2", StringComparison.InvariantCultureIgnoreCase))
+            {
+                Context.Respond("Incorrect gas type specified. Options are: H2, and O2.");
+                return;
+            }
+            
+            var controllingCube = Context.Player.Controller.ControlledEntity as IMyCubeBlock;
+            if (controllingCube == null)
+            {
+                Context.Respond("Trading by hand is not supported.");
+                return;
+            }
+
+            var marketManager = GetManager<MarketManager>();
+            var npcManager = GetManager<NPCManager>();
+            marketManager.GetConnectedMarket(controllingCube.CubeGrid)
+                .Then(market =>
+                {
+                    if (market == null)
+                    {
+                        Context.Respond("Unable to find any connected markets. Have you docked to a market?");
+                        return;
+                    }
+
+                    if (!market.IsNPC)
+                    {
+                        Context.Respond("Only Service Stations can refuel ships.");
+                        return;
+                    }
+
+                    npcManager.GetNPC((long) market.CreatorId)
+                        .Then(npc =>
+                        {
+                            if (npc.IndustryType != IndustryTypeEnum.Service)
+                            {
+                                Context.Respond("Only Service Stations can refuel ships.");
+                                return;
+                            }
+                        })
+                        .Catch(HandleError);
+                })
+                .Catch(HandleError);
+        }
+        
+        [Command("recharge", "Recharges the batteries on your ship.")]
+        [Permission(MyPromoteLevel.None)]
+        public void Recharge()
+        {
+            var character = Context.Player.Character;
+            if (character == null)
+            {
+                Context.Respond("You cannot do this while dead.");
+                return;
+            }
+            
+            var controllingCube = Context.Player.Controller.ControlledEntity as IMyCubeBlock;
+            if (controllingCube == null)
+            {
+                Context.Respond("Trading by hand is not supported.");
+                return;
+            }
+
+            var marketManager = GetManager<MarketManager>();
+            var npcManager = GetManager<NPCManager>();
+            marketManager.GetConnectedMarket(controllingCube.CubeGrid)
+                .Then(market =>
+                {
+                    if (market == null)
+                    {
+                        Context.Respond("Unable to find any connected markets. Have you docked to a market?");
+                        return;
+                    }
+
+                    if (!market.IsNPC)
+                    {
+                        Context.Respond("Only Service Stations can recharge ships.");
+                        return;
+                    }
+
+                    npcManager.GetNPC((long) market.CreatorId)
+                        .Then(npc =>
+                        {
+                            if (npc.IndustryType != IndustryTypeEnum.Service)
+                            {
+                                Context.Respond("Only Service Stations can recharge ships.");
+                                return;
+                            }
+                        })
+                        .Catch(HandleError);
+                })
+                .Catch(HandleError);
         }
     }
 }
