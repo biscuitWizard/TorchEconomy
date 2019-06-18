@@ -77,7 +77,7 @@ It is currently possibly to interact directly with accounts using the API if pro
 
 ### Admin Commands
 * !admin markets createNPC \<gridName\> \<industry\>: Creates an NPC market of the specified industry type at the provider grid.
-* (Coming Soon) !admin markets delete \<marketNameOrId\>: Deletes a market.  
+* !admin markets delete \<marketNameOrId\>: Deletes a market.  
 * !admin markets buy.price \<marketNameOrId\> \<itemName\> \<newPrice\>: Overrides a buy price on a market.
 * !admin markets sell.price \<marketNameOrId\> \<itemName\> \<newPrice\>: Overrides a sell price on a market.
 * !admin markets buy.quantity \<marketNameOrId\> \<itemName\> \<newQuantity\>: Overrides a buy order quantity on a market.
