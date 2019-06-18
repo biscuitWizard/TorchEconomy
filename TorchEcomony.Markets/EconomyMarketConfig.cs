@@ -43,6 +43,7 @@ namespace TorchEconomy.Markets
 				new ValueDefinitionBinding { RawDefinitionId = "MyObjectBuilder_Ore/Silver", Value = .088},
 				new ValueDefinitionBinding { RawDefinitionId = "MyObjectBuilder_Ore/Magnesium", Value = .04},
 				new ValueDefinitionBinding { RawDefinitionId = "MyObjectBuilder_Ore/Stone", Value = 0},
+				new ValueDefinitionBinding { RawDefinitionId = "MyObjectBuilder_Ore/Ice", Value = .01},
 				new ValueDefinitionBinding { RawDefinitionId = "MyObjectBuilder_Ore/Uranium", Value = .08},
 				new ValueDefinitionBinding { RawDefinitionId = "MyObjectBuilder_Ore/Default", Value = .01},
 				new ValueDefinitionBinding { RawDefinitionId = "MyObjectBuilder_Ore/Platinum", Value = .09},

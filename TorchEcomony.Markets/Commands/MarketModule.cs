@@ -5,6 +5,7 @@ using System.Text;
 using NLog;
 using Sandbox.Definitions;
 using Sandbox.Game.Entities;
+using Sandbox.Game.Entities.Blocks;
 using Sandbox.ModAPI;
 using Torch.Commands;
 using Torch.Commands.Permissions;
@@ -20,6 +21,7 @@ using VRage;
 using VRage.Game;
 using VRage.Game.Entity;
 using VRage.Game.ModAPI;
+using VRage.Game.ObjectBuilders.Definitions;
 
 namespace TorchEconomy.Markets.Commands
 {
@@ -416,8 +418,13 @@ namespace TorchEconomy.Markets.Commands
                 return;
             }
 
+            var gasDefinition = gasType.Equals("o2", StringComparison.InvariantCultureIgnoreCase)
+                ? new MyDefinitionId(typeof(MyObjectBuilder_GasProperties), "Oxygen")
+                : new MyDefinitionId(typeof(MyObjectBuilder_GasProperties), "Hydrogen");
+
             var marketManager = GetManager<MarketManager>();
             var npcManager = GetManager<NPCManager>();
+            var accountManager = GetManager<AccountsManager>();
             marketManager.GetConnectedMarket(controllingCube.CubeGrid)
                 .Then(market =>
                 {
@@ -441,6 +448,57 @@ namespace TorchEconomy.Markets.Commands
                                 Context.Respond("Only Service Stations can refuel ships.");
                                 return;
                             }
+
+                            accountManager.GetPrimaryAccount(Context.Player.SteamUserId)
+                                .Then(account =>
+                                {
+                                     var terminalSystem = MyAPIGateway.TerminalActionsHelper.GetTerminalSystemForGrid(controllingCube.CubeGrid);
+                                    var blocks = new List<IMyGasTank>();
+                                    terminalSystem.GetBlocksOfType(blocks);
+
+                                    double neededGas = 0;
+                                    foreach (var tank in blocks.Cast<MyGasTank>())
+                                    {
+                                        if (tank.BlockDefinition.StoredGasId != gasDefinition)
+                                            continue;
+                                        neededGas += tank.GasCapacity * tank.FilledRatio;
+                                    }
+
+                                    var simulationProvider = EconomyPlugin.GetDataProvider<MarketSimulationProvider>();
+                                    var iceValue = simulationProvider.GetUniversalItemValue("Ice");
+                                    var costToFill = new decimal(neededGas) / (iceValue * 9);
+                                    
+                                    var cost = Math.Min(costToFill, account.Balance);
+                                    var purchasedGasAmount = cost * (iceValue * 9);
+                                    
+                                    var remainingGasAmount = purchasedGasAmount;
+                                    foreach (var tank in blocks.Cast<MyGasTank>())
+                                    {
+                                        if (tank.BlockDefinition.StoredGasId != gasDefinition)
+                                            continue;
+                                        
+                                        var gas = new decimal(tank.GasCapacity * (1 - tank.FilledRatio));
+                                        if (gas < remainingGasAmount)
+                                        {
+                                            tank.ChangeFillRatioAmount(1);
+                                            remainingGasAmount -= gas;
+                                        }
+                                        else
+                                        {
+                                            var newRatio = (double) (remainingGasAmount / new decimal(tank.GasCapacity))
+                                                           + tank.FilledRatio;
+                                            tank.ChangeFillRatioAmount(newRatio);
+                                            break;
+                                        }
+                                    }
+
+                                    var friendlyBoughtAmount = Math.Round(purchasedGasAmount, 2);
+                                    accountManager.AdjustAccountBalance(account.Id, cost, null,
+                                        $"Bought {friendlyBoughtAmount}kg of {gasType}.");
+
+                                    Context.Respond(
+                                        $"Bought {friendlyBoughtAmount}kg of {gasType} for {Utilities.FriendlyFormatCurrency(cost)}.");
+                                }).Catch(HandleError);
                         })
                         .Catch(HandleError);
                 })
