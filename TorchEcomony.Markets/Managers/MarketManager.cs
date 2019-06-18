@@ -124,5 +124,17 @@ namespace TorchEconomy.Markets.Managers
                 }
             });
         }
+
+        public Promise DeleteMarket(long marketId)
+        {
+            return new Promise((resolve, reject) =>
+            {
+                using (var connection = ConnectionFactory.Open())
+                {
+                    connection.Execute(SQL.DELETE_MARKET, new {id = marketId});
+                    resolve();
+                }
+            });
+        }
     }
 }

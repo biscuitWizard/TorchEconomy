@@ -50,14 +50,17 @@ namespace TorchEconomy.Data
             = @"SELECT * FROM `Market` WHERE `ParentGridId`=@parentGridId AND `IsDeleted`=0;";
 
         public const string SELECT_MARKET_BY_NAME_AND_OWNER
-            = @"SELECT * FROM `Market` WHERE CreatorId=@creatorId  
+            = @"SELECT * FROM `Market` WHERE CreatorId=@creatorId  AND `IsDeleted`=0
                          AND (`Name` LIKE @marketNameOrId OR `Id`=@marketNameOrId)";
 
         public const string MUTATE_MARKET_OPEN
             = @"UPDATE `Market` SET IsOpen=@isOpen WHERE `Id`=@id;";
 
         public const string MUTATE_MARKET_ACCOUNT
-            = @"UPDATE `Market` SET AccountId=@accountId WHERE `Id`=@id;"; 
+            = @"UPDATE `Market` SET AccountId=@accountId WHERE `Id`=@id;";
+
+        public const string DELETE_MARKET
+            = @"UPDATE `Market` SET `IsDeleted`=1 WHERE `Id`=@id;";
         #endregion
         
         #region Market Orders

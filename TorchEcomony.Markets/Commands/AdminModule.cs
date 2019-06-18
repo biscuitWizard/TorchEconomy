@@ -19,6 +19,36 @@ namespace TorchEconomy.Commands
     public class AdminModule : EconomyCommandModule
     {
         private static readonly Logger Log = LogManager.GetLogger("Economy.Commands.Admin");
+
+        [Command("delete", "<marketName>: Deletes a market from the game.")]
+        [Permission(MyPromoteLevel.Admin)]
+        public void DeleteMarket(string marketNameOrId)
+        {
+            var manager = EconomyPlugin.GetManager<MarketManager>();
+            manager.GetMarkets()
+                .Then(markets =>
+                {
+                    MarketDataObject market = null;
+                    if (long.TryParse(marketNameOrId, out var marketId))
+                    {
+                        market = markets.FirstOrDefault(m => m.Id == marketId);
+                    }
+                    else
+                    {
+                        market = markets.FirstOrDefault(m =>
+                            m.Name.Equals(marketNameOrId, StringComparison.InvariantCultureIgnoreCase));
+                    }
+
+                    if (market == null)
+                    {
+                        Context.Respond($"Unable to find market by name or id of '{marketNameOrId}'.");
+                        return;
+                    }
+
+                    manager.DeleteMarket(market.Id)
+                        .Then(() => { Context.Respond($"Successfully deleted Mrkt#{market.Id}."); });
+                }).Catch(HandleError);
+        }
         
         [Command("createNPC", "<gridName> <provider>: Creates an NPC market of the specified industry type at the provider grid.")]
         [Permission(MyPromoteLevel.Admin)]
