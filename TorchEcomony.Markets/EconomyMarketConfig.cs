@@ -35,6 +35,7 @@ namespace TorchEconomy.Markets
 			
 			ValueDefinitionBindings = new ObservableCollection<ValueDefinitionBinding>
 			{
+				new ValueDefinitionBinding { RawDefinitionId = "MyObjectBuilder_Ore/Ice", Value = .01},
 				new ValueDefinitionBinding { RawDefinitionId = "MyObjectBuilder_Ore/Iron", Value = .02},
 				new ValueDefinitionBinding { RawDefinitionId = "MyObjectBuilder_Ore/Nickel", Value = .034},
 				new ValueDefinitionBinding { RawDefinitionId = "MyObjectBuilder_Ore/Silicon", Value = .02},
