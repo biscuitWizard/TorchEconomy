@@ -55,21 +55,18 @@
     </Reference>
     <Reference Include="NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\GameBinaries\NLog.dll</HintPath>
+      <HintPath>..\GameBinaries\steamapps\common\SpaceEngineersDedicatedServer\DedicatedServer64\NLog.dll</HintPath>
     </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="protobuf-net, Version=2.4.0.0, Culture=neutral, PublicKeyToken=257b51d87d2e4d67">
-      <HintPath>..\GameBinaries\protobuf-net.dll</HintPath>
+      <HintPath>..\GameBinaries\steamapps\common\SpaceEngineersDedicatedServer\DedicatedServer64\protobuf-net.dll</HintPath>
     </Reference>
     <Reference Include="Sandbox.Common">
-      <HintPath>..\GameBinaries\Sandbox.Common.dll</HintPath>
+      <HintPath>..\GameBinaries\steamapps\common\SpaceEngineersDedicatedServer\DedicatedServer64\Sandbox.Common.dll</HintPath>
     </Reference>
     <Reference Include="Sandbox.Game">
-      <HintPath>..\GameBinaries\Sandbox.Game.dll</HintPath>
-    </Reference>
-    <Reference Include="SpaceEngineers.ObjectBuilders, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
-      <HintPath>..\GameBinaries\SpaceEngineers.ObjectBuilders.dll</HintPath>
+      <HintPath>..\GameBinaries\steamapps\common\SpaceEngineersDedicatedServer\DedicatedServer64\Sandbox.Game.dll</HintPath>
     </Reference>
     <Reference Include="StructureMap, Version=4.7.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\StructureMap.4.7.1\lib\net45\StructureMap.dll</HintPath>
@@ -118,27 +115,27 @@
       <HintPath>..\TorchBinaries\Torch.Server.exe</HintPath>
     </Reference>
     <Reference Include="VRage">
-      <HintPath>..\GameBinaries\VRage.dll</HintPath>
+      <HintPath>..\GameBinaries\steamapps\common\SpaceEngineersDedicatedServer\DedicatedServer64\VRage.dll</HintPath>
     </Reference>
     <Reference Include="VRage.Game">
-      <HintPath>..\GameBinaries\VRage.Game.dll</HintPath>
+      <HintPath>..\GameBinaries\steamapps\common\SpaceEngineersDedicatedServer\DedicatedServer64\VRage.Game.dll</HintPath>
     </Reference>
     <Reference Include="VRage.Input, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
-      <HintPath>..\GameBinaries\VRage.Input.dll</HintPath>
+      <HintPath>..\GameBinaries\steamapps\common\SpaceEngineersDedicatedServer\DedicatedServer64\VRage.Input.dll</HintPath>
     </Reference>
     <Reference Include="VRage.Library, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\GameBinaries\VRage.Library.dll</HintPath>
+      <HintPath>..\GameBinaries\steamapps\common\SpaceEngineersDedicatedServer\DedicatedServer64\VRage.Library.dll</HintPath>
     </Reference>
     <Reference Include="VRage.Math, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
-      <HintPath>..\GameBinaries\VRage.Math.dll</HintPath>
+      <HintPath>..\GameBinaries\steamapps\common\SpaceEngineersDedicatedServer\DedicatedServer64\VRage.Math.dll</HintPath>
     </Reference>
     <Reference Include="VRage.Render, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\GameBinaries\VRage.Render.dll</HintPath>
+      <HintPath>..\GameBinaries\steamapps\common\SpaceEngineersDedicatedServer\DedicatedServer64\VRage.Render.dll</HintPath>
     </Reference>
     <Reference Include="VRage.Steam, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
-      <HintPath>..\GameBinaries\VRage.Steam.dll</HintPath>
+      <HintPath>..\GameBinaries\steamapps\common\SpaceEngineersDedicatedServer\DedicatedServer64\VRage.Steam.dll</HintPath>
     </Reference>
     <Reference Include="WindowsBase" />
   </ItemGroup>
