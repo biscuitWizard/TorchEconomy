@@ -3,5 +3,5 @@
   <Name>Torch Economy</Name>
   <Guid>7e97fc70-b8c8-4c07-a380-588cfbb9e20e</Guid>
   <Repository>biscuitWizard/TorchEconomy</Repository>
-  <Version>v1.23</Version>
+  <Version>v$buildVersion</Version>
 </PluginManifest>
