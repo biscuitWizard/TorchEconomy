@@ -33,7 +33,7 @@
 				Include="$(OutDir)\TorchEconomy.Markets.dll;
 						$(OutDir)\TorchEconomy.Markets.pdb;
 						manifest.xml">
-			</ReleaseFiles>
+			</Files>
 		</ItemGroup>
 		<Copy SourceFiles="@(Files)" DestinationFolder="$(OutputDir)"/>
 	</Target>

@@ -32,7 +32,7 @@
 			<Files
 				Include="$(OutDir)\TorchEconomy.Markets.dll;
 						manifest.xml">
-			</ReleaseFiles>
+			</Files>
 		</ItemGroup>
 		<Copy SourceFiles="@(Files)" DestinationFolder="$(OutputDir)"/>
 	</Target>
