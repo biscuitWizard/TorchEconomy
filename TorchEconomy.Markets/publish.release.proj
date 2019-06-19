@@ -5,10 +5,10 @@
 
 		<!-- Release Folder -->
 		<!-- To change the output folder, use the following parameter: /p:BuildDir=C:\BuildTest-->
-		<ReleaseDir>release</ReleaseDir>
+		<OutputDir>output\Release</OutputDir>
 
 		<!-- Build Folder -->
-		<OutDir>bin\Debug</OutDir>
+		<OutDir>bin\Release</OutDir>
 
 		<!-- create zip file? -->
 		<CreateZip>1</CreateZip>
@@ -21,28 +21,27 @@
 
 	<!-- "Autostart" -->
 	<Target Name="Start">
-		<CallTarget Targets="CopyRelease"/>
+		<CallTarget Targets="CopyOutput"/>
 		<CallTarget Condition="$(CreateZip) == '1'" Targets="Zip"/>
 	</Target>
 
 	<!-- copy files to release folder -->
-	<Target Name="CopyRelease">
-		<MakeDir Directories="$(ReleaseDir)\lib-bin"/>
+	<Target Name="CopyOutput">
+		<MakeDir Directories="$(OutputDir)"/>
 		<ItemGroup>
-			<ReleaseFiles
+			<Files
 				Include="$(OutDir)\TorchEconomy.Markets.dll;
-						TorchEconomy.Markets.pdb;
 						manifest.xml">
 			</ReleaseFiles>
 		</ItemGroup>
-		<Copy SourceFiles="@(ReleaseFiles)" DestinationFolder="$(ReleaseDir)\lib-bin"/>
+		<Copy SourceFiles="@(Files)" DestinationFolder="$(OutputDir)"/>
 	</Target>
 
 	<!-- create zip file with content of release\bin folder -->
 	<Target Name="Zip">
-		<CreateItem Include="$(ReleaseDir)\lib-bin\*.*" >
+		<CreateItem Include="$(OutputDir)\*.*" >
 			<Output ItemName="ZipFiles" TaskParameter="Include"/>
 		</CreateItem>
-		<Zip ZipFileName="$(ReleaseDir)\lib-zip\torcheconomy-markets-$(VersionNumber).zip" WorkingDirectory="$(ReleaseDir)\lib-bin" Files="@(ZipFiles)" />
+		<Zip ZipFileName="$(OutputDir)\torcheconomy-markets-$(VersionNumber).zip" WorkingDirectory="$(OutputDir)" Files="@(ZipFiles)" />
 	</Target>	
 </Project>
