@@ -8,7 +8,7 @@
 		<ReleaseDir>release</ReleaseDir>
 
 		<!-- Build Folder -->
-		<OutDir>TorchEconomy\TorchEconomy.Markets\bin\Debug</OutDir>
+		<OutDir>bin\Debug</OutDir>
 
 		<!-- create zip file? -->
 		<CreateZip>1</CreateZip>
