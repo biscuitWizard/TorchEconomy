@@ -12,10 +12,6 @@ namespace TorchEconomy
         {
             var content = (MyObjectBuilder_PhysicalObject) MyObjectBuilderSerializer.CreateNewObject(definitionId);
 
-            var gasContainer = content as MyObjectBuilder_GasContainerObject;
-            if (gasContainer != null)
-                gasContainer.GasLevel = 1f;
-
             MyObjectBuilder_InventoryItem inventoryItem = new MyObjectBuilder_InventoryItem
                 {Amount = amount, PhysicalContent = content};
 
