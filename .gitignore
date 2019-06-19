@@ -255,3 +255,5 @@ paket-files/
 # Binaries
 TorchBinaries
 GameBinaries
+steamcmd.zip
+torch-server.zip
