@@ -5,7 +5,7 @@ VisualStudioVersion = 15.0.27703.2026
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TorchEconomy", "TorchEconomy\TorchEconomy.csproj", "{8EEFDD28-D4A1-4256-AA68-44B288989F61}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TorchEcomony.Markets", "TorchEcomony.Markets\TorchEcomony.Markets.csproj", "{68DFFAFD-2131-402F-B89E-1C5C92D4CED9}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TorchEconomy.Markets", "TorchEconomy.Markets\TorchEconomy.Markets.csproj", "{68DFFAFD-2131-402F-B89E-1C5C92D4CED9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
