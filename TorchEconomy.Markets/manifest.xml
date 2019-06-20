@@ -3,7 +3,7 @@
   <Name>Torch Economy.Markets</Name>
   <Guid>682c66cd-e2ad-490f-8da1-bcdcff4f2f36</Guid>
   <Repository>biscuitWizard/TorchEconomy.Markets</Repository>
-  <Version>v$buildVersion</Version>
+  <Version>v$buildVersion$</Version>
   <Dependencies>
 	<PluginDependency>
 		<Plugin>7e97fc70-b8c8-4c07-a380-588cfbb9e20e</Plugin>
