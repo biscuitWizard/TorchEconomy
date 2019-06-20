@@ -136,5 +136,17 @@ namespace TorchEconomy.Markets.Managers
                 }
             });
         }
+
+        public Promise<MarketDataObject> GetMarketByGridId(long cubeGridEntityId)
+        {
+            return new Promise<MarketDataObject>((resolve, reject) =>
+            {
+                using (var connection = ConnectionFactory.Open())
+                {
+                    resolve(connection.QueryFirstOrDefault<MarketDataObject>(SQL.SELECT_MARKET_BY_GRID,
+                        new {parentGridId = cubeGridEntityId}));
+                }
+            });
+        }
     }
 }

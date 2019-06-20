@@ -90,9 +90,9 @@ namespace TorchEconomy.Markets.Managers
                         var marketPosition = ((IMyEntity) cubeGrid).GetPosition();
                         var marketGps = new MarketGPS
                         {
-                            Gps = CreateGPS(market.Key, market.Value),
-                            MarketRange = market.Key.Range,
-                            MarketId = market.Key.Id,
+                            Gps = CreateGPS(market, marketPosition),
+                            MarketRange = market.Range,
+                            MarketId = market.Id,
                             Position = marketPosition
                         };
 
