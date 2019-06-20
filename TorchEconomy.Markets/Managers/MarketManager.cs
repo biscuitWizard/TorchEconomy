@@ -14,6 +14,8 @@ namespace TorchEconomy.Markets.Managers
 {
     public class MarketManager : BaseManager
     {
+        public event Action<MarketDataObject> OnMarketCreated;
+        
         // ReSharper disable once InconsistentNaming
         public MarketManager(IConnectionFactory connectionFactory) : base(connectionFactory)
         {
@@ -36,6 +38,8 @@ namespace TorchEconomy.Markets.Managers
                     var market = connection.QueryFirst<MarketDataObject>(
                         SQL.SELECT_MARKET_BY_GRID,
                         new {parentGridId = parentGridId});
+                    
+                    OnMarketCreated?.Invoke(market);
                     resolve(market);
                 }
             });

@@ -48,9 +48,16 @@ namespace TorchEconomy.Markets.Managers
         {
             LoadMarkets();
             
+            _marketManager.OnMarketCreated += MarketManagerOnOnMarketCreated;
+            
             _processing = true;
             UpdateGps();
             _lastUpdate = DateTime.UtcNow;
+        }
+
+        private void MarketManagerOnOnMarketCreated(MarketDataObject market)
+        {
+            RegisterMarket(market);
         }
 
         private void LoadMarkets()
@@ -61,23 +68,28 @@ namespace TorchEconomy.Markets.Managers
                 {
                     foreach (var market in markets)
                     {
-                        var marketEntity = MyAPIGateway.Entities.GetEntityById(market.ParentGridId) as MyCubeGrid;
-                        if (marketEntity == null)
-                            continue;
-
-                        var marketPosition = ((IMyEntity) marketEntity).GetPosition();
-                        var marketGps = new MarketGPS
-                        {
-                            Gps = CreateGPS(market, marketPosition),
-                            MarketRange = market.Range,
-                            MarketId = market.Id,
-                            Position = marketPosition
-                        };
-
-                        _cachedMarkets[market] = marketGps;
-                        marketEntity.OnStaticChanged += MarketEntityOnOnStaticChanged;
+                        RegisterMarket(market);
                     }
                 });
+        }
+
+        private void RegisterMarket(MarketDataObject market)
+        {
+            var marketEntity = MyAPIGateway.Entities.GetEntityById(market.ParentGridId) as MyCubeGrid;
+            if (marketEntity == null)
+                return;
+
+            var marketPosition = ((IMyEntity) marketEntity).GetPosition();
+            var marketGps = new MarketGPS
+            {
+                Gps = CreateGPS(market, marketPosition),
+                MarketRange = market.Range,
+                MarketId = market.Id,
+                Position = marketPosition
+            };
+
+            _cachedMarkets[market] = marketGps;
+            marketEntity.OnStaticChanged += MarketEntityOnOnStaticChanged;
         }
 
         private void MarketEntityOnOnStaticChanged(MyCubeGrid cubeGrid, bool newValue)
