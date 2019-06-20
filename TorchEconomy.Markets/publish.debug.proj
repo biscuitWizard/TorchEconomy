@@ -1,3 +1,4 @@
+
 <?xml version="1.0" encoding="utf-8"?>
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" DefaultTargets="Start">
 	<!-- Variables -->
@@ -13,6 +14,8 @@
 		<!-- create zip file? -->
 		<CreateZip>1</CreateZip>
 
+		<VersionNumber></VersionNumber>
+
 		<!-- specify path for MSBuild Community Tasks (MSBuild.Community.Tasks.Targets needs this path) -->
 		<!-- <MSBuildCommunityTasksPath>..\net20</MSBuildCommunityTasksPath> -->
 	</PropertyGroup>
@@ -21,28 +24,18 @@
 
 	<!-- "Autostart" -->
 	<Target Name="Start">
-		<CallTarget Targets="CopyOutput"/>
 		<CallTarget Condition="$(CreateZip) == '1'" Targets="Zip"/>
 	</Target>
 
-	<!-- copy files to release folder -->
-	<Target Name="CopyOutput">
-		<MakeDir Directories="$(OutputDir)"/>
+	<!-- create zip file with content of release\bin folder -->
+	<Target Name="Zip">
 		<ItemGroup>
 			<Files
 				Include="$(OutDir)\TorchEconomy.Markets.dll;
 						$(OutDir)\TorchEconomy.Markets.pdb;
 						manifest.xml">
 			</Files>
-		</ItemGroup>
-		<Copy SourceFiles="@(Files)" DestinationFolder="$(OutputDir)"/>
-	</Target>
-
-	<!-- create zip file with content of release\bin folder -->
-	<Target Name="Zip">
-		<CreateItem Include="$(OutputDir)\*.*" >
-			<Output ItemName="ZipFiles" TaskParameter="Include"/>
-		</CreateItem>
-		<Zip ZipFileName="$(OutputDir)\torcheconomy-markets-$(VersionNumber).zip" WorkingDirectory="$(OutputDir)" Files="@(ZipFiles)" />
+		</ItemGroup>>
+		<Zip ZipFileName="$(OutputDir)\torcheconomy-markets-$(VersionNumber).zip" WorkingDirectory="$(OutputDir)" Files="@(Files)" />
 	</Target>	
 </Project>
