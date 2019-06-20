@@ -43,7 +43,7 @@
 						$(OutDir)\StructureMap.dll;
 						manifest.xml">
 			</Files>
-		</ItemGroup>>
+		</ItemGroup>
 		<Zip ZipFileName="$(OutputDir)\torcheconomy-$(VersionNumber).zip" WorkingDirectory="$(OutputDir)" Files="@(Files)" />
 	</Target>	
 </Project>

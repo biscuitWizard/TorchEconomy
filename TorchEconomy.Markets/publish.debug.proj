@@ -38,7 +38,7 @@
 						$(OutDir)\TorchEconomy.Markets.pdb;
 						manifest.xml">
 			</Files>
-		</ItemGroup>>
+		</ItemGroup>
 		<Zip ZipFileName="$(OutputDir)\torcheconomy-markets-$(VersionNumber).zip" WorkingDirectory="$(OutputDir)" Files="@(Files)" />
 	</Target>	
 </Project>
