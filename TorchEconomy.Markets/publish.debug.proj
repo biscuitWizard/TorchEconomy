@@ -9,7 +9,7 @@
 		<OutputDir>output\Debug</OutputDir>
 
 		<!-- Build Folder -->
-		<OutDir>bin\Debug</OutDir>
+		<BinDir>bin\Debug</BinDir>
 
 		<VersionNumber>v0.0.0</VersionNumber>
 	</PropertyGroup>
@@ -34,8 +34,8 @@
 		<MakeDir Directories="$(OutputDir)"/>
 		<ItemGroup>
 			<Files
-				Include="$(OutDir)\TorchEconomy.Markets.dll;
-						$(OutDir)\TorchEconomy.Markets.pdb;
+				Include="$(BinDir)\TorchEconomy.Markets.dll;
+						$(BinDir)\TorchEconomy.Markets.pdb;
 						manifest.xml">
 			</Files>
 		</ItemGroup>

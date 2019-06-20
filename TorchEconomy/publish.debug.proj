@@ -8,7 +8,7 @@
 		<OutputDir>output\Debug</OutputDir>
 
 		<!-- Build Folder -->
-		<OutDir>bin\Debug</OutDir>
+		<BinDir>bin\Debug</BinDir>
 
 		<VersionNumber>v0.0.0</VersionNumber>
 	</PropertyGroup>
@@ -33,14 +33,14 @@
 		<MakeDir Directories="$(OutputDir)"/>
 		<ItemGroup>
 			<Files
-				Include="$(OutDir)\TorchEconomy.dll;
-						$(OutDir)\TorchEconomy.pdb;
-						$(OutDir)\Dapper.dll;
-						$(OutDir)\Google.Protobuf.dll;
-						$(OutDir)\Mono.Data.Sqlite.dll;
-						$(OutDir)\MySql.Data.dll;
-						$(OutDir)\Newtonsoft.Json.dll;
-						$(OutDir)\StructureMap.dll;
+				Include="$(BinDir)\TorchEconomy.dll;
+						$(BinDir)\TorchEconomy.pdb;
+						$(BinDir)\Dapper.dll;
+						$(BinDir)\Google.Protobuf.dll;
+						$(BinDir)\Mono.Data.Sqlite.dll;
+						$(BinDir)\MySql.Data.dll;
+						$(BinDir)\Newtonsoft.Json.dll;
+						$(BinDir)\StructureMap.dll;
 						manifest.xml">
 			</Files>
 		</ItemGroup>
