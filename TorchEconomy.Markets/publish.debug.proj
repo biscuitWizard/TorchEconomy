@@ -11,24 +11,27 @@
 		<!-- Build Folder -->
 		<OutDir>bin\Debug</OutDir>
 
-		<!-- create zip file? -->
-		<CreateZip>1</CreateZip>
-
-		<VersionNumber></VersionNumber>
-
-		<!-- specify path for MSBuild Community Tasks (MSBuild.Community.Tasks.Targets needs this path) -->
-		<!-- <MSBuildCommunityTasksPath>..\net20</MSBuildCommunityTasksPath> -->
+		<VersionNumber>v0.0.0</VersionNumber>
 	</PropertyGroup>
 
 	<Import Project="..\packages\MSBuildTasks.1.5.0.235\build\MSBuildTasks.targets" />
 
 	<!-- "Autostart" -->
 	<Target Name="Start">
-		<CallTarget Condition="$(CreateZip) == '1'" Targets="Zip"/>
+		<CallTarget Targets="CleanWork"/>
+		<CallTarget Targets="Zip"/>
 	</Target>
 
+	<Target Name="CleanWork">
+		<ItemGroup>
+			<DirsToClean Include="$(OutputDir)" />
+		</ItemGroup>
+        <RemoveDir Directories="@(DirsToClean)" />
+    </Target>
+	
 	<!-- create zip file with content of release\bin folder -->
 	<Target Name="Zip">
+		<MakeDir Directories="$(OutputDir)"/>
 		<ItemGroup>
 			<Files
 				Include="$(OutDir)\TorchEconomy.Markets.dll;
