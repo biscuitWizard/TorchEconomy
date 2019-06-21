@@ -48,14 +48,20 @@ namespace TorchEconomy.Markets.Managers
         {
             LoadMarkets();
             
-            _marketManager.OnMarketCreated += MarketManagerOnOnMarketCreated;
+            _marketManager.OnMarketCreated += MarketManager_OnMarketCreated;
+            _marketManager.OnMarketDeleted += MarketManager_OnMarketDeleted;
             
             _processing = true;
             UpdateGps();
             _lastUpdate = DateTime.UtcNow;
         }
 
-        private void MarketManagerOnOnMarketCreated(MarketDataObject market)
+        private void MarketManager_OnMarketDeleted(MarketDataObject market)
+        {
+            UnregisterMarket(market.Id);
+        }
+
+        private void MarketManager_OnMarketCreated(MarketDataObject market)
         {
             RegisterMarket(market);
         }
@@ -89,10 +95,20 @@ namespace TorchEconomy.Markets.Managers
             };
 
             _cachedMarkets[market] = marketGps;
-            marketEntity.OnStaticChanged += MarketEntityOnOnStaticChanged;
+            marketEntity.OnStaticChanged += MarketEntity_OnStaticChanged;
         }
 
-        private void MarketEntityOnOnStaticChanged(MyCubeGrid cubeGrid, bool newValue)
+
+        private void UnregisterMarket(long marketId)
+        {
+            var cachedMarket = _cachedMarkets.Keys.FirstOrDefault(cm => cm.Id == marketId);
+            if (cachedMarket == null)
+                return;
+            
+            _cachedMarkets.Remove(cachedMarket);
+        }
+
+        private void MarketEntity_OnStaticChanged(MyCubeGrid cubeGrid, bool newValue)
         {
             if (newValue)
             {

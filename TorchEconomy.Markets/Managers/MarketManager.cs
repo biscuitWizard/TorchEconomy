@@ -15,6 +15,8 @@ namespace TorchEconomy.Markets.Managers
     public class MarketManager : BaseManager
     {
         public event Action<MarketDataObject> OnMarketCreated;
+
+        public event Action<MarketDataObject> OnMarketDeleted;
         
         // ReSharper disable once InconsistentNaming
         public MarketManager(IConnectionFactory connectionFactory) : base(connectionFactory)
@@ -136,6 +138,8 @@ namespace TorchEconomy.Markets.Managers
                 using (var connection = ConnectionFactory.Open())
                 {
                     connection.Execute(SQL.DELETE_MARKET, new {id = marketId});
+                    
+                    OnMarketDeleted?.Invoke(new MarketDataObject { Id = marketId});
                     resolve();
                 }
             });

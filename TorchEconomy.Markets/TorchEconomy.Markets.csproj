@@ -87,6 +87,7 @@
     <Compile Include="Commands\MarketModule.cs" />
     <Compile Include="Data\DataObjects\MarketOrderDataObject.cs" />
     <Compile Include="Data\DataObjects\MarketDataObject.cs" />
+    <Compile Include="Data\DataObjects\MarketOrderFluctuationDataObject.cs" />
     <Compile Include="Data\MarketSimulationProvider.cs" />
     <Compile Include="Data\Models\MarketValueItem.cs" />
     <Compile Include="Data\Models\NPCMarketOrder.cs" />
