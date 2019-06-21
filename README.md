@@ -42,7 +42,7 @@ Send requests to DS using the normal APIGateway (the Protobuf classes are under 
 
 It is currently possibly to interact directly with accounts using the API if properly authorized by the server's TransactionKey.
 
-## TorchEconomy.Markets (In Progress)
+## TorchEconomy.Markets (Testing)
 
 ### Features
 * Can make stations into Trade Zones capable of supporting buy and sell orders.
@@ -108,7 +108,7 @@ It's recommended that servers set up four markets minimum for their server. The 
 
 This will create the basic trade loop gameplay.
 
-## TorchEconomy.ShipTrading (Incomplete)
+## TorchEconomy.ShipTrading (In Progress)
 
 ### Features
 * Ships can be sold by their owners and bought by other players.
