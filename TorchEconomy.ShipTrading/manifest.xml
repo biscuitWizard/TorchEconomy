@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<PluginManifest xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <Name>Torch Economy.ShipTrading</Name>
+  <Guid>32cf5e80-6e7f-44b5-9256-fcc773170f2a</Guid>
+  <Repository>biscuitWizard/TorchEconomy.ShipTrading</Repository>
+  <Version>v$buildVersion$</Version>
+  <Dependencies>
+	<PluginDependency>
+		<Plugin>7e97fc70-b8c8-4c07-a380-588cfbb9e20e</Plugin>
+		<Plugin>682c66cd-e2ad-490f-8da1-bcdcff4f2f36</Plugin>
+	</PluginDependency>
+  </Dependencies>
+</PluginManifest>

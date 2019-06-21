@@ -9,7 +9,7 @@ using Torch.Views;
 
 namespace TorchEconomy.Markets
 {
-	public class EconomyMarketsPlugin : TorchPluginBase, IWpfPlugin
+	public class EconomyMarketsPlugin : EconomyPluginBase, IWpfPlugin
 	{
 		private static readonly Logger Log = LogManager.GetLogger("Economy.Markets");
         

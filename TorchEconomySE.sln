@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TorchEconomy", "TorchEconom
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TorchEconomy.Markets", "TorchEconomy.Markets\TorchEconomy.Markets.csproj", "{68DFFAFD-2131-402F-B89E-1C5C92D4CED9}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TorchEconomy.ShipTrading", "TorchEconomy.ShipTrading\TorchEconomy.ShipTrading.csproj", "{30339CB4-3850-4C2D-816B-BB4E7F53C678}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

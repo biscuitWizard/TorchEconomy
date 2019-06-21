@@ -32,8 +32,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c">
-      <HintPath>..\GameBinaries\NLog.dll</HintPath>
+    <Reference Include="NLog, Culture=neutral, PublicKeyToken=5120e14c03d0593c">
+      <HintPath>..\GameBinaries\steamapps\common\SpaceEngineersDedicatedServer\DedicatedServer64\NLog.dll</HintPath>
     </Reference>
     <Reference Include="PresentationFramework" />
     <Reference Include="System" />
@@ -46,14 +46,14 @@
     <Reference Include="Torch.API">
       <HintPath>..\TorchBinaries\Torch.API.dll</HintPath>
     </Reference>
-    <Reference Include="VRage, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
-      <HintPath>..\GameBinaries\VRage.dll</HintPath>
+    <Reference Include="VRage, Culture=neutral, PublicKeyToken=null">
+      <HintPath>..\GameBinaries\steamapps\common\SpaceEngineersDedicatedServer\DedicatedServer64\VRage.dll</HintPath>
     </Reference>
-    <Reference Include="VRage.Game, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
-      <HintPath>..\GameBinaries\VRage.Game.dll</HintPath>
+    <Reference Include="VRage.Game, Culture=neutral, PublicKeyToken=null">
+      <HintPath>..\GameBinaries\steamapps\common\SpaceEngineersDedicatedServer\DedicatedServer64\VRage.Game.dll</HintPath>
     </Reference>
-    <Reference Include="VRage.Library, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
-      <HintPath>..\GameBinaries\VRage.Library.dll</HintPath>
+    <Reference Include="VRage.Library, Culture=neutral, PublicKeyToken=null">
+      <HintPath>..\GameBinaries\steamapps\common\SpaceEngineersDedicatedServer\DedicatedServer64\VRage.Library.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -63,6 +63,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\TorchEconomy.Markets\TorchEconomy.Markets.csproj">
+      <Project>{68dffafd-2131-402f-b89e-1c5c92d4ced9}</Project>
+      <Name>TorchEconomy.Markets</Name>
+    </ProjectReference>
     <ProjectReference Include="..\TorchEconomy\TorchEconomy.csproj">
       <Project>{8eefdd28-d4a1-4256-aa68-44b288989f61}</Project>
       <Name>TorchEconomy</Name>

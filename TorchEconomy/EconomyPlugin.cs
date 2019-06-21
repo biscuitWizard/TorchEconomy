@@ -26,26 +26,8 @@ using VRage.Game;
 
 namespace TorchEconomy
 {
-    public class EconomyPlugin : TorchPluginBase, IWpfPlugin
+    public class EconomyPlugin : EconomyPluginBase, IWpfPlugin
     {
-        private static IContainer _container;
-
-        protected IContainer GetContainer()
-        {
-            if (_container == null)
-            {
-                _container = new Container();
-                _container.Initialize();
-            }
-
-            return _container;
-        }
-
-        public IConnectionFactory GetConnectionFactory()
-        {
-            return GetContainer().GetInstance<IConnectionFactory>();
-        }
-        
         public static DefinitionResolver DefinitionResolver { get; private set; }
         
         private static readonly Logger Log = LogManager.GetLogger("Economy");
@@ -97,12 +79,6 @@ namespace TorchEconomy
                 
                 // Add mod override for the economy client mod for client enhancements.
                 _sessionManager.AddOverrideMod(1772298664);
-//                var instanceManager = Torch
-//                    .Managers
-//                    .GetManager<InstanceManager>();
-//                    
-//                instanceManager.
-//                    .DedicatedConfig.Mods.Add(new ModItemInfo(new MyObjectBuilder_Checkpoint.ModItem(1772298664)));
             }
             else
             {
@@ -127,8 +103,13 @@ namespace TorchEconomy
                         .Managers
                         .GetManager(typeof(InstanceManager)) as InstanceManager;
 
-                    instanceManager?.DedicatedConfig.Mods
-                        .Add(new ModItemInfo(new MyObjectBuilder_Checkpoint.ModItem(1772298664)));
+                    if (instanceManager == null)
+                        return;
+                    
+                    var clientMod = new ModItemInfo(new MyObjectBuilder_Checkpoint.ModItem(1772298664));
+                    if(!instanceManager.DedicatedConfig.Mods.Contains(clientMod))
+                        instanceManager.DedicatedConfig.Mods
+                            .Add(clientMod);
                     break;
             }
         }
