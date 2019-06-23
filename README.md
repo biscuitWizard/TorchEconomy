@@ -94,6 +94,8 @@ There are four market types:
 
 If you'll notice, markets sell Industrial -\> Consumer -\> Research -\> Military -\> Industrial.
 
+All prices are calculated using the SimpleBlueprint definition data structure. The equation is like: (sumall(prereq * quantity) + (energySecs * ProductionSeconds)) * output quantity.
+
 #### Special NPC Markets (Coming Soon)
 There are two special/unique NPC markets that can be setup.
 * Service: Service markets are refuel points for the weary ship. They offer recharge and refuel options, making battery powered hydrogen-only ships very viable.
@@ -115,6 +117,18 @@ This will create the basic trade loop gameplay.
 * Extra PCU granted explicitly for ships in escrow.
 * NPC ship pads that will respawn sellable ships over time as players buy them.
 * Fully configurable through Torch's WPF UI
+
+### Commands
+* !econ ships sell \<gridNameOrId\> \<amount\>: Lists a player ship for sale. The ship will remain in player's control until the sale is completed.
+* !econ ships buy \<gridNameOrId\>: Purchases a ship for sale.
+* !econ ships info \<gridNameOrId\>: Gets information on a ship for sale.
+
+### Admin Commands
+* !admin markets createNPC <gridNameOrId> Shipyard: Creates a shipyard NPC station. It will buy components off of players and have a number of ships for sale.
+  
+### Configuration
+Blueprint item definitions can be whitelisted on the WPF torch configuration page. To add new ships for sale, the blueprints need to be added and registered to the server via a mod. 
+
 
 ## TorchEconomy.Storage (Incomplete)
 
