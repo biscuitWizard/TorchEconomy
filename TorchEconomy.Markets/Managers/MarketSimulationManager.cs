@@ -13,6 +13,7 @@ using TorchEconomy.Markets.Data;
 using TorchEconomy.Markets.Data.DataObjects;
 using TorchEconomy.Markets.Data.Models;
 using TorchEconomy.Markets.Data.Types;
+using TorchEconomy.Markets.Managers.Generators;
 using VRage.Game;
 using VRage.ObjectBuilders;
 
@@ -22,18 +23,15 @@ namespace TorchEconomy.Markets.Managers
     {
         private static readonly Logger Log = LogManager.GetLogger("Economy.Markets.Managers.Market_Simulation");
         
-        private readonly MarketSimulationProvider _simulationProvider;
-        private readonly DefinitionResolver _definitionResolver;
         private readonly ConcurrentDictionary<long, List<NPCMarketOrder>> _npcMarketOrders 
             = new ConcurrentDictionary<long, List<NPCMarketOrder>>();
+        private readonly List<IOrderGenerator> _orderGenerators = new List<IOrderGenerator>();
         
-        public MarketSimulationManager(IConnectionFactory connectionFactory, 
-            MarketSimulationProvider simulationProvider,
-            DefinitionResolver definitionResolver) 
+        public MarketSimulationManager(IConnectionFactory connectionFactory) 
             : base(connectionFactory)
         {
-            _simulationProvider = simulationProvider;
-            _definitionResolver = definitionResolver;
+
+            RegisterGenerator(new GeneralOrderGenerator());
         }
 
         public override void Start()
@@ -60,81 +58,25 @@ namespace TorchEconomy.Markets.Managers
             }
         }
 
+        public void RegisterGenerator(IOrderGenerator generator)
+        {
+            _orderGenerators.Add(generator);
+        }
+
         public Promise GenerateNPCOrders(NPCDataObject npc, MarketDataObject market)
         {
             return new Promise((resolve, reject) =>
             {
-                decimal marginFlux = 0;
-                var items = _simulationProvider.GetUniversalItems(npc.IndustryType);
-                
-                switch (npc.IndustryType)
+                var orders = new List<NPCMarketOrder>();
+                foreach (var generator in _orderGenerators)
                 {
-                    case IndustryTypeEnum.Industrial:
-                        // Industrial buys industrial trade goods at a high price.
-                        // Industrial buys ore at a moderate price.
-                        // Industrial sells ingots at a low price.
-                        marginFlux = new decimal(0.04);
-                        break;
-                    case IndustryTypeEnum.Consumer:
-                        // Consumer buys ingots at a high price.
-                        // Consumer sells components at a low price.
-                        marginFlux = new decimal(0.08);
-                        break;
-                    case IndustryTypeEnum.Research:
-                        // Research buys components at a high price.
-                        // Research sells research trade goods at a low price.
-                        marginFlux = new decimal(0.12);
-                        break;
-                    case IndustryTypeEnum.Military:
-                        // Military buys research trade goods at a high price.
-                        // Military sells industrial trade goods & ammo at a low price.
-                        marginFlux = new decimal(0.16);
-                        break;
+                    if (!generator.CanHandle(npc.IndustryType))
+                        continue;
+                    
+                    orders.AddRange(generator.GenerateOrders(npc.IndustryType, npc, market));
                 }
 
-                var orderManager = EconomyPlugin.GetManager<MarketOrderManager>();
-                var npcOrders = new List<NPCMarketOrder>();
-                var random = new Random();
-                foreach (var item in items)
-                {
-                    
-                    if (MarketConfig.Blacklist.Any(b => b.Value == item.Definition.Id.ToString()))
-                        continue; // This entry is blacklisted.
-                    
-                    var affinity = item.IndustryAffinities[npc.IndustryType];
-                    var minMarginFlux =(double)((marginFlux / 2m) * -1m);
-                    var maxMarginFlux = (double)marginFlux;
-                    var orderMarginFlux = random.NextRange(minMarginFlux, maxMarginFlux);
-
-                    var order = new NPCMarketOrder
-                    {
-                        DesiredStock = 10000,
-                        Definition = item.Definition,
-                        MarketId = market.Id,
-                        MarginFlux = new decimal(orderMarginFlux),
-                        DemandMultiplier = 1
-                    };
-
-                    var orderType = affinity == MarketAffinity.AmbivalentBuy
-                                    || affinity == MarketAffinity.ExtremeBuy
-                                    || affinity == MarketAffinity.Buy
-                        ? BuyOrderType.Buy
-                        : BuyOrderType.Sell;
-
-                    var basePrice = _simulationProvider.GetUniversalItemValue(item.Definition.Id);
-                    var price = basePrice;
-                    if (orderType == BuyOrderType.Buy)
-                        price = price * (1m + order.MarginFlux);
-                    else
-                        price = price * (1m - order.MarginFlux);
-
-                    orderManager.UpdateOrAddMarketOrder(orderType, market.Id, item.Definition.Id,
-                        price, -1)
-                        .Then(newOrder => { order.OrderId = newOrder.Id; });
-                    npcOrders.Add(order);
-                }
-
-                _npcMarketOrders[market.Id] = npcOrders;
+                _npcMarketOrders[market.Id] = orders;
                 resolve();
             });
         }

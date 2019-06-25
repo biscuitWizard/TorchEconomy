@@ -76,6 +76,8 @@
     </Compile>
     <Compile Include="EconomyShipTradingConfig.cs" />
     <Compile Include="EconomyShipTradingPlugin.cs" />
+    <Compile Include="Managers\Generators\ShipyardOrderGenerator.cs" />
+    <Compile Include="Managers\ShipOrderManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

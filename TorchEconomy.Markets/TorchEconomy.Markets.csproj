@@ -98,6 +98,8 @@
     <Compile Include="EconomyMarketConfig.cs" />
     <Compile Include="EconomyMarketsPlugin.cs" />
     <Compile Include="Managers\BaseMarketManager.cs" />
+    <Compile Include="Managers\Generators\GeneralOrderGenerator.cs" />
+    <Compile Include="Managers\Generators\IOrderGenerator.cs" />
     <Compile Include="Managers\MarketGPSManager.cs" />
     <Compile Include="Managers\MarketOrderManager.cs" />
     <Compile Include="Managers\MarketSimulationManager.cs" />
