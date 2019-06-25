@@ -32,5 +32,10 @@ namespace TorchEconomy.ShipTrading
 			Log.Info($"Attempting to load config from {path}");
 			_config = Persistent<EconomyShipTradingConfig>.Load(path);
 		}
+		
+		public void Save()
+		{
+			_config.Save();
+		}
 	}
 }

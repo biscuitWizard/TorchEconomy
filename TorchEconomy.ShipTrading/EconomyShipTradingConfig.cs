@@ -6,8 +6,15 @@ namespace TorchEconomy.ShipTrading
 {
 	public class EconomyShipTradingConfig : ViewModel
 	{
-		private ObservableCollection<ShipOrder> _sellableShips = new ObservableCollection<ShipOrder>();
-		public ObservableCollection<ShipOrder> SellableShips
+		public class ShipOrderBlueprint
+		{
+			public string DefinitionId { get; set; }
+			public string DisplayName { get; set; }
+			public decimal Value { get; set; }
+		}
+		
+		private ObservableCollection<ShipOrderBlueprint> _sellableShips = new ObservableCollection<ShipOrderBlueprint>();
+		public ObservableCollection<ShipOrderBlueprint> SellableShips
 		{
 			get => _sellableShips;
 			set => SetValue(ref _sellableShips, value);

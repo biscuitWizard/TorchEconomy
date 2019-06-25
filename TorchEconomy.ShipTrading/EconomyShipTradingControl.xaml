@@ -1,0 +1,58 @@
+﻿<UserControl x:Class="TorchEconomy.ShipTrading.EconomyShipTradingControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:torchEconomy="clr-namespace:TorchEconomy.ShipTrading"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.DataContext>
+        <torchEconomy:EconomyShipTradingConfig/>
+    </UserControl.DataContext>
+    <StackPanel>
+        <GroupBox Header="Value Configuration">
+            <DockPanel LastChildFill="True">
+                <StackPanel DockPanel.Dock="Right">
+                    <Button Content="Add Item" Padding="10,5,10,5" Click="AddValueItem"/>
+                    <Button Content="Remove Item" Padding="10,5,10,5" Click="RemoveValueItem" DataContext="{Binding RelativeSource={RelativeSource Self}}" Name="ButtonValueRemoveItem"/>
+                </StackPanel>
+                
+                <DataGrid ItemsSource="{Binding SellableShips}" 
+                          AutoGenerateColumns="False" 
+                          CanUserAddRows="False" 
+                          ColumnWidth="*" 
+                          SelectedCellsChanged="ValueSelectionChanged" 
+                          Name="ValueDataGrid">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Definition Id" Binding="{Binding DefinitionId}">
+                            <DataGridTextColumn.CellStyle>
+                                <Style TargetType="DataGridCell">
+                                    <EventSetter Event="PreviewMouseDown" Handler="DataGridCell_PreviewMouseDown"/>
+                                </Style>
+                            </DataGridTextColumn.CellStyle>
+                        </DataGridTextColumn>
+                        <DataGridTextColumn Header="DisplayName" Binding="{Binding DisplayName}" />
+                        <DataGridTextColumn Header="Value" Binding="{Binding Value}" />
+                    </DataGrid.Columns>
+                </DataGrid>
+            </DockPanel>
+        </GroupBox>
+        
+        <!-- <Label Content="Energy Value per Second"/> -->
+        <!-- <TextBox Text="{Binding EnergySecondsValue}" PreviewTextInput="PreviewNumericInput"/> -->
+        <!-- -->
+        <!-- <Label Content="Default Market Range"/> -->
+        <!-- <TextBox Text="{Binding DefaultMarketRange}" PreviewTextInput="PreviewNumericInput"/> -->
+        <!-- -->
+        <!-- <Label Content="Create Market Cost"/> -->
+        <!-- <TextBox Text="{Binding CreateMarketCost}" PreviewTextInput="PreviewNumericInput"/> -->
+        <!-- -->
+        <!-- <CheckBox Content="Player Owned Markets" IsChecked="{Binding PlayerOwnedMarkets}"/> -->
+        
+        <Separator Margin="0,10,0,10"/>
+        <StackPanel Orientation="Horizontal">
+            <Button Content="Save Config" Click="SaveConfig_OnClick" Margin="5,0,5,0" Padding="10,5,10,5"/>
+            <!-- <Button Content="Revert Config" Click="RevertConfig_OnClick" Margin="5,0,5,0" Padding="10,5,10,5"/> -->
+        </StackPanel>
+    </StackPanel>
+</UserControl>
