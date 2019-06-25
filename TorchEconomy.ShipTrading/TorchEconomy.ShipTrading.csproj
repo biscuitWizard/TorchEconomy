@@ -36,6 +36,12 @@
       <HintPath>..\GameBinaries\steamapps\common\SpaceEngineersDedicatedServer\DedicatedServer64\NLog.dll</HintPath>
     </Reference>
     <Reference Include="PresentationFramework" />
+    <Reference Include="Sandbox.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
+      <HintPath>..\GameBinaries\steamapps\common\SpaceEngineersDedicatedServer\DedicatedServer64\Sandbox.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="Sandbox.Game, Version=0.1.1.0, Culture=neutral, PublicKeyToken=null">
+      <HintPath>..\GameBinaries\steamapps\common\SpaceEngineersDedicatedServer\DedicatedServer64\Sandbox.Game.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data" />
@@ -55,9 +61,14 @@
     <Reference Include="VRage.Library, Culture=neutral, PublicKeyToken=null">
       <HintPath>..\GameBinaries\steamapps\common\SpaceEngineersDedicatedServer\DedicatedServer64\VRage.Library.dll</HintPath>
     </Reference>
+    <Reference Include="VRage.Math, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
+      <HintPath>..\GameBinaries\steamapps\common\SpaceEngineersDedicatedServer\DedicatedServer64\VRage.Math.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Commands\ShipModule.cs" />
     <Compile Include="Data\DataObjects\ShipSaleDataObject.cs" />
+    <Compile Include="Data\Models\ShipOrder.cs" />
     <Compile Include="EconomyShipTradingConfig.cs" />
     <Compile Include="EconomyShipTradingPlugin.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
