@@ -31,7 +31,7 @@
                                 </Style>
                             </DataGridTextColumn.CellStyle>
                         </DataGridTextColumn>
-                        <DataGridTextColumn Header="DisplayName" Binding="{Binding DisplayName}" />
+                        <!-- <DataGridTextColumn Header="DisplayName" Binding="{Binding DisplayName}" /> -->
                         <DataGridTextColumn Header="Value" Binding="{Binding Value}" />
                     </DataGrid.Columns>
                 </DataGrid>

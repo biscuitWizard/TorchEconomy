@@ -80,5 +80,12 @@ namespace TorchEconomy.Markets.Managers
                 resolve();
             });
         }
+
+        public override void Stop()
+        {
+            base.Stop();
+
+            _npcMarketOrders.Clear();
+        }
     }
 }

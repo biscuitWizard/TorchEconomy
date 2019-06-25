@@ -72,7 +72,8 @@ namespace TorchEconomy.Markets.Commands
                             var maxNameLength = 30;
                             
                             responseBuilder.AppendLine("+-- Buy Orders:");
-                            var buyOrders = orders.Where(o => o.OrderType == BuyOrderType.Buy).ToArray();
+                            var buyOrders = orders.Where(o => o.OrderType == BuyOrderType.Buy 
+                                                              || o.OrderType == BuyOrderType.BuyShip).ToArray();
                             if (buyOrders.Length == 0)
                                 responseBuilder.AppendLine("None");
                             else
@@ -85,7 +86,8 @@ namespace TorchEconomy.Markets.Commands
                             }
 
                             responseBuilder.AppendLine("+-- Sell Orders:");
-                            var sellOrders = orders.Where(o => o.OrderType == BuyOrderType.Sell).ToArray();
+                            var sellOrders = orders.Where(o => o.OrderType == BuyOrderType.Sell
+                                                               || o.OrderType == BuyOrderType.SellShip).ToArray();
                             if (sellOrders.Length == 0)
                                 responseBuilder.AppendLine("None");
                             else

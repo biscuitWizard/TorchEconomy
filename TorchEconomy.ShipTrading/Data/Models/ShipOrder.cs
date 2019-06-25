@@ -14,6 +14,6 @@ namespace TorchEconomy.ShipTrading.Data.Models
 		
 		public decimal Price { get; set; }
 		
-		public string DisplayName { get; set; }
+//		public string DisplayName { get; set; }
 	}
 }

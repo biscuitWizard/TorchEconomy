@@ -1,6 +1,8 @@
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using Sandbox.Definitions;
 using TorchEconomy.Data.DataObjects;
 using TorchEconomy.Data.Types;
 using TorchEconomy.Markets;
@@ -10,6 +12,7 @@ using TorchEconomy.Markets.Data.Models;
 using TorchEconomy.Markets.Data.Types;
 using TorchEconomy.Markets.Managers;
 using TorchEconomy.Markets.Managers.Generators;
+using VRage.Game;
 
 namespace TorchEconomy.ShipTrading.Managers.Generators
 {
@@ -23,16 +26,32 @@ namespace TorchEconomy.ShipTrading.Managers.Generators
 		public NPCMarketOrder[] GenerateOrders(IndustryTypeEnum industryType, NPCDataObject npc, MarketDataObject market)
 		{
 			var simulationProvider = EconomyPlugin.GetDataProvider<MarketSimulationProvider>();
-
-			const decimal marginFlux = 0.1m;
-			var items = simulationProvider.GetUniversalItems(npc.IndustryType);
+			var definitionManager = MyDefinitionManager.Static;
+			
+			const decimal marginFlux = 0.02m;
+			// Purchase components.
+			var items = simulationProvider.GetUniversalItems()
+				.Where(i => i.IndustryAffinities.Any(kvp => kvp.Key == IndustryTypeEnum.Consumer 
+				                                            && kvp.Value == MarketAffinity.Buy))
+				.ToList();
+			
+			// Generate sell orders dynamically for ships.
+			var shipAffinity = new ConcurrentDictionary<IndustryTypeEnum, MarketAffinity>();
+			shipAffinity[IndustryTypeEnum.Shipyard] = MarketAffinity.Sell;
+			foreach (var sellableShip in EconomyShipTradingPlugin.Instance.Config.SellableShips)
+			{
+				var definitionId = MyDefinitionId.Parse(sellableShip.DefinitionId);
+				var definition = definitionManager.GetBlueprintDefinition(definitionId);
+				var marketItem = new MarketValueItem(definition, sellableShip.Value, shipAffinity);
+				
+				items.Add(marketItem);
+			}
 
 			var orderManager = EconomyPlugin.GetManager<MarketOrderManager>();
 			var npcOrders = new List<NPCMarketOrder>();
 			var random = new Random();
 			foreach (var item in items)
 			{
-
 				if (EconomyMarketsPlugin.Instance.Config.Blacklist.Any(b => b.Value == item.Definition.Id.ToString()))
 					continue; // This entry is blacklisted.
 

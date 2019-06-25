@@ -23,7 +23,14 @@ namespace TorchEconomy.Managers
         
         public virtual void Update() {}
         public virtual void Stop() {}
+        /// <summary>
+        /// Final initialization.
+        /// </summary>
         public virtual void Start() {}
+        /// <summary>
+        /// Called before Start, for initialization.
+        /// </summary>
+        public virtual void Awake() {}
         public virtual void Save() {}
     }
 }

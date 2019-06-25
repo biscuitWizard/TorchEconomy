@@ -3,6 +3,8 @@
     public enum BuyOrderType : byte
     {
         Buy,
-        Sell
+        Sell,
+        BuyShip,
+        SellShip
     }
 }

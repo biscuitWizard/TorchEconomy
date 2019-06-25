@@ -145,6 +145,12 @@ namespace TorchEconomy
                         dataProvider.Start();
                     }
                     
+                    // Awaken the managers.
+                    foreach (var manager in _managers)
+                    {
+                        manager.Awake();
+                    }
+                    
                     // Start the managers.
                     foreach (var manager in _managers)
                     {
