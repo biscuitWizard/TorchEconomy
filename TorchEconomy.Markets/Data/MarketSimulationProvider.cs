@@ -156,6 +156,11 @@ namespace TorchEconomy.Markets.Data
 
         public decimal GetUniversalItemValue(MyDefinitionId id)
         {
+            if (!_itemValues.ContainsKey(id))
+            {
+                Log.Error($"Cannot find Universal Item value for: {id}");
+                return 0;
+            }
             return _itemValues[id].Value;
         }
 
