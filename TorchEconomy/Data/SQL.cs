@@ -68,11 +68,23 @@ namespace TorchEconomy.Data
         public const string SELECT_MARKET_ORDERS =
             @"SELECT * FROM `MarketOrder` WHERE `MarketId`=@marketId AND `IsDeleted`=0;";
 
-        public const string INSERT_OR_UPDATE_MARKET_ORDER =
-            @"INSERT IGNORE INTO `MarketOrder` (`OrderType`,`DefinitionId`,`Quantity`,`Price`,`MarketId`)
-                VALUES(@orderType,@definitionId,0,0,@marketId);
-              UPDATE `MarketOrder` SET `Quantity`=@quantity, `Price`=@price,`CreatedOn`=@createdOn
-                WHERE `MarketId`=@marketId AND `DefinitionId`=@definitionId AND `OrderType`=@orderType;";
+        public static string INSERT_OR_UPDATE_MARKET_ORDER
+        {
+            get
+            {
+                if (EconomyPlugin.Instance.Config.SqlLite)
+                {
+                    return @"INSERT OR IGNORE INTO `MarketOrder` (`OrderType`,`DefinitionId`,`Quantity`,`Price`,`MarketId`)
+                      VALUES(@orderType,@definitionId,0,0,@marketId);
+                        UPDATE `MarketOrder` SET `Quantity`=@quantity, `Price`=@price,`CreatedOn`=@createdOn
+                        WHERE `MarketId`=@marketId AND `DefinitionId`=@definitionId AND `OrderType`=@orderType;";
+                }
+                return @"INSERT IGNORE INTO `MarketOrder` (`OrderType`,`DefinitionId`,`Quantity`,`Price`,`MarketId`)
+                  VALUES(@orderType,@definitionId,0,0,@marketId);
+                    UPDATE `MarketOrder` SET `Quantity`=@quantity, `Price`=@price,`CreatedOn`=@createdOn
+                    WHERE `MarketId`=@marketId AND `DefinitionId`=@definitionId AND `OrderType`=@orderType;";
+            }
+        }
 
         public const string SELECT_MARKET_ORDER_BY_ITEM =
             @"SELECT * FROM `MarketOrder` WHERE `MarketId`=@marketId AND `IsDeleted`=0 
