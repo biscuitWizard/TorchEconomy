@@ -177,6 +177,7 @@
     <Compile Include="Managers\MessageRouterManager.cs" />
     <Compile Include="Managers\NPCManager.cs" />
     <Compile Include="Managers\TextHudAPIManager.cs" />
+    <Compile Include="Managers\ThreadSynchronizationDispatcher.cs" />
     <Compile Include="Messages\Accounts\AdjustBalanceMessage.cs" />
     <Compile Include="Messages\Accounts\CreateAccountMessage.cs" />
     <Compile Include="Messages\Accounts\GetAccountsMessage.cs" />
